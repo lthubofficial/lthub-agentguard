@@ -750,3 +750,35 @@ Limitations: The missing-file and directory-path cases used real temporary files
 Evidence record: Google Colab execution output supplied for AG-C054 Test 23. Preserve the notebook and output as supporting evidence.
 
 Next step: AG-C054 Test 24 — Atomic Replay-Store Updates and Recovery from Interrupted Writes.
+
+AG-C054 Test 24 — Atomic Replay-Store Updates
+
+Status: [V] All 6 defined checks passed in the reported Google Colab run.
+
+Objective: Evaluate a temporary-file update pattern for replay-store records and verify basic duplicate rejection and malformed-store handling.
+
+Test environment: Google Colab; Python; temporary local directory and file; single-process test.
+
+Results
+
+Check| Result
+New request is accepted| PASS
+Updated store contains both request IDs| PASS
+Previously recorded request is rejected| PASS
+Malformed store causes request rejection| PASS
+Malformed original store remains unchanged| PASS
+No temporary update file remains after rejected update| PASS
+
+Summary: 6 checks passed; 0 checks failed.
+
+[V] Observed: The supplied output shows successful recording of a new request ID, retention of both IDs, rejection of a duplicate, rejection of malformed JSON, preservation of the malformed content, and no leftover temporary update file after the rejected update.
+
+[I] Interpretation: Writing updated records to a temporary file and replacing the original with "os.replace()" is a safer update pattern than directly overwriting the existing store. The tested scenarios behaved as expected.
+
+[H] Remaining hypothesis: The approach will maintain replay-store integrity under process crashes, power loss, concurrent writers, and production storage conditions. These conditions were not tested.
+
+Limitations: This was a controlled, single-process test. It did not simulate an interruption during the write or replacement operation, test multiple concurrent processes, or establish crash durability or production-grade atomicity. The test's cleanup check concerned a rejected malformed-store update, not every possible failure during a successful update.
+
+Evidence record: Google Colab execution output supplied for AG-C054 Test 24. Preserve the notebook and output as supporting evidence.
+
+Next step: AG-C054 Test 25 — Simulated Failure During Temporary-File Update.
