@@ -610,3 +610,46 @@ Evidence status: Basic replay-record logic was tested. Persistent storage and re
 Next requirement: Run a genuine file-backed test that writes request IDs to disk, creates a fresh handler, and confirms that previously recorded IDs are still rejected after being read back from the file.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
+
+Test 20 — Actual File Persistence and Recovery
+
+Test ID: AG-C054-T20
+Control area: File-backed replay-record retention
+Environment: Python notebook; local temporary-file simulation
+Status: User-reported result — all defined checks passed
+
+Objective
+
+Test whether accepted request IDs written to a file remain available to a newly created replay-guard handler using the same file.
+
+[V] Observed test output
+
+The user-reported output recorded 5 passed, 0 failed.
+
+1. First request ID accepted and written to the file.
+2. Duplicate request ID rejected by the first handler.
+3. Fresh handler rejected the previously recorded request ID.
+4. Fresh handler accepted a new request ID.
+5. File contents contained both accepted request IDs.
+
+[I] Interpretation
+
+The file-backed simulation retained the recorded request IDs across handler recreation during the same run. The new handler read the existing file and rejected the duplicate.
+
+This is stronger evidence of record retention than Test 19's in-memory JSON-string simulation.
+
+Limitations
+
+- The test reused the same temporary file; it did not perform an operating-system process restart.
+- The temporary directory and file were deleted when the test completed.
+- Concurrent writers, multiple processes, multiple servers, file corruption, interrupted writes, and power-loss recovery were not tested.
+- A file lock or atomic transaction across independent processes was not implemented.
+- The result does not establish production-grade replay protection.
+
+Conclusion
+
+Result: 5/5 defined checks passed in the user-reported file-backed simulation.
+
+Evidence status: File-backed retention across handler recreation was demonstrated in the tested run. Real process-restart recovery and production concurrency safety remain unverified.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
