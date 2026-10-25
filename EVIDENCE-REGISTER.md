@@ -1052,7 +1052,28 @@ Pass criteria: Each predefined scenario behaves according to its acceptance crit
 
 Limitations: Iteration and retry limits do not independently prevent every form of excessive consumption. Parallel workflows, delegated agents, nested calls, and downstream operations may require additional controls and aggregate limits. No implementation or successful test is claimed until supported by recorded evidence.
 
-- AG-C059 — Resource Monitoring: Record resource consumption and flag unusual increases for review.
+- AG-C059 — Resource Monitoring: Validation Plan
+
+Status: Proposed; not yet tested.
+
+Evidence classification: [H] Hypothesis until implemented and tested.
+
+Risk addressed: Excessive or unusual resource consumption that remains undetected, potentially contributing to service degradation, unexpected usage or costs, and resource exhaustion.
+
+Test method: In an authorised test environment, identify the resource-consumption signals available to the system. Depending on the architecture, these may include request volume, input and output token counts, processing duration, concurrent operations, tool calls, error rates, and estimated usage costs.
+
+Establish documented baseline behaviour and predefined alert thresholds. Run controlled scenarios representing normal usage, a sudden increase in requests, unusually large workloads, repeated failures, and sustained elevated consumption. Where supported, test both individual-user or agent-level monitoring and aggregate monitoring across workflows. Do not generate real overload or incur unnecessary provider charges.
+
+Expected result: Available resource metrics are recorded with timestamps and sufficient context to support investigation. The monitoring system identifies test scenarios that cross the configured thresholds and generates the expected alert or review event. Missing telemetry, delayed alerts, monitoring failures, and unsupported metrics are documented. An alert alone is not considered proof that resource consumption was blocked or reduced.
+
+Evidence to retain: Monitoring configuration; metric names and units; baseline and threshold values; test scenario descriptions; timestamps; recorded measurements; alert-generation and delivery records; relevant logs; monitoring gaps; errors; and any evidence of missed, delayed, or false alerts. Redact secrets, access tokens, personal information, and other sensitive data from retained evidence.
+
+Pass criteria: Every predefined test scenario produces the expected measurements and alert behaviour according to documented acceptance criteria. Relevant events can be traced to their test scenario, and known telemetry gaps are recorded. Any missed alert, unexplained measurement gap, or failure to detect a threshold breach is documented as a finding rather than silently treated as a pass.
+
+Limitations and residual risks: Monitoring is a detection and visibility control; it does not independently prevent excessive consumption. Its effectiveness depends on metric availability, threshold quality, alert delivery, coverage, and response procedures. Delayed telemetry, provider-side usage not exposed to the application, distributed workflows, and activity spread across multiple identities may create blind spots. Rate limits, usage budgets, execution limits, and an explicitly defined response to alerts may be needed as complementary controls.
+
+Evidence limitation: This document is a proposed validation plan, not a test result. No implementation, successful detection, cost reduction, or prevention capability is claimed until supported by recorded evidence.
+
 - AG-C060 — Downstream Action Limits: Restrict the number and frequency of tool calls, queued jobs, or external operations within a workflow.
 
 Control enforcement and validation requirements
