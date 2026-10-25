@@ -987,7 +987,21 @@ Expected result: Requests within the permitted rate are handled according to pol
 Evidence to retain: Configuration and threshold; test timestamp; request counts and rates; observed responses; enforcement logs; any errors or bypasses; and the final test result.
 Pass criteria: All predefined scenarios satisfy the expected behaviour, with no unexplained enforcement failures. Any failed scenario must be recorded and investigated.
 Limitations: No implementation or test result is claimed until the test has actually been performed and its evidence reviewed.
-- AG-C056 — Input and Output Limits: Set appropriate limits for request size, generated output, and processing workloads.
+- AG-C055 — Usage and Cost Budgets: Validation Plan
+
+Status: Proposed; not yet tested.
+
+Risk addressed: Excessive model usage, unexpected expenditure, and resource consumption exceeding authorised limits.
+
+Test method: In an authorised test environment, configure a usage ceiling and budget alert where supported. Simulate usage below, near, and above the threshold. Test alert delivery separately from any enforced usage restriction. Use a simulated budget or provider-supported test mechanism where possible; do not incur unnecessary real charges.
+
+Expected result: Usage is measured against the configured threshold. Alerts are triggered according to the documented policy. Where an enforceable usage restriction exists, further usage is restricted as specified. Any unsupported provider capability or enforcement gap is documented.
+
+Evidence to retain: Configuration; threshold and measurement units; test timestamps; usage records; alert delivery results; observed enforcement behaviour; provider limitations; and any discrepancy between estimated and reported usage.
+
+Pass criteria: Each configured alert and restriction behaves according to its documented acceptance criteria. Alerts must not be recorded as proof of spending enforcement. Any failed scenario or unverified capability remains explicitly documented.
+
+Limitations: No implementation, provider capability, cost saving, or successful enforcement is claimed until supported by recorded evidence.
 - AG-C057 — Execution Timeouts: Define maximum execution durations and controlled termination behaviour for stalled workflows.
 - AG-C058 — Agent Loop Protection: Set maximum iteration counts and retry limits, with explicit termination conditions.
 - AG-C059 — Resource Monitoring: Record resource consumption and flag unusual increases for review.
