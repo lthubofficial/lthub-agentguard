@@ -566,3 +566,47 @@ Result: 5/5 defined checks passed in the user-reported local simulation.
 Security finding: The tested in-memory replay guard does not retain duplicate-request history when its object is recreated. Restart-resistant replay protection remains unimplemented and unverified.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
+
+Test 19 — Replay-Record Logic and Persistence Boundary
+
+Test ID: AG-C054-T19
+Control area: Duplicate-request detection and replay-record retention
+Environment: Programiz; local Python simulation
+Status: User-reported result — all defined logic checks passed; disk persistence not tested
+
+Objective
+
+Check whether the simulated replay-record logic rejects duplicate request IDs and retains records within its in-memory JSON-string representation.
+
+[V] Observed test output
+
+The user-reported Programiz output recorded 5 passed, 0 failed.
+
+1. First request ID accepted.
+2. Duplicate request ID rejected.
+3. Duplicate remained rejected when the same handler function was reused.
+4. A new request ID was accepted.
+5. Both accepted IDs remained present in the stored JSON data.
+
+[I] Interpretation
+
+The fallback simulation behaved according to its defined duplicate-record rules while its in-memory data remained available.
+
+The handler-recreation check did not create a new independent storage instance or simulate a process restart. The JSON string remained in memory throughout the test.
+
+Limitations
+
+- No disk file, database, or other persistent storage was used.
+- No actual handler reconstruction with independent state, operating-system process restart, or restart recovery was tested.
+- No atomic storage transaction or multi-process concurrency was tested.
+- The result does not establish persistent replay protection.
+
+Conclusion
+
+Result: 5/5 defined checks passed in the user-reported local simulation.
+
+Evidence status: Basic replay-record logic was tested. Persistent storage and restart recovery remain untested.
+
+Next requirement: Run a genuine file-backed test that writes request IDs to disk, creates a fresh handler, and confirms that previously recorded IDs are still rejected after being read back from the file.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
