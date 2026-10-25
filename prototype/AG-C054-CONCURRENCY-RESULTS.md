@@ -85,3 +85,40 @@ This was a local experimental test, not an independent security audit. It does n
 
 Conclusion
 Test 8 produced no unexpected allowed-request counts across 100 trials of 20 concurrent attempts with a limit of 5. Further testing and independent review are required before any production-security claim.
+
+Test 9 — Input Validation and Boundary Testing
+
+Status: Completed; result reported by developer.
+
+Test configuration: Ten defined checks against a test-script reproduction of the saved thread-safe rate limiter's logic.
+
+Observed results
+
+- Tests passed: 10
+- Tests failed: 0
+- Total tests: 10
+
+Checks performed
+
+1. Zero request limit rejected.
+2. Negative request limit rejected.
+3. Boolean request limit rejected.
+4. Zero time window rejected.
+5. Negative time window rejected.
+6. Empty client identifier rejected.
+7. Whitespace-only client identifier rejected.
+8. Non-string client identifier rejected.
+9. Valid client received exactly two allowed requests under a limit of two; the third was blocked.
+10. Separate client identifiers maintained separate request counters.
+
+Evidence classification
+
+- [V] Developer-reported Programiz output shows all ten defined checks passing.
+- [I] The observations support the conclusion that the tested logic handles these inputs and boundary conditions as expected.
+- [H] Untested inputs and deployment conditions may reveal further weaknesses.
+
+Limitations
+The test reproduced the implementation's logic in a separate script. It did not independently verify the saved repository file, perform a security audit, or establish production readiness.
+
+Conclusion
+All ten defined input-validation and boundary checks passed in the reported run. Further testing is required before making broader security claims.
