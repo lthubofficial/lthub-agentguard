@@ -829,3 +829,88 @@ A passing test only supports the tested configuration and scenarios. It does not
 Vector and embedding security is an important part of protecting AI applications that retrieve external knowledge. LT Hub™ AgentGuard proposes permission-aware retrieval, dataset separation, knowledge-source validation, privacy review, and retrieval monitoring. These controls must be implemented and tested before their effectiveness can be claimed.
 
 Next action: Append this record after E016 in the root-level "EVIDENCE-REGISTER.md", preserve the evidence labels, and commit the update.
+
+## 23. Source Record — OWASP LLM09:2025 Misinformation
+
+Record ID: E018
+Research Series: LT Hub™ AgentGuard AI Agent Security Risk Research Series
+Research Date: 2026-10-25
+Evidence Status: Source identified; proposed controls not yet tested
+Primary Source: OWASP GenAI Security Project
+Source Title: LLM09:2025 Misinformation
+Source URL: https://genai.owasp.org/llmrisk/llm092025-misinformation/
+
+23.1 Research Question
+
+How can an AI application produce unsupported, inaccurate, or misleading information, and how can an AI agent reduce the risk of people or downstream systems relying on those outputs?
+
+23.2 Source Findings
+
+[V] Verified — Source identification
+
+The source selected for this record is the OWASP GenAI Security Project page titled LLM09:2025 Misinformation.
+
+[V] Source-content verification required
+
+Before marking individual mitigation statements as verified, check their exact wording against the opened page. The source topic alone does not independently verify every example or recommendation listed in this record.
+
+Relevant points to check on the source page include:
+
+- Hallucinations and confidently stated incorrect information.
+- Bias, incomplete context, or misleading generated content.
+- Risks when users rely on AI output without independent verification.
+- Recommendations for human oversight, cross-checking, and validation of critical outputs.
+
+Record only claims that the source actually supports.
+
+23.3 Security Implications
+
+[I] Inferred
+
+An AI agent can produce a technically well-formatted response that is nevertheless factually wrong. If that response triggers an external action, informs a business decision, or is published without review, the consequences may extend beyond the conversation itself.
+
+A confident tone, fluent writing, or citation-like formatting is not proof that a claim is true.
+
+For LT Hub™ AgentGuard, factual reliability should be treated separately from permission control: an agent may be authorised to perform an action but still base that action on inaccurate information.
+
+23.4 Proposed AgentGuard Controls
+
+All controls below are [H] Hypotheses until implemented and tested.
+
+- AG-C048 — Claim-to-Source Traceability: Record the source supporting each material factual claim in a research report.
+- AG-C049 — Evidence Classification: Separate verified claims, inferences, and hypotheses using the LT Hub™ [V]/[I]/[H] framework.
+- AG-C050 — Independent Cross-Checking: Require additional source checks for high-impact or disputed claims.
+- AG-C051 — Human Review Gate: Require human approval before publishing or acting on high-impact, unverified outputs.
+- AG-C052 — Uncertainty Disclosure: Clearly identify missing evidence, unresolved contradictions, and limitations.
+- AG-C053 — Output Validation: Define checks for source relevance, claim accuracy, date sensitivity, and unsupported conclusions before a report is approved.
+
+23.5 Proposed Validation Plan
+
+Test status: NOT RUN
+
+Use a small, controlled set of synthetic research statements and public, non-sensitive reference material.
+
+1. Create a test set containing supported claims, unsupported claims, and claims that cannot be resolved from the available evidence.
+2. Require the proposed review process to assign an evidence status to each claim.
+3. Check whether supported claims have relevant source references.
+4. Check whether unsupported claims are flagged instead of being presented as verified.
+5. Check whether uncertain claims are labelled as unresolved rather than silently treated as facts.
+6. Record expected results, observed results, false positives, missed errors, and limitations.
+
+Proposed pass criterion: The review process flags every deliberately unsupported test claim and does not label it verified without supporting evidence.
+
+This test evaluates only the defined sample and review procedure. It cannot prove that a model will never generate misinformation or that all source references are accurate.
+
+23.6 Evidence and Limitations
+
+- [V] The page identity is recorded; detailed source-specific claims must be checked against its content.
+- [I] The consequences of misinformation depend on the application's use, the audience, and whether outputs trigger decisions or actions.
+- [H] AG-C048–AG-C053 are proposed controls, not confirmed implementations.
+- Test status: NOT RUN.
+- No claim of complete factual accuracy or misinformation prevention is made.
+
+23.7 Research Conclusion
+
+AI agent reliability requires more than fluent responses. LT Hub™ AgentGuard proposes traceable sources, explicit evidence labels, independent checks, human review for high-impact outputs, and uncertainty disclosure. These controls remain hypotheses until implemented and evaluated.
+
+Next action: Verify the relevant source passages, append this record after E017 in the root-level "EVIDENCE-REGISTER.md", and commit the update.
