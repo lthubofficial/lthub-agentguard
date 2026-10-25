@@ -325,3 +325,63 @@ The cited OWASP material documents guidance and an illustrative attack scenario.
 Verification status: The supplied passage supports the recorded source findings. AgentGuard implementation and control effectiveness remain unverified.
 
 Next action: Identify the exact actions that require approval, define safe rate limits for a test environment, and document reproducible test results before changing any proposed control's status.
+
+## 16. Source Record — OWASP LLM01:2025 Prompt Injection
+
+Evidence ID: LT-AG-E011
+
+Source title: LLM01:2025 Prompt Injection
+
+Publisher: OWASP GenAI Security Project
+
+Source URL: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+
+Access date: 2026-10-25
+
+Source type: Published AI application security guidance
+
+Source findings
+
+Claim 1 — [V] Published assessment: OWASP states that prompt injection vulnerabilities arise from the nature of generative AI and that foolproof prevention methods are unclear.
+
+Supporting reference: The “Prevention and Mitigation Strategies” section of the official LLM01:2025 page.
+
+Claim 2 — [V] Published recommendations: OWASP describes measures including constraining model behaviour, validating expected output formats, filtering inputs and outputs, enforcing least-privilege access, requiring human approval for high-risk actions, segregating untrusted external content, and conducting adversarial testing.
+
+Supporting reference: The seven mitigation measures listed in the official LLM01:2025 page.
+
+Claim 3 — [V] Published examples: OWASP describes direct and indirect prompt injection, malicious instructions in retrieved documents, multimodal injection, payload splitting, and obfuscated or multilingual attacks, among other scenarios.
+
+Supporting reference: The “Example Attack Scenarios” section of the official LLM01:2025 page.
+
+Relevance to LT Hub™ AgentGuard
+
+[I] Research implication: An AI agent's security cannot rely only on its system prompt. Research should examine trust boundaries, tool permissions, input and output handling, human authorization, and adversarial testing.
+
+Proposed controls — not yet validated
+
+- AG-C010 [H]: Clearly identify external documents, webpages, emails, and retrieved content as untrusted input.
+- AG-C011 [H]: Enforce tool permissions and authorization outside the model's natural-language instructions.
+- AG-C012 [H]: Validate tool arguments and structured outputs against predefined rules before execution.
+- AG-C013 [H]: Require human approval for defined high-impact operations.
+- AG-C014 [H]: Test direct and indirect prompt-injection scenarios in a controlled environment.
+
+Proposed validation work
+
+In an isolated test environment, provide a test agent with a benign task and a document containing an instruction that conflicts with the task.
+
+Observe whether the agent treats the document's instruction as untrusted content, whether it attempts restricted tool calls, and whether external authorization controls reject unauthorized actions.
+
+Use synthetic data only. Do not test against real accounts, private documents, or live systems.
+
+Required test record: Test ID, environment, model and configuration, test input, expected behaviour, observed behaviour, tool-call trace, authorization outcome, date, and reviewer.
+
+Current test status: Not run.
+
+Limitations
+
+OWASP guidance describes risks and mitigation approaches; it does not establish that LT Hub™ AgentGuard implements these controls or is resistant to prompt injection. No single proposed control should be assumed to prevent every attack. Control effectiveness must be assessed through documented testing.
+
+Verification status: The supplied source passage supports the recorded descriptions of OWASP's guidance. AgentGuard implementation and effectiveness remain unverified.
+
+Next action: Review the proposed controls, select a safe test scenario, and document actual observations before changing any hypothesis to a validated status.
