@@ -987,6 +987,12 @@ All controls below are [H] Hypotheses until implemented and tested.
 - AG-C059 — Resource Monitoring: Record resource consumption and flag unusual increases for review.
 - AG-C060 — Downstream Action Limits: Restrict the number and frequency of tool calls, queued jobs, or external operations within a workflow.
 
+Control enforcement and validation requirements
+
+Each proposed control must specify its enforcement mechanism, applicable scope, configured threshold or decision rule, behaviour when the limit is reached, and evidence required to verify operation. Where applicable, enforcement should remain effective across retries, parallel execution, and delegated workflows.
+
+Implementation status and test status must be recorded separately. A configured control is not considered validated until its behaviour has been tested against defined acceptance criteria and the results have been retained. Failed tests, bypasses, unsupported provider capabilities, and residual risks must be documented. No control is assumed to provide complete prevention.
+
 24.5 Proposed Validation Plan
 
 Test status: NOT RUN
