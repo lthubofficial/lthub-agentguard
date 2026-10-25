@@ -929,23 +929,39 @@ Source URL: https://genai.owasp.org/llmrisk/llm102025-unbounded-consumption/
 
 How can an AI application or agent consume excessive resources, exhaust usage limits, increase operational costs, or degrade service availability, and what controls can reduce these risks?
 
-24.2 Source Findings
+## 24.2 Source Findings
 
-[V] Verified — Source identification
+[V] Verified against the reviewed OWASP LLM10:2025 source passage
 
-The selected source is the OWASP GenAI Security Project page titled LLM10:2025 Unbounded Consumption.
+The OWASP GenAI Security Project page identifies unbounded consumption as a risk associated with excessive and uncontrolled model inference. Described consequences include denial of service, economic losses, model theft, and service degradation.
 
-[V] Source-content verification required
+The reviewed prevention and mitigation section lists 15 strategies:
 
-Check the opened page before marking individual examples or recommendations as source-verified. Relevant areas to examine include:
+1. Input validation and reasonable input-size limits.
+2. Limiting exposure of logits and log probabilities.
+3. Rate limiting and user quotas.
+4. Dynamic resource-allocation management.
+5. Timeouts and throttling for resource-intensive operations.
+6. Sandboxing and restrictions on access to network resources, internal services, and APIs.
+7. Logging, monitoring, and anomaly detection for unusual resource consumption.
+8. Watermarking to help identify unauthorised use of model outputs.
+9. Graceful degradation under heavy load.
+10. Limits on queued actions and total actions, with dynamic scaling and load balancing.
+11. Adversarial robustness training.
+12. Filtering known glitch tokens before they enter the model's context.
+13. Access controls, including role-based access control (RBAC) and least privilege.
+14. A centralised inventory or registry for production ML models.
+15. Automated MLOps deployment with governance, tracking, and approval workflows.
 
-- Excessive or uncontrolled model requests.
-- Resource exhaustion and service degradation.
-- Unexpected usage or financial costs.
-- Automated requests, repeated actions, or runaway agent loops.
-- Rate limiting, usage quotas, input restrictions, timeouts, and resource monitoring.
+[I] Inferred
 
-Only retain claims that the source actually supports. A source title alone does not verify every mitigation or example listed here.
+For an AI agent, request limits, quotas, resource monitoring, timeouts, sandboxing, and restrictions on queued actions may help reduce resource-exhaustion risks. The effectiveness of each measure depends on the system architecture and implementation.
+
+[H] Hypothesis
+
+AG-C054–AG-C060 remain proposed controls. Their implementation and effectiveness have not yet been demonstrated by this research series.
+
+Evidence limitation: Verification of the source passage does not establish that every recommendation has been independently evaluated, implemented, or tested by LT Hub™ AgentGuard. No claim of complete prevention is made.
 
 24.3 Security Implications
 
