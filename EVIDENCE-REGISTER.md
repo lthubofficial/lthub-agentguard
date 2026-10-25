@@ -1036,7 +1036,22 @@ Pass criteria: Each test scenario behaves according to predefined acceptance cri
 
 Limitations: A timeout does not automatically stop work already accepted by an external provider or guarantee cancellation of every downstream operation. Cancellation behaviour and residual resource consumption must be assessed separately. No implementation or successful test is claimed until supported by recorded evidence.
 
-- AG-C058 — Agent Loop Protection: Set maximum iteration counts and retry limits, with explicit termination conditions.
+- AG-C058 — Agent Loop Protection: Validation Plan
+
+Status: Proposed; not yet tested.
+
+Risk addressed: Unbounded agent iterations, repeated retries, recursive workflow execution, and excessive resource consumption caused by workflows that fail to make progress or terminate correctly.
+
+Test method: In an authorised test environment, configure a maximum iteration count, retry limit, and explicit workflow termination conditions. Test a workflow that completes normally, a controlled repeated-action scenario, repeated transient failures, and a scenario that reaches the configured limit. Where applicable, examine recursive calls, delegated workflows, and concurrent execution.
+
+Expected result: Normal workflows complete within their permitted limits. Repeated actions and retries do not exceed the configured bounds. When a limit or termination condition is reached, the workflow stops or enters its documented recovery process. Relevant events and reasons for termination are recorded.
+
+Evidence to retain: Configuration and limit values; workflow identifiers; iteration and retry counts; test timestamps; model and tool-call records where available; termination reasons; resource-usage observations; and any errors, bypasses, or incomplete cancellations.
+
+Pass criteria: Each predefined scenario behaves according to its acceptance criteria. Iteration and retry counts remain within their enforced limits, and workflows terminate as specified when a limit is reached. Any unbounded recursion, duplicate downstream action, limit bypass, or unexplained continuation is recorded as a finding.
+
+Limitations: Iteration and retry limits do not independently prevent every form of excessive consumption. Parallel workflows, delegated agents, nested calls, and downstream operations may require additional controls and aggregate limits. No implementation or successful test is claimed until supported by recorded evidence.
+
 - AG-C059 — Resource Monitoring: Record resource consumption and flag unusual increases for review.
 - AG-C060 — Downstream Action Limits: Restrict the number and frequency of tool calls, queued jobs, or external operations within a workflow.
 
