@@ -432,3 +432,91 @@ Result: 4/4 defined checks passed in the user-reported local simulation.
 This is a limited positive test result, not proof of production replay protection.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
+
+
+class ReplayGuard:
+    def __init__(self):
+        self.processed_ids = set()
+
+    def accept(self, request_id):
+        if request_id in self.processed_ids:
+            return False
+
+        self.processed_ids.add(request_id)
+        return True
+
+
+print("LT Hub AgentGuard - AG-C054 Test 18")
+print("Replay-guard state reset and restart")
+print()
+
+passed = 0
+failed = 0
+
+def check(description, actual, expected):
+    global passed, failed
+    if actual == expected:
+        print("[PASS]", description)
+        passed += 1
+    else:
+        print(
+            "[FAIL]", description,
+            "| expected:", expected,
+            "| got:", actual
+        )
+        failed += 1
+
+
+# Initial in-memory state.
+guard = ReplayGuard()
+
+check(
+    "First submission is accepted",
+    guard.accept("request-001"),
+    True
+)
+
+check(
+    "Duplicate is rejected before reset",
+    guard.accept("request-001"),
+    False
+)
+
+# Simulate a state reset by recreating the object.
+guard = ReplayGuard()
+
+check(
+    "Previously used ID is accepted after state reset",
+    guard.accept("request-001"),
+    True
+)
+
+check(
+    "Duplicate is rejected again after being recorded",
+    guard.accept("request-001"),
+    False
+)
+
+# Simulate another fresh instance.
+restarted_guard = ReplayGuard()
+
+check(
+    "Fresh instance has no previous replay history",
+    restarted_guard.accept("request-001"),
+    True
+)
+
+print()
+print("Checks passed:", passed)
+print("Checks failed:", failed)
+print("Total checks:", passed + failed)
+
+if failed == 0:
+    print("Result: All defined checks passed.")
+else:
+    print("Result: Review failed checks.")
+
+print()
+print("Limitation: recreating the object simulates lost in-memory state.")
+print("No actual operating-system process restart was performed.")
+print("No persistent or shared replay store was tested.")
