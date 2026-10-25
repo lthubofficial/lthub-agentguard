@@ -914,3 +914,88 @@ This test evaluates only the defined sample and review procedure. It cannot prov
 AI agent reliability requires more than fluent responses. LT Hub™ AgentGuard proposes traceable sources, explicit evidence labels, independent checks, human review for high-impact outputs, and uncertainty disclosure. These controls remain hypotheses until implemented and evaluated.
 
 Next action: Verify the relevant source passages, append this record after E017 in the root-level "EVIDENCE-REGISTER.md", and commit the update.
+
+## 24. Source Record — OWASP LLM10:2025 Unbounded Consumption
+
+Record ID: E019
+Research Series: LT Hub™ AgentGuard AI Agent Security Risk Research Series
+Research Date: 2026-10-25
+Evidence Status: Source identified; proposed controls not yet tested
+Primary Source: OWASP GenAI Security Project
+Source Title: LLM10:2025 Unbounded Consumption
+Source URL: https://genai.owasp.org/llmrisk/llm102025-unbounded-consumption/
+
+24.1 Research Question
+
+How can an AI application or agent consume excessive resources, exhaust usage limits, increase operational costs, or degrade service availability, and what controls can reduce these risks?
+
+24.2 Source Findings
+
+[V] Verified — Source identification
+
+The selected source is the OWASP GenAI Security Project page titled LLM10:2025 Unbounded Consumption.
+
+[V] Source-content verification required
+
+Check the opened page before marking individual examples or recommendations as source-verified. Relevant areas to examine include:
+
+- Excessive or uncontrolled model requests.
+- Resource exhaustion and service degradation.
+- Unexpected usage or financial costs.
+- Automated requests, repeated actions, or runaway agent loops.
+- Rate limiting, usage quotas, input restrictions, timeouts, and resource monitoring.
+
+Only retain claims that the source actually supports. A source title alone does not verify every mitigation or example listed here.
+
+24.3 Security Implications
+
+[I] Inferred
+
+An AI agent that repeatedly calls a model, retries failed operations, processes oversized inputs, or launches multiple downstream tasks may consume resources beyond the intended budget.
+
+The risk can be amplified when an agent has permission to invoke tools repeatedly without clear stopping conditions.
+
+Resource limits should therefore apply to the overall workflow, not only to an individual model request. Cost, request frequency, processing time, and downstream action counts may all require independent controls.
+
+24.4 Proposed AgentGuard Controls
+
+All controls below are [H] Hypotheses until implemented and tested.
+
+- AG-C054 — Request Rate Limits: Define permitted request rates for each relevant user, agent, or workflow.
+- AG-C055 — Usage and Cost Budgets: Establish configurable usage ceilings and budget alerts where the provider supports them.
+- AG-C056 — Input and Output Limits: Set appropriate limits for request size, generated output, and processing workloads.
+- AG-C057 — Execution Timeouts: Define maximum execution durations and controlled termination behaviour for stalled workflows.
+- AG-C058 — Agent Loop Protection: Set maximum iteration counts and retry limits, with explicit termination conditions.
+- AG-C059 — Resource Monitoring: Record resource consumption and flag unusual increases for review.
+- AG-C060 — Downstream Action Limits: Restrict the number and frequency of tool calls, queued jobs, or external operations within a workflow.
+
+24.5 Proposed Validation Plan
+
+Test status: NOT RUN
+
+Use a local mock application or another controlled test environment with synthetic requests. Do not deliberately overload production services or generate unexpected charges.
+
+1. Configure a small test request limit and a fixed maximum number of workflow iterations.
+2. Submit harmless synthetic requests below and above the configured threshold.
+3. Simulate a repeated-task loop in the mock application.
+4. Check whether the request limit and iteration cap stop further work at the intended boundary.
+5. Simulate a timeout and verify that the workflow stops or enters a documented recovery state.
+6. Record expected results, observed results, resource use, errors, and limitations.
+
+Proposed pass criterion: The mock application stops processing when its configured limits are reached and records the limit event.
+
+A passing mock test does not prove that an external AI provider, distributed application, or production agent is protected against every resource-exhaustion attack.
+
+24.6 Evidence and Limitations
+
+- [V] The source identity is recorded; detailed source-specific claims require checking against the page content.
+- [I] Actual impact depends on provider pricing, application architecture, workload, permissions, and configured limits.
+- [H] AG-C054–AG-C060 are proposed controls, not confirmed implementations.
+- Test status: NOT RUN.
+- No production performance test, cost guarantee, or complete denial-of-service prevention claim is made.
+
+24.7 Research Conclusion
+
+Unbounded consumption is an AI security and operational risk. LT Hub™ AgentGuard proposes request limits, budgets, workload restrictions, timeouts, loop protection, resource monitoring, and downstream action limits. Their effectiveness must be demonstrated through controlled tests before any success claim is made.
+
+Next action: Verify the relevant passages on the official source page, append this record after E018 in the root-level "EVIDENCE-REGISTER.md", and commit the update.
