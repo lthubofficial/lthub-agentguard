@@ -979,8 +979,14 @@ Resource limits should therefore apply to the overall workflow, not only to an i
 
 All controls below are [H] Hypotheses until implemented and tested.
 
-- AG-C054 — Request Rate Limits: Define permitted request rates for each relevant user, agent, or workflow.
-- AG-C055 — Usage and Cost Budgets: Establish configurable usage ceilings and budget alerts where the provider supports them.
+- AG-C054 — Request Rate Limits: Validation Plan
+Status: Proposed; not yet tested.
+Risk addressed: Excessive request frequency leading to resource exhaustion, service degradation, or unexpected consumption.
+Test method: In an authorised test environment, configure a known request-rate threshold. Send requests below, at, and above the threshold, including a controlled concurrent-request scenario.
+Expected result: Requests within the permitted rate are handled according to policy. Excess requests are limited according to the configured enforcement behaviour. Relevant outcomes are logged, and normal operation resumes according to the documented recovery policy.
+Evidence to retain: Configuration and threshold; test timestamp; request counts and rates; observed responses; enforcement logs; any errors or bypasses; and the final test result.
+Pass criteria: All predefined scenarios satisfy the expected behaviour, with no unexplained enforcement failures. Any failed scenario must be recorded and investigated.
+Limitations: No implementation or test result is claimed until the test has actually been performed and its evidence reviewed.
 - AG-C056 — Input and Output Limits: Set appropriate limits for request size, generated output, and processing workloads.
 - AG-C057 — Execution Timeouts: Define maximum execution durations and controlled termination behaviour for stalled workflows.
 - AG-C058 — Agent Loop Protection: Set maximum iteration counts and retry limits, with explicit termination conditions.
