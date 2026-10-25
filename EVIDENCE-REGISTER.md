@@ -212,3 +212,59 @@ This source documents OWASP's security guidance. It does not establish that LT H
 Verification status: Source reviewed; claims about the contents of the OWASP guidance are supported by the cited source. Control effectiveness remains unverified.
 
 Next action: Design a safe, reproducible least-privilege test and record its results before changing any proposed control to a validated status.
+
+## 14. Source Record — Role Based Access Control (RBAC)
+
+Evidence ID: LT-AG-E009
+
+Source title: Role Based Access Control (RBAC)
+
+Publisher: National Institute of Standards and Technology (NIST)
+
+Source URL: https://csrc.nist.gov/projects/role-based-access-control
+
+Page update date: 2026-03-04 (as displayed on the page)
+
+Access date: 2026-10-25
+
+Source type: Official access-control research project page
+
+Source findings
+
+Claim 1 — [V] Source content: The NIST project page discusses role-based access control (RBAC), attribute-based access control (ABAC), and related access-control research.
+
+Supporting reference: The page sections titled “RBAC vs. ABAC (Attribute Based Access Control)” and “Primary References and Background.”
+
+Claim 2 — [V] Source content: The page lists research on RBAC models, access-control configuration vulnerabilities, and the characteristics and trade-offs of RBAC and ABAC.
+
+Supporting reference: The research references listed on the NIST project page.
+
+Relevance to LT Hub™ AgentGuard
+
+[I] Research implication: Access-control models are relevant to investigating how an AI agent's permissions can be limited and governed. The suitability of a particular model depends on the agent's tasks, system architecture, and authorization requirements.
+
+Proposed control — not yet validated
+
+- AG-C005 [H]: Investigate whether each AgentGuard tool can be assigned narrowly scoped permissions appropriate to its defined task, with authorization enforced by the system executing the action.
+
+Proposed validation work
+
+Identify a controlled test environment and document the permissions available to a test agent. Check whether an action outside its authorized scope is rejected by the enforcing system.
+
+Do not perform unauthorized actions against live systems.
+
+Required test record: Test ID, environment, configuration, authorized scope, test steps, expected result, observed result, supporting logs, date, and reviewer.
+
+Current test status: Not run.
+
+Limitations
+
+The NIST page describes access-control research and references related publications. Its presence does not demonstrate that a particular AgentGuard design implements RBAC or ABAC, nor that any proposed control is effective.
+
+Verification status: The supplied page content supports the recorded description of the source. Implementation and control effectiveness remain unverified.
+
+Next action: Review the relevant primary research or standard before making a more specific technical claim, then design and document a controlled authorization test.
+
+---
+
+LT Hub™ | Creative AI Solutions Powered by Intelligence
