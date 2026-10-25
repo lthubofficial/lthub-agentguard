@@ -155,3 +155,60 @@ Verification status: The source page has been reviewed for the finding stated ab
 Related source — Excessive Agency: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/?lang=us
 
 Next action: Review the source's mitigation guidance and record individual claims with supporting references before treating proposed controls as validated.
+
+13. Source Record — OWASP LLM06:2025 Excessive Agency
+
+Evidence ID: LT-AG-E008
+
+Source title: LLM06:2025 Excessive Agency
+
+Publisher: OWASP GenAI Security Project
+
+Source URL: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/?lang=us
+
+Access date: 2026-10-25
+
+Source type: Published AI application security guidance
+
+Source findings
+
+Claim 1 — [V] Source classification: OWASP identifies Excessive Agency as a risk in its 2025 Top 10 for Large Language Model Applications.
+
+Supporting reference: The official LLM06:2025 page identifies the risk and describes how an AI application can take damaging actions in response to unexpected, ambiguous, or manipulated model outputs.
+
+Claim 2 — [V] Source description: OWASP identifies excessive functionality, excessive permissions, and excessive autonomy as typical root causes.
+
+Supporting reference: The “Root Cause” discussion on the official LLM06:2025 page.
+
+Claim 3 — [V] Published recommendation: OWASP recommends limiting available extensions and their functionality, minimizing permissions, requiring human approval for high-impact actions, and enforcing authorization in downstream systems.
+
+Supporting reference: The “Prevention and Mitigation Strategies” section on the official LLM06:2025 page.
+
+Relevance to LT Hub™ AgentGuard
+
+[I] Research implication: Restricting an agent's available tools, permissions, and independent authority may reduce opportunities for unintended or unauthorized actions. The effectiveness of specific controls depends on implementation and testing.
+
+Proposed controls — not yet validated
+
+- AG-C001 [H]: Limit each agent to the tools required for its defined task.
+- AG-C002 [H]: Enforce least-privilege permissions in the systems that execute tool requests.
+- AG-C003 [H]: Require explicit human approval before defined high-impact actions.
+- AG-C004 [H]: Record tool requests, authorization decisions, approvals, and outcomes for later review.
+
+Proposed validation test
+
+In a controlled test environment, define a task that requires read-only access. Attempt an unauthorized write or delete action.
+
+Expected result: The downstream authorization control rejects the unauthorized action, and the attempt is recorded where audit logging is configured.
+
+Required test record: Test ID, environment, configuration, exact steps, observed result, logs or other evidence, date, and reviewer.
+
+Current test status: Not run. No test result is claimed.
+
+Limitations
+
+This source documents OWASP's security guidance. It does not establish that LT Hub™ AgentGuard is implemented, deployed, independently audited, or effective. The proposed controls remain hypotheses until their implementation and test results are documented.
+
+Verification status: Source reviewed; claims about the contents of the OWASP guidance are supported by the cited source. Control effectiveness remains unverified.
+
+Next action: Design a safe, reproducible least-privilege test and record its results before changing any proposed control to a validated status.
