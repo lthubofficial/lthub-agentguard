@@ -957,11 +957,13 @@ The reviewed prevention and mitigation section lists 15 strategies:
 
 For an AI agent, request limits, quotas, resource monitoring, timeouts, sandboxing, and restrictions on queued actions may help reduce resource-exhaustion risks. The effectiveness of each measure depends on the system architecture and implementation.
 
-[H] Hypothesis
+[H] Hypothesis — Proposed control effectiveness
 
-AG-C054–AG-C060 remain proposed controls. Their implementation and effectiveness have not yet been demonstrated by this research series.
+AG-C054–AG-C060 are proposed controls. Their implementation and effectiveness have not yet been demonstrated by this research series. The hypothesis that these controls will reduce relevant resource-exhaustion risks remains untested until supported by documented validation.
 
-Evidence limitation: Verification of the source passage does not establish that every recommendation has been independently evaluated, implemented, or tested by LT Hub™ AgentGuard. No claim of complete prevention is made.
+Evidence limitation
+
+Verification of the OWASP source passage establishes that the cited recommendations appear in the reviewed source. It does not establish that every recommendation has been independently evaluated or that any proposed control has been implemented, tested, or shown effective in LT Hub™ AgentGuard. No claim of complete prevention is made.
 
 24.3 Security Implications
 
