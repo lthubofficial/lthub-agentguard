@@ -505,3 +505,83 @@ The supplied OWASP passage documents security guidance and illustrative attack s
 Verification status: The supplied source passage supports the recorded descriptions of the guidance. AgentGuard implementation and control effectiveness remain unverified.
 
 Next action: Identify the intended receiving components in the proposed AgentGuard architecture, define their validation and authorization requirements, and conduct controlled tests before claiming effectiveness.
+
+## 19. Source Record — OWASP LLM03:2025 Supply Chain
+
+Record ID: E014
+Research Series: LT Hub™ AgentGuard AI Agent Security Risk Research Series
+Research Date: 2026-10-25
+Evidence Status: Source reviewed; proposed controls not yet tested
+Primary Source: OWASP GenAI Security Project — LLM03:2025 Supply Chain
+Source URL: https://genai.owasp.org/llmrisk/llm032025-supply-chain/
+
+19.1 Research Question
+
+How can compromised, outdated, unverified, or improperly licensed third-party components undermine the security and integrity of an AI application or agent?
+
+19.2 Source Findings
+
+[V] Verified — Source description
+
+The OWASP LLM03:2025 page identifies supply-chain vulnerabilities affecting the integrity of training data, models, deployment platforms, software dependencies, and other third-party components. It describes risks from tampering, poisoning, vulnerable packages, outdated models, weak model provenance, compromised fine-tuning adapters, and unclear supplier terms or privacy policies.
+
+[V] Verified — Mitigation guidance published by OWASP
+
+The source recommends measures including:
+
+- Vetting suppliers, data sources, terms and conditions, and privacy policies.
+- Scanning, managing, and patching vulnerable or outdated software components.
+- Evaluating third-party models through security testing and AI red teaming.
+- Maintaining an accurate Software Bill of Materials (SBOM) or evaluating relevant AI/ML bill-of-materials approaches.
+- Tracking software and dataset licences.
+- Verifying model origins and using integrity checks, hashes, and signing where appropriate.
+- Monitoring collaborative development and model-handling environments.
+- Testing supplied models and data for signs of tampering or poisoning.
+- Maintaining patching policies and using integrity protections for models deployed on devices.
+
+These are recommendations described by the source, not controls confirmed as implemented by LT Hub™.
+
+19.3 Security Implications
+
+[I] Inferred
+
+An AI agent may inherit risks from the models, libraries, plugins, datasets, adapters, and services on which it depends. A component that appears trustworthy may still have an uncertain origin or contain an unrecognised vulnerability.
+
+For agent security, checking the agent's permissions alone may therefore be insufficient. Its dependency inventory, supplier trust, update process, and component integrity also require consideration.
+
+19.4 Proposed AgentGuard Controls
+
+All controls below are [H] Hypotheses until implemented and tested.
+
+- AG-C025 — Dependency Inventory: Record relevant software packages, model providers, model versions, plugins, and external services.
+- AG-C026 — Source and Provenance Verification: Define checks for confirming the origin and identity of downloaded models and other security-sensitive components.
+- AG-C027 — Integrity Verification: Where supported, verify trusted hashes or digital signatures before accepting or deploying components.
+- AG-C028 — Vulnerability and Update Review: Establish a process for identifying outdated or vulnerable dependencies and recording patch decisions.
+- AG-C029 — Supplier and Licence Review: Record supplier trust considerations, applicable software or dataset licences, and relevant privacy terms.
+
+19.5 Proposed Validation Plan
+
+Test status: NOT RUN
+
+Use a controlled test environment and synthetic or non-sensitive sample data.
+
+1. Create an inventory containing a small set of sample dependencies and model artefacts.
+2. Introduce a deliberately incorrect expected hash for a harmless test file.
+3. Check whether the proposed integrity procedure detects the mismatch and prevents acceptance under the defined test rules.
+4. Include a sample dependency with an intentionally outdated version in the test inventory and check whether the review procedure flags it.
+5. Record the expected result, observed result, evidence, limitations, and any corrective action.
+
+Do not download or execute suspicious models, packages, or malware to conduct this test. A written procedure or successful demonstration with sample files does not establish the security of a production AI agent.
+
+19.6 Evidence and Limitations
+
+- The OWASP page supports the recorded descriptions of supply-chain risks and recommended mitigations.
+- [I] The implications for an individual AI agent depend on its actual architecture, dependencies, deployment environment, and access.
+- [H] AG-C025–AG-C029 are proposed controls; their effectiveness remains unverified.
+- No implementation, independent audit, or security test result is claimed by this record.
+
+19.7 Research Conclusion
+
+AI agent security includes the integrity and trustworthiness of the components on which the agent depends. LT Hub™ AgentGuard proposes tracking dependencies, checking component provenance and integrity, reviewing vulnerabilities and updates, and documenting supplier and licence risks. These controls must be implemented and validated before any effectiveness claim is made.
+
+Next action: Review the proposed controls, preserve the evidence labels, and commit this record to the root-level "EVIDENCE-REGISTER.md".
