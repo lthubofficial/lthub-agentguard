@@ -890,3 +890,121 @@ Monitoring does not itself prevent excessive resource consumption. Alerts may be
 Assess complementary controls, including request rate limits, usage and cost budgets, input/output limits, execution timeouts, agent loop protection, and downstream action limits.
 
 Conclusion: This record establishes a testing baseline only. It does not demonstrate that monitoring is implemented, that alerts work, or that resource exhaustion will be prevented.
+
+AG-C060 — Downstream Action Limits
+
+Test Record ID: AG-C060-TEST-001
+
+Control reference: AG-C060 — Downstream Action Limits
+
+Evidence classification: [H] Proposed control; implementation and effectiveness not yet established by this record.
+
+1. Implementation Status
+
+Status: Unknown — pending evidence review.
+
+Implementation evidence: Not yet recorded.
+
+Maximum permitted actions: Not established.
+
+Queue capacity and action-rate limits: Not established.
+
+Enforcement point: Not established.
+
+Coverage of parallel, retried, and delegated actions: Not established.
+
+Approval requirements for sensitive or irreversible actions: Not established.
+
+2. Test Status
+
+Status: Planned — test not yet evidenced as executed.
+
+Test objective: Determine whether limits on queued and executed actions are enforced across the defined workflow scope, including retries, parallel execution, and delegated tasks where applicable.
+
+Required test cases:
+
+- A workflow that executes fewer actions than the configured limit.
+- A workflow that reaches the configured action limit.
+- An attempt to exceed the action limit.
+- Queue-capacity and queue-overflow behaviour.
+- Parallel workflows attempting actions concurrently.
+- Retry scenarios that could create duplicate actions.
+- Delegated or nested workflows, where applicable.
+- Verification that blocked actions do not execute downstream.
+- Sensitive or irreversible actions that require independent human approval, where applicable.
+
+Use an authorised test environment with harmless, reversible test actions. Do not use real payments, modify production systems, or trigger third-party actions without permission.
+
+3. Expected Behaviour
+
+Actions within the documented limits follow the permitted workflow. Attempts to exceed a limit are blocked, rejected, paused, or handled through a documented recovery procedure.
+
+Queue limits and action limits should behave consistently under concurrent requests and retries within the tested scope. Where duplicate execution is possible, verify the documented safeguards and record any limitations.
+
+Sensitive or irreversible actions must follow their required approval process. Reaching an action limit must not silently bypass approval or trigger an alternative unbounded execution path.
+
+Relevant decisions, blocked actions, queue events, approvals, and execution outcomes should be recorded where supported.
+
+4. Acceptance Criteria
+
+Before testing, document:
+
+- The action types covered by the control.
+- Maximum action count and queue capacity.
+- Whether limits apply per request, workflow, user, agent, tenant, or across the system.
+- How limits behave during parallel execution, retries, and delegation.
+- Expected queue-overflow and limit-exceeded behaviour.
+- Duplicate-action prevention or idempotency requirements, where applicable.
+- Human approval requirements for sensitive or irreversible actions.
+- Required audit records and known architecture limitations.
+
+A test passes only when observed behaviour meets predefined acceptance criteria within the tested scope.
+
+5. Execution Results
+
+Execution date and time: Not recorded.
+
+Test environment: Not established.
+
+Configured action and queue limits: Not recorded.
+
+Observed action counts: Not recorded.
+
+Queue-limit behaviour: Not recorded.
+
+Concurrent, retry, and delegated-workflow results: Not recorded.
+
+Approval enforcement results: Not recorded.
+
+Test outcome: Not tested.
+
+6. Evidence References
+
+No implementation or execution evidence has yet been attached to this record.
+
+When available, retain verified references to:
+
+- Action-limit and queue configuration.
+- Relevant code or enforcement rules.
+- Test-case descriptions and execution timestamps.
+- Workflow and action identifiers.
+- Queue, rejection, approval, and execution logs.
+- Records of retries, concurrent operations, and delegated actions.
+- Evidence of blocked actions and duplicate-action checks.
+- Errors, bypasses, deviations, and corrective actions.
+
+Use actual evidence identifiers and verified paths or URLs. Redact credentials, tokens, personal data, and other sensitive information.
+
+7. Findings
+
+Current finding: [GAP] Implementation, configured limits, enforcement scope, approval behaviour, and test results have not yet been recorded in this test record.
+
+Follow-up: Identify where downstream actions are authorised and executed. Define measurable limits and establish how blocked actions, queue behaviour, concurrency, retries, and approval enforcement can be verified.
+
+8. Residual Risks
+
+Limits enforced at only one layer may be bypassed by other execution paths. Parallel workflows can create aggregate activity beyond a per-workflow limit. Retries may duplicate actions, and a parent workflow may stop while downstream operations continue.
+
+Action-count limits alone do not guarantee that each permitted action is safe or authorised. Independent approval, least-privilege access, idempotency safeguards, monitoring, and resource budgets may still be necessary.
+
+Conclusion: This record establishes a testing baseline only. It does not demonstrate that downstream action limits are implemented, that prohibited actions are blocked, or that sensitive actions always require the correct approval.
