@@ -781,3 +781,112 @@ A per-workflow iteration limit may not control aggregate consumption across para
 Assess complementary controls, including request rate limits, usage budgets, execution timeouts, resource monitoring, and downstream action limits.
 
 Conclusion: This record establishes a testing baseline only. It does not demonstrate that loop protection is implemented, that workflows terminate correctly, or that resource consumption is fully controlled.
+
+AG-C059 — Resource Monitoring
+
+Test Record ID: AG-C059-TEST-001
+
+Control reference: AG-C059 — Resource Monitoring
+
+Evidence classification: [H] Proposed control; implementation and effectiveness not yet established by this record.
+
+1. Implementation Status
+
+Status: Unknown — pending evidence review.
+
+Implementation evidence: Not yet recorded.
+
+Monitored resources and metrics: Not established.
+
+Alert thresholds and escalation rules: Not established.
+
+Monitoring coverage and collection frequency: Not established.
+
+Alert ownership and response procedure: Not established.
+
+2. Test Status
+
+Status: Planned — test not yet evidenced as executed.
+
+Test objective: Determine whether relevant resource usage is observable, whether defined thresholds trigger the expected alerts, and whether monitoring gaps or abnormal consumption can be identified.
+
+Required test cases:
+
+- Confirm that expected resource metrics are collected.
+- Check that normal activity is represented accurately.
+- In an authorised test environment, generate bounded resource usage below a documented alert threshold.
+- Test a controlled threshold crossing and verify the expected alert.
+- Verify alert delivery and the documented response procedure.
+- Check for missing, delayed, duplicated, or misleading monitoring events.
+- Examine whether relevant usage across concurrent workflows is represented, where applicable.
+- Check monitoring behaviour during collection failures or temporary monitoring outages.
+
+Use controlled test conditions. Avoid production disruption, unnecessary charges, and tests against third-party systems without permission.
+
+3. Expected Behaviour
+
+The documented monitoring system collects the selected metrics at the specified frequency and scope. When a predefined threshold or anomaly rule is triggered, the expected alert or recorded event is generated and routed according to the documented procedure.
+
+Monitoring gaps, collection failures, and alert-delivery failures should be identifiable where the system supports such detection. Evidence should distinguish a metric being collected from an alert being delivered and an operator taking action.
+
+4. Acceptance Criteria
+
+Before testing, document:
+
+- The resources and metrics being monitored.
+- The systems, workflows, and environments covered.
+- Collection frequency and known reporting delays.
+- Alert thresholds and decision rules.
+- Expected alert destination and response procedure.
+- How monitoring and alert-delivery failures are detected.
+- Evidence-retention and access-control requirements.
+- Known provider, infrastructure, and telemetry limitations.
+
+A test passes only when observed results meet predefined acceptance criteria within the tested scope.
+
+5. Execution Results
+
+Execution date and time: Not recorded.
+
+Test environment: Not established.
+
+Metrics and thresholds tested: Not recorded.
+
+Observed resource measurements: Not recorded.
+
+Alert generation and delivery results: Not recorded.
+
+Monitoring gaps or collection failures observed: Not recorded.
+
+Test outcome: Not tested.
+
+6. Evidence References
+
+No implementation or execution evidence has yet been attached to this record.
+
+When available, retain verified references to:
+
+- Monitoring configuration and metric definitions.
+- Alert thresholds and routing rules.
+- Timestamped resource measurements.
+- Test-case descriptions and execution timestamps.
+- Alert-generation and delivery records.
+- Relevant workflow or request identifiers.
+- Monitoring outage, missing-data, and recovery records.
+- Findings, deviations, and corrective actions.
+
+Use actual evidence identifiers and verified paths or URLs. Redact credentials, tokens, personal data, and other sensitive information.
+
+7. Findings
+
+Current finding: [GAP] Monitoring coverage, metric definitions, thresholds, alert delivery, and test results have not yet been established by this record.
+
+Follow-up: Identify the available monitoring mechanisms and define measurable criteria for detecting excessive resource consumption and verifying alert delivery.
+
+8. Residual Risks
+
+Monitoring does not itself prevent excessive resource consumption. Alerts may be delayed, incomplete, misconfigured, or ignored. Metrics may omit costs or activity occurring in external providers, parallel workflows, delegated agents, or downstream services.
+
+Assess complementary controls, including request rate limits, usage and cost budgets, input/output limits, execution timeouts, agent loop protection, and downstream action limits.
+
+Conclusion: This record establishes a testing baseline only. It does not demonstrate that monitoring is implemented, that alerts work, or that resource exhaustion will be prevented.
