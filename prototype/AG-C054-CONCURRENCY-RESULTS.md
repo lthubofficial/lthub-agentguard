@@ -653,3 +653,35 @@ Result: 5/5 defined checks passed in the user-reported file-backed simulation.
 Evidence status: File-backed retention across handler recreation was demonstrated in the tested run. Real process-restart recovery and production concurrency safety remain unverified.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
+
+AG-C054 Test 21 — Corrupted Replay Store and Fail-Closed Recovery
+
+Status: [V] All 6 defined checks passed in the reported Google Colab run.
+
+Objective: Evaluate whether a file-backed replay guard rejects requests when its replay store contains malformed JSON or an unexpected data structure.
+
+Test environment: Google Colab; Python; temporary local file; single-process test.
+
+Results
+
+Check| Result
+Invalid JSON store rejects the request| PASS
+Invalid JSON store is not silently overwritten| PASS
+Unexpected store structure rejects the request| PASS
+Existing request ID is rejected from a valid store| PASS
+New request ID is accepted with a valid store| PASS
+Valid store retains both request IDs| PASS
+
+Summary: 6 checks passed; 0 checks failed.
+
+[V] Observed: The supplied execution output shows that malformed JSON and an unexpected JSON structure were rejected. The malformed JSON content remained unchanged. With a valid store, a previously recorded request ID was rejected, while a new request ID was accepted and recorded.
+
+[I] Interpretation: Fail-closed handling can reduce the risk of accepting replayed requests when the replay store is unreadable or structurally invalid. The tested implementation returns a rejection in the covered error cases.
+
+[H] Remaining hypothesis: Comparable behaviour will hold under real service failures, concurrent writers, process crashes, and multi-server deployment. These conditions were not tested here.
+
+Limitations: This was a controlled local test using a temporary file and one process. It did not test production deployment, simultaneous file access by multiple processes, atomic writes, actual operating-system restarts, or recovery from physical storage failure. The result does not establish production readiness.
+
+Evidence record: Google Colab execution output supplied for AG-C054 Test 21. Preserve the notebook and output as supporting evidence.
+
+Next step: Test 22 — interrupted or incomplete file writes and safe rejection when the replay store becomes unreadable.
