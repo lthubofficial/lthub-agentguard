@@ -718,3 +718,35 @@ Limitations: The incomplete write was simulated by deliberately truncating a tem
 Evidence record: Google Colab output supplied for AG-C054 Test 22. Preserve the notebook and output as supporting evidence.
 
 Next step: AG-C054 Test 23 — Replay-Store Permission and Read/Write Failure Handling.
+
+AG-C054 Test 23 — Replay-Store Read/Write Failure Handling
+
+Status: [V] All 6 defined checks passed in the reported Google Colab run.
+
+Objective: Evaluate whether the file-backed replay guard rejects requests when the replay store is missing, cannot be opened as a normal file, or encounters a simulated write failure.
+
+Test environment: Google Colab; Python; temporary local file and directory; single-process test.
+
+Results
+
+Check| Result
+Missing replay-store file causes rejection| PASS
+Valid store accepts and records a new request| PASS
+Recorded request ID is rejected| PASS
+Store path that is a directory causes rejection| PASS
+Simulated write failure rejects the new request| PASS
+Failed write does not add the new request ID| PASS
+
+Summary: 6 checks passed; 0 checks failed.
+
+[V] Observed: The supplied output shows rejection when the replay-store file was missing or its path referred to a directory. Normal duplicate detection and new-request recording worked in the valid-store scenario. A deliberately simulated write failure also resulted in rejection, with the stored request list unchanged.
+
+[I] Interpretation: Rejecting requests when the replay store cannot be read, or when the simulated write operation fails, is a useful fail-closed design property in the tested scenarios.
+
+[H] Remaining hypothesis: Equivalent protection will hold under real operating-system permission restrictions, actual storage failures, interrupted writes, concurrent access, and production deployment. These conditions remain unverified.
+
+Limitations: The missing-file and directory-path cases used real temporary filesystem conditions. The write failure was simulated by raising an "OSError"; it was not an actual operating-system write failure. This test did not establish atomicity, multi-process safety, or production readiness.
+
+Evidence record: Google Colab execution output supplied for AG-C054 Test 23. Preserve the notebook and output as supporting evidence.
+
+Next step: AG-C054 Test 24 — Atomic Replay-Store Updates and Recovery from Interrupted Writes.
