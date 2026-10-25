@@ -280,3 +280,71 @@ The source supports the relevance of resource limits, rate limiting, timeouts, l
 Source review date: Enter the actual date the source was reviewed.
 
 Record maintenance: Update this document only when supported by new evidence, a documented review, or a recorded change.
+
+AG-C054 — Request Rate Limits
+
+Test Record ID: AG-C054-TEST-001
+
+Control reference: AG-C054 — Request Rate Limits
+
+Evidence classification: [H] Proposed control; implementation and effectiveness not yet established by this record.
+
+1. Implementation Status
+
+Status: Unknown — pending evidence review.
+
+Implementation evidence: Not yet recorded.
+
+Enforcement point: Not yet established.
+
+Configured request-rate threshold: Not yet established.
+
+Scope of enforcement: Not yet established.
+
+2. Test Status
+
+Status: Planned — test not yet evidenced as executed.
+
+Test objective: Determine whether requests exceeding a documented rate limit are handled according to the configured policy.
+
+Required test cases:
+
+- Requests below the configured limit.
+- Requests at the configured limit.
+- Requests above the configured limit.
+- Concurrent requests, where applicable.
+- Retry behaviour and potential limit bypasses, where applicable.
+
+Expected behaviour: Requests within the permitted limit are handled according to policy. Requests exceeding the limit are restricted or handled according to documented enforcement rules. Relevant events are recorded.
+
+Acceptance criteria: Define the exact expected behaviour and measurable limits before executing the tests.
+
+3. Execution Results
+
+Execution date and time: Not recorded.
+
+Test environment: Not established.
+
+Actual measurements: Not recorded.
+
+Observed behaviour: Not recorded.
+
+Test outcome: Not tested.
+
+4. Evidence References
+
+No implementation or execution evidence has yet been attached to this record.
+
+Add evidence identifiers and verified file paths or URLs when actual configuration, logs, or test results become available.
+
+5. Findings
+
+Current finding: [GAP] Implementation and test evidence have not yet been recorded in this test record.
+
+Follow-up: Identify the system or component that would enforce request-rate limits and determine whether it is implemented and accessible for authorised testing.
+
+6. Residual Risks
+
+Until implementation and testing are evidenced, it remains unknown whether excessive request rates are restricted. Concurrent requests, retries, distributed workflows, and differences between application-level and provider-level enforcement may require separate assessment.
+
+Conclusion: This record establishes a testing baseline only. It does not demonstrate implementation, successful enforcement, or prevention of resource exhaustion.
