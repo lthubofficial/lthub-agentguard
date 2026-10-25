@@ -782,3 +782,34 @@ Limitations: This was a controlled, single-process test. It did not simulate an 
 Evidence record: Google Colab execution output supplied for AG-C054 Test 24. Preserve the notebook and output as supporting evidence.
 
 Next step: AG-C054 Test 25 — Simulated Failure During Temporary-File Update.
+
+AG-C054 Test 25 — Simulated Failure During Temporary-File Update
+
+Status: [V] All 5 defined checks passed in the reported Google Colab run.
+
+Objective: Evaluate whether a simulated failure before replacing the original replay-store file leaves the original records unchanged and cleans up the temporary update file.
+
+Test environment: Google Colab; Python; temporary local directory and files; single-process test.
+
+Results
+
+Check| Result
+Initial replay store contains expected records| PASS
+Simulated pre-replacement failure rejects the update| PASS
+Original replay-store content remains unchanged| PASS
+Temporary update file is cleaned up| PASS
+Failed request ID is absent from the original store| PASS
+
+Summary: 5 checks passed; 0 checks failed.
+
+[V] Observed: The supplied output shows that the update was rejected after a deliberately raised "OSError", the original store content remained unchanged, the temporary file was removed, and the attempted request ID was absent from the original store.
+
+[I] Interpretation: Preparing an update in a separate file before replacing the original can help preserve the original state when a failure occurs before replacement. The tested cleanup path also removed the temporary file.
+
+[H] Remaining hypothesis: The same properties will hold during real process crashes, power loss, storage faults, and concurrent updates. These conditions were not tested.
+
+Limitations: The failure was deliberately simulated in code before "os.replace()"; it was not an actual operating-system failure or process interruption. The test did not establish crash durability, multi-process safety, or production readiness.
+
+Evidence record: Google Colab execution output supplied for AG-C054 Test 25. Preserve the notebook and output as supporting evidence.
+
+Next step: AG-C054 Test 26 — Failure During Replacement and Recovery of the Original Store.
