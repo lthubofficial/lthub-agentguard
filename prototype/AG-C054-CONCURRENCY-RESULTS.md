@@ -520,3 +520,49 @@ print()
 print("Limitation: recreating the object simulates lost in-memory state.")
 print("No actual operating-system process restart was performed.")
 print("No persistent or shared replay store was tested.")
+
+Test 18 — Replay-Guard State Reset and Restart
+
+Test ID: AG-C054-T18
+Control area: Replay detection and loss of in-memory state
+Environment: Programiz; local Python simulation
+Status: User-reported result — all defined checks passed; design limitation demonstrated
+
+Objective
+
+Examine whether duplicate-request detection persists when the in-memory replay guard is recreated.
+
+[V] Observed test output
+
+The user-reported Programiz output recorded 5 passed, 0 failed.
+
+1. First submission was accepted.
+2. Duplicate was rejected before the reset.
+3. Previously used request ID was accepted after the in-memory state was reset.
+4. Duplicate was rejected again after the ID was recorded in the new instance.
+5. A fresh instance had no previous replay history.
+
+[I] Interpretation
+
+The simulation demonstrates that replay detection depends on the current object's in-memory state. Recreating the object clears the processed-request history, allowing a previously used request ID to be accepted again.
+
+This is an expected limitation of the tested implementation, not a failure of the test procedure.
+
+[H] Potential mitigation to investigate
+
+A persistent, atomic replay store could preserve request-ID records across application restarts. Its design would need to account for expiration, concurrency, storage failures, and coordination across application instances. This mitigation has not been implemented or tested here.
+
+Limitations
+
+- Recreating a Python object simulated loss of state; no operating-system process restart occurred.
+- No persistent database or shared replay store was tested.
+- No real network requests or production environment were involved.
+- The test does not establish how a distributed deployment would behave.
+
+Conclusion
+
+Result: 5/5 defined checks passed in the user-reported local simulation.
+
+Security finding: The tested in-memory replay guard does not retain duplicate-request history when its object is recreated. Restart-resistant replay protection remains unimplemented and unverified.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
