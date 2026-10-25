@@ -191,3 +191,37 @@ The experiment used a separate test script reproducing the limiter logic. It did
 
 Conclusion
 All eight defined checks passed in the reported run. Client isolation behaved as expected, while the new-instance test demonstrated that request history is not persisted across instances.
+
+Test 12 — Client Identity and Spoofing Risk
+
+Status: Completed; result reported by developer.
+
+Test configuration
+
+- Configured limit: 2 requests per identifier
+- Time window: 30 seconds
+- Identifiers tested: "client-A" and "client-B"
+- Environment: local Programiz simulation
+- External systems accessed: none
+
+Observed results
+
+1. "client-A" received two allowed requests; its third request was blocked.
+2. "client-B" received its own two allowed requests; its third request was blocked.
+3. All six defined checks passed.
+
+Evidence classification
+
+- [V] Developer-reported output records six passing checks.
+- [V] The test script did not authenticate the person or system supplying an identifier.
+- [I] The implementation maintains separate request counters for different supplied identifier strings.
+- [H] A real application that allows callers to choose arbitrary identifiers without adequate controls may be vulnerable to per-identifier limit evasion.
+
+Security implication
+A client identifier is not proof of identity. A production design should derive rate-limit keys from appropriately authenticated identities or trusted server-controlled attributes, with additional abuse controls where necessary.
+
+Limitations
+This was a local simulation using reproduced limiter logic. It did not test an actual deployed service, bypass authentication, or demonstrate exploitation of a real account or system.
+
+Conclusion
+Test 12 confirmed the identifier-based behaviour of the simulated limiter and identified a potential design weakness requiring further threat modelling and testing.
