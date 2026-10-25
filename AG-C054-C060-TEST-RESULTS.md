@@ -455,3 +455,110 @@ Even where alerts work, usage may continue to increase before a human or automat
 Usage budgets should be assessed alongside request rate limits, input/output limits, execution timeouts, agent loop protection, resource monitoring, and downstream action limits.
 
 Conclusion: This record establishes a testing baseline only. It does not demonstrate that a budget is configured, an alert works, a hard spending cap exists, or financial losses are prevented.
+
+AG-C056 — Input and Output Limits
+
+Test Record ID: AG-C056-TEST-001
+
+Control reference: AG-C056 — Input and Output Limits
+
+Evidence classification: [H] Proposed control; implementation and effectiveness not yet established by this record.
+
+1. Implementation Status
+
+Status: Unknown — pending evidence review.
+
+Implementation evidence: Not yet recorded.
+
+Input-size limit and units: Not yet established.
+
+Output-size limit and units: Not yet established.
+
+Processing-workload limits: Not yet established.
+
+Enforcement point and scope: Not yet established.
+
+Behaviour when a limit is reached: Not yet established.
+
+2. Test Status
+
+Status: Planned — test not yet evidenced as executed.
+
+Test objective: Determine whether the intended system enforces documented input, output, and processing-workload limits and handles limit breaches according to policy.
+
+Required test cases:
+
+- Input below, at, and above the configured limit.
+- Output within and beyond the configured limit, where safely testable.
+- Processing workloads below and above documented bounds.
+- Oversized or malformed inputs, where relevant to the control.
+- Concurrent requests and retries, where applicable.
+- Consistency of enforcement across relevant entry points or workflows.
+- Appropriate logging or reporting when a limit is reached.
+
+Define the test boundaries before execution. Use bounded test data and an authorised environment to avoid unnecessary resource use or provider charges.
+
+3. Expected Behaviour
+
+Inputs and outputs within configured bounds are handled according to the documented policy. Requests exceeding a limit are rejected, truncated, constrained, or otherwise handled according to the specified behaviour. Processing constraints are enforced where supported. Relevant outcomes and errors are recorded.
+
+The observed behaviour must match the actual configured policy; do not assume that all providers or components support identical limits.
+
+4. Acceptance Criteria
+
+Before testing, document:
+
+- Each applicable limit and its units.
+- The component that enforces the limit.
+- Whether the limit is applied before or after processing begins.
+- Expected behaviour at and beyond the limit.
+- Applicable handling for concurrent requests and retries.
+- Required logs or events.
+- Known provider or architecture limitations.
+
+A test passes only when the observed result meets its predefined criteria within the documented scope.
+
+5. Execution Results
+
+Execution date and time: Not recorded.
+
+Test environment: Not established.
+
+Configuration and thresholds: Not recorded.
+
+Actual test inputs and outputs: Not recorded.
+
+Observed processing behaviour: Not recorded.
+
+Errors, bypasses, or unsupported limits: Not recorded.
+
+Test outcome: Not tested.
+
+6. Evidence References
+
+No implementation or execution evidence has yet been attached to this record.
+
+When available, retain verified references to:
+
+- Configuration or code showing the enforced limits.
+- Test-case descriptions and bounded test data.
+- Actual input and output measurements.
+- Processing or usage records, where available.
+- Relevant logs, errors, and limit-breach responses.
+- Evidence of testing across applicable entry points or workflows.
+
+Use actual evidence identifiers and verified paths or URLs. Redact credentials, personal information, and other sensitive data.
+
+7. Findings
+
+Current finding: [GAP] Implementation, configured thresholds, enforcement behaviour, and test results have not yet been recorded in this test record.
+
+Follow-up: Identify the input, output, and workload limits supported by the intended system and determine how their enforcement can be verified.
+
+8. Residual Risks
+
+Limits may not cover every processing stage or entry point. Tokenization overhead, concurrent workloads, retries, delegated workflows, provider-side processing, and delayed rejection may create additional resource consumption. A limit on generated output does not necessarily limit the resources consumed before that output is produced.
+
+Assess complementary controls such as rate limits, usage budgets, execution timeouts, resource monitoring, loop protection, and downstream action limits.
+
+Conclusion: This record establishes a testing baseline only. It does not demonstrate that any limit is implemented, successfully enforced, or sufficient to prevent resource exhaustion.
