@@ -265,3 +265,45 @@ The trusted session mapping was hard-coded. No real login, cryptographic token v
 
 Conclusion
 All six defined checks passed in the reported simulation. The result supports the defensive design principle that rate-limit accounting should rely on a securely established identity rather than a caller-selected label.
+
+Test 14 — Fail-Closed Behaviour
+
+Test ID: AG-C054-T14
+Control area: Identity-validation failure handling
+Environment: Programiz; local Python simulation
+Status: User-reported result — all defined checks passed
+
+Objective
+
+Assess whether the simulated request-handling logic denies requests when identity validation is unavailable or the supplied session is invalid, instead of granting access by default.
+
+[V] Observed test output
+
+The user-reported Programiz output recorded 7 passed, 0 failed across these checks:
+
+1. Valid session accepted when the simulated identity service is available.
+2. Request denied when the simulated identity service is unavailable.
+3. Unknown session denied.
+4. Empty session denied.
+5. Missing session denied.
+6. Valid session can retry after simulated service recovery.
+7. Request limit remains enforced after the retry.
+
+[I] Interpretation
+
+The tested simulation behaved according to its defined fail-closed rules. The service-unavailable check returned a denial, and the simulated request limit remained effective in the tested sequence.
+
+Limitations
+
+- Service unavailability was represented by a Boolean flag, not a real identity-service failure.
+- Session identities were held in a hard-coded local mapping.
+- The test did not exercise real authentication, network timeouts, process failures, distributed deployments, or production infrastructure.
+- Results apply to the tested code and scenarios only; they do not establish production security.
+
+Conclusion
+
+Result: 7/7 defined checks passed in the user-reported local simulation.
+
+Further testing is required before drawing conclusions about a deployed system.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
