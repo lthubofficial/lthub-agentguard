@@ -122,3 +122,37 @@ The test reproduced the implementation's logic in a separate script. It did not 
 
 Conclusion
 All ten defined input-validation and boundary checks passed in the reported run. Further testing is required before making broader security claims.
+
+Test 10 — Time-Window Boundary Testing
+
+Status: Completed; result reported by developer.
+
+Test configuration
+
+- Maximum requests: 2
+- Time window: 1.5 seconds
+- Initial requests: 3
+- First wait: 0.8 seconds
+- Additional wait: 0.9 seconds
+
+Observed results
+
+1. Request 1: ALLOWED.
+2. Request 2: ALLOWED.
+3. Request 3 immediately: BLOCKED.
+4. Request before the window expired: BLOCKED.
+5. Request after the original window expired: ALLOWED.
+
+Result: 5 checks passed; 0 failed.
+
+Evidence classification
+
+- [V] Developer-reported Programiz output records all five checks passing.
+- [I] The observations are consistent with the intended rolling-window expiration behaviour.
+- [H] Other timing conditions and deployment environments may produce additional edge cases.
+
+Limitations
+This was a functional test using a separate script reproducing the limiter's logic. It was not an independent audit of the saved repository file and does not establish production readiness or comprehensive security.
+
+Conclusion
+All five defined time-window checks passed in the reported run.
