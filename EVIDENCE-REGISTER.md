@@ -1074,7 +1074,37 @@ Limitations and residual risks: Monitoring is a detection and visibility control
 
 Evidence limitation: This document is a proposed validation plan, not a test result. No implementation, successful detection, cost reduction, or prevention capability is claimed until supported by recorded evidence.
 
-- AG-C060 — Downstream Action Limits: Restrict the number and frequency of tool calls, queued jobs, or external operations within a workflow.
+- AG-C060 — Downstream Action Limits: Validation Plan
+
+Status: Proposed; not yet tested.
+
+Evidence classification: [H] Hypothesis until implemented and tested.
+
+Risk addressed: An AI agent initiating excessive, repeated, unauthorised, or cascading downstream operations. Examples include excessive tool calls, queued jobs, external API requests, duplicate actions, and operations delegated to other agents or services.
+
+Test method: In an authorised test environment, define explicit limits for the relevant downstream actions. Where supported by the architecture, configure limits per workflow, agent session, user, tool, or other appropriate scope. Document the enforcement point and the expected response when a limit is reached.
+
+Test the following scenarios:
+
+1. Normal operation: A workflow performs an expected number of permitted downstream actions.
+2. Action-limit boundary: A workflow operates below, at, and above its configured action limit.
+3. Repeated actions: A controlled test attempts to repeat the same action beyond the permitted frequency or count.
+4. Queued operations: A test workflow attempts to exceed the configured queue-depth or queued-job limit, where applicable.
+5. Parallel and delegated execution: Multiple concurrent tasks or delegated workflows attempt to exceed the intended aggregate limit, where the architecture supports these scenarios.
+6. Failure and retry behaviour: A downstream operation fails and triggers retries, allowing verification that retries cannot silently bypass applicable limits.
+7. High-impact actions: Where applicable, verify that payment, deletion, external communication, or other sensitive operations remain subject to their separate authorisation and human-approval requirements.
+
+Use bounded test workloads and non-production targets. Do not test against third-party services without permission or deliberately generate harmful traffic or unnecessary charges.
+
+Expected result: Permitted workflows complete within their defined limits. Excess downstream actions are rejected, paused, queued within the allowed bounds, or terminated according to documented policy. Limit breaches produce an auditable event. Retries, parallel execution, and delegated workflows do not silently bypass the applicable limits. Sensitive or irreversible actions remain subject to their independent authorisation requirements.
+
+Evidence to retain: Configuration and limit values; enforcement location; workflow and session identifiers; action types and counts; queue-depth observations where relevant; test timestamps; retry and concurrency records; downstream responses; limit-breach logs; authorisation outcomes; errors; and any bypasses or unsupported capabilities. Redact credentials, access tokens, personal information, and other sensitive data.
+
+Pass criteria: Each predefined test scenario meets its documented acceptance criteria. Action counts and queue sizes remain within the intended enforced bounds, including tested retry, concurrent, and delegated scenarios. Attempts to exceed limits are handled according to policy and recorded. Any bypass, duplicate high-impact action, unexplained continuation, or missing audit event is documented as a finding.
+
+Limitations and residual risks: Action-count limits do not independently guarantee that every operation is safe or authorised. One permitted action may still have a serious impact. Aggregate limits may be necessary across sessions, users, agents, and downstream services. Idempotency, access controls, transaction-specific approval, rate limits, resource budgets, and independent execution checks may be required as complementary controls.
+
+Evidence limitation: This is a proposed validation plan, not a test result. No implementation, successful enforcement, or complete prevention is claimed until supported by retained test evidence.
 
 Control enforcement and validation requirements
 
