@@ -562,3 +562,114 @@ Limits may not cover every processing stage or entry point. Tokenization overhea
 Assess complementary controls such as rate limits, usage budgets, execution timeouts, resource monitoring, loop protection, and downstream action limits.
 
 Conclusion: This record establishes a testing baseline only. It does not demonstrate that any limit is implemented, successfully enforced, or sufficient to prevent resource exhaustion.
+
+AG-C057 — Execution Timeouts
+
+Test Record ID: AG-C057-TEST-001
+
+Control reference: AG-C057 — Execution Timeouts
+
+Evidence classification: [H] Proposed control; implementation and effectiveness not yet established by this record.
+
+1. Implementation Status
+
+Status: Unknown — pending evidence review.
+
+Implementation evidence: Not yet recorded.
+
+Configured timeout duration and units: Not yet established.
+
+Enforcement point: Not yet established.
+
+Cancellation mechanism: Not yet established.
+
+Cleanup and downstream-task behaviour: Not yet established.
+
+2. Test Status
+
+Status: Planned — test not yet evidenced as executed.
+
+Test objective: Determine whether operations exceeding a documented execution-time limit are terminated, cancelled, or otherwise handled according to the configured policy.
+
+Required test cases:
+
+- An operation that completes within the timeout.
+- An operation that approaches the timeout boundary.
+- A controlled operation that exceeds the configured timeout.
+- Cancellation and cleanup behaviour, where supported.
+- The status of dependent or downstream tasks after a timeout.
+- Retry behaviour following a timeout.
+- External provider operations that may continue after the local client stops waiting, where applicable.
+
+Use an authorised test environment and bounded operations. Avoid production disruption, unnecessary charges, and tests against third-party services without permission.
+
+3. Expected Behaviour
+
+Operations completing within the permitted duration follow the normal workflow. Operations exceeding the configured timeout trigger the documented timeout response.
+
+Where cancellation is supported, verify whether it reaches the underlying operation rather than merely ending the local wait. Cleanup, downstream task handling, and retry behaviour should follow documented policy. Relevant timeout events and outcomes should be recorded.
+
+A client-side timeout must not automatically be treated as proof that the underlying operation stopped.
+
+4. Acceptance Criteria
+
+Before testing, document:
+
+- The timeout threshold and units.
+- The operation or workflow covered.
+- The enforcement point.
+- The expected response when the timeout is reached.
+- Whether cancellation propagates to the underlying operation.
+- Required cleanup and downstream-task behaviour.
+- Retry policy and required audit events.
+- Known provider or architecture limitations.
+
+A test passes only when the observed behaviour meets its predefined criteria within the tested scope.
+
+5. Execution Results
+
+Execution date and time: Not recorded.
+
+Test environment: Not established.
+
+Configured timeout: Not recorded.
+
+Actual execution durations: Not recorded.
+
+Observed termination or cancellation behaviour: Not recorded.
+
+Cleanup and downstream-task results: Not recorded.
+
+Evidence of underlying operations stopping: Not recorded.
+
+Test outcome: Not tested.
+
+6. Evidence References
+
+No implementation or execution evidence has yet been attached to this record.
+
+When available, retain verified references to:
+
+- Timeout configuration or code.
+- Test-case descriptions and execution timestamps.
+- Observed operation durations.
+- Timeout, cancellation, and cleanup logs.
+- Downstream-task status and retry records.
+- Provider responses or other evidence relevant to underlying operation termination.
+- Errors, incomplete cancellations, and other deviations.
+
+Use actual evidence identifiers and verified paths or URLs. Redact credentials, tokens, personal data, and other sensitive information.
+
+7. Findings
+
+Current finding: [GAP] Implementation, timeout configuration, cancellation behaviour, and test results have not yet been recorded in this test record.
+
+Follow-up: Identify where timeouts are enforced and determine how termination, cancellation, cleanup, and downstream behaviour can be verified.
+
+8. Residual Risks
+
+A timeout may stop a client from waiting without stopping the underlying operation. Cleanup may fail, downstream tasks may continue, and automatic retries may duplicate work or increase resource consumption. Distributed workflows and external services may require independent cancellation, idempotency, and resource controls.
+
+Assess complementary controls such as request rate limits, usage budgets, input/output limits, agent loop protection, resource monitoring, and downstream action limits.
+
+Conclusion: This record establishes a testing baseline only. It does not demonstrate that timeouts are implemented, that cancellation succeeds, or that all underlying resource consumption stops at the timeout boundary.
