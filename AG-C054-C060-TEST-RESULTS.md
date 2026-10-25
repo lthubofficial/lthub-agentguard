@@ -348,3 +348,110 @@ Follow-up: Identify the system or component that would enforce request-rate limi
 Until implementation and testing are evidenced, it remains unknown whether excessive request rates are restricted. Concurrent requests, retries, distributed workflows, and differences between application-level and provider-level enforcement may require separate assessment.
 
 Conclusion: This record establishes a testing baseline only. It does not demonstrate implementation, successful enforcement, or prevention of resource exhaustion.
+
+AG-C055 — Usage and Cost Budgets
+
+Test Record ID: AG-C055-TEST-001
+
+Control reference: AG-C055 — Usage and Cost Budgets
+
+Evidence classification: [H] Proposed control; implementation and effectiveness not yet established by this record.
+
+1. Implementation Status
+
+Status: Unknown — pending evidence review.
+
+Implementation evidence: Not yet recorded.
+
+Budget or usage ceiling: Not yet established.
+
+Measurement source and units: Not yet established.
+
+Budget period: Not yet established.
+
+Enforcement mechanism: Not yet established.
+
+Alerting mechanism: Not yet established.
+
+2. Test Status
+
+Status: Planned — test not yet evidenced as executed.
+
+Test objective: Determine whether usage is measured accurately against a documented budget or ceiling, and whether configured alerts or enforcement mechanisms behave as expected.
+
+Required test cases:
+
+- Usage below the configured alert threshold.
+- Usage reaching or crossing the alert threshold.
+- Usage approaching and exceeding the configured ceiling, where safe and supported.
+- Alert generation and delivery.
+- Enforcement behaviour, tested separately from alerting, if a hard limit is supported.
+- Relevant concurrent requests or workflows, where applicable.
+- Provider-side limits and reporting delays, where applicable.
+
+Use a sandbox, simulated usage records, or another authorised test mechanism where possible. Do not deliberately incur charges or assume a provider offers a hard spending cap.
+
+3. Expected Behaviour
+
+Usage is measured using documented units and a known reporting source. Configured thresholds trigger the expected alerts. If an enforceable ceiling is supported and configured, exceeding it results in the documented restriction or response.
+
+Alert delivery, budget enforcement, and provider billing limits must be evaluated separately. An alert alone does not prove that additional usage or charges have been prevented.
+
+4. Acceptance Criteria
+
+Before testing, document:
+
+- The budget or usage ceiling and its units.
+- The applicable user, agent, workflow, service, or account scope.
+- The budget period and reset behaviour.
+- The expected threshold and alert timing.
+- Whether a hard limit is technically supported.
+- The expected response when a limit is reached.
+- Acceptable measurement and reporting delays.
+
+A test can pass only against these predefined criteria and the scope actually examined.
+
+5. Execution Results
+
+Execution date and time: Not recorded.
+
+Test environment: Not established.
+
+Configured budget and thresholds: Not recorded.
+
+Actual usage measurements: Not recorded.
+
+Alert generation and delivery: Not recorded.
+
+Observed enforcement behaviour: Not recorded.
+
+Test outcome: Not tested.
+
+6. Evidence References
+
+No implementation or execution evidence has yet been attached to this record.
+
+When available, retain verified references to:
+
+- Budget and threshold configuration.
+- Usage records and their units.
+- Alert generation and delivery logs.
+- Enforcement or restriction results.
+- Provider documentation describing applicable limitations.
+- Test inputs, timestamps, errors, and observed outcomes.
+
+Use actual evidence identifiers and verified paths or URLs. Do not invent measurements, alerts, configurations, or results.
+
+7. Findings
+
+Current finding: [GAP] Implementation, measurement, alerting, and enforcement evidence have not yet been recorded in this test record.
+
+Follow-up: Identify the relevant usage-measurement source and determine which budget, alert, and enforcement capabilities are available in the intended system.
+
+8. Residual Risks
+
+Even where alerts work, usage may continue to increase before a human or automated response occurs. Reporting delays, estimated costs, concurrent operations, provider billing behaviour, and unsupported hard caps may leave residual financial exposure.
+
+Usage budgets should be assessed alongside request rate limits, input/output limits, execution timeouts, agent loop protection, resource monitoring, and downstream action limits.
+
+Conclusion: This record establishes a testing baseline only. It does not demonstrate that a budget is configured, an alert works, a hard spending cap exists, or financial losses are prevented.
