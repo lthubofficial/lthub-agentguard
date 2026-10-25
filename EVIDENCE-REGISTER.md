@@ -1020,7 +1020,22 @@ Pass criteria: Each tested limit behaves according to its predefined acceptance 
 
 Limitations: Input and output limits alone do not establish protection against all forms of resource exhaustion. Tokenization overhead, concurrent requests, retries, provider-side processing, and other workload factors may require separate controls. No implementation or successful test is claimed until supported by recorded evidence.
 
-- AG-C057 — Execution Timeouts: Define maximum execution durations and controlled termination behaviour for stalled workflows.
+- AG-C057 — Execution Timeouts: Validation Plan
+
+Status: Proposed; not yet tested.
+
+Risk addressed: Excessive resource consumption caused by stalled, slow, or long-running model calls and agent workflows.
+
+Test method: In an authorised test environment, configure documented execution timeouts for applicable model calls and workflows. Test operations that complete within the permitted duration, operations that approach the timeout, and controlled operations that exceed it. Where supported, examine cancellation propagation, cleanup, and behaviour of dependent tasks after termination. Avoid unnecessary provider charges or disruptive workloads.
+
+Expected result: Operations that complete within the permitted duration finish normally. Operations that exceed the configured timeout are terminated or cancelled according to the documented policy. Relevant resources are released where supported, and dependent tasks do not continue unintended work after termination. Timeout events and resulting errors are recorded.
+
+Evidence to retain: Timeout configuration and units; test timestamps; operation duration; observed completion or termination behaviour; cancellation and cleanup logs; downstream task status; resource-use records where available; and any errors or unsupported capabilities.
+
+Pass criteria: Each test scenario behaves according to predefined acceptance criteria. An expired timeout does not merely report an error while the underlying operation continues consuming resources unnoticed. Any cancellation failure, incomplete cleanup, or continuing downstream activity is documented as a finding.
+
+Limitations: A timeout does not automatically stop work already accepted by an external provider or guarantee cancellation of every downstream operation. Cancellation behaviour and residual resource consumption must be assessed separately. No implementation or successful test is claimed until supported by recorded evidence.
+
 - AG-C058 — Agent Loop Protection: Set maximum iteration counts and retry limits, with explicit termination conditions.
 - AG-C059 — Resource Monitoring: Record resource consumption and flag unusual increases for review.
 - AG-C060 — Downstream Action Limits: Restrict the number and frequency of tool calls, queued jobs, or external operations within a workflow.
