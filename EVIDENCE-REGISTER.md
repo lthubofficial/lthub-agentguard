@@ -585,3 +585,91 @@ Do not download or execute suspicious models, packages, or malware to conduct th
 AI agent security includes the integrity and trustworthiness of the components on which the agent depends. LT Hub™ AgentGuard proposes tracking dependencies, checking component provenance and integrity, reviewing vulnerabilities and updates, and documenting supplier and licence risks. These controls must be implemented and validated before any effectiveness claim is made.
 
 Next action: Review the proposed controls, preserve the evidence labels, and commit this record to the root-level "EVIDENCE-REGISTER.md".
+
+## 20. Source Record — OWASP LLM04:2025 Data and Model Poisoning
+
+Record ID: E015
+Research Series: LT Hub™ AgentGuard AI Agent Security Risk Research Series
+Research Date: 2026-10-25
+Evidence Status: Official source reviewed; proposed controls not yet tested
+Primary Source: OWASP GenAI Security Project
+Source URL: https://genai.owasp.org/llmrisk/llm042025-data-and-model-poisoning/
+
+20.1 Research Question
+
+How can manipulated datasets, compromised model artefacts, or hidden backdoors undermine the reliability and security of AI agents?
+
+20.2 Source Findings
+
+[V] Verified — Source description
+
+OWASP describes data poisoning as the manipulation of pre-training, fine-tuning, or embedding data to introduce vulnerabilities, backdoors, or biases. Possible consequences include degraded performance, harmful or biased outputs, and exploitation of downstream systems.
+
+The source distinguishes several potential exposure points across the model lifecycle, including training datasets, fine-tuning datasets, embedding data, and external data sources.
+
+[V] Verified — Source-described risks and examples
+
+The source identifies risks including:
+
+- Unverified or malicious training data influencing model outputs.
+- Biased, toxic, misleading, or inaccurate data.
+- Manipulation of data used during model development.
+- Backdoors that activate only when a particular trigger is encountered.
+- Potentially malicious model files that may execute code when loaded through unsafe serialization mechanisms.
+- Inadequate restrictions on which data sources a system can access.
+
+[V] Verified — Source mitigation guidance
+
+OWASP recommends measures that include tracking data origins and transformations, vetting data suppliers, validating outputs against trusted sources, sandboxing exposure to unverified data, using data version control, applying infrastructure access restrictions, testing robustness, and monitoring for anomalous training loss or model behaviour.
+
+These are source recommendations, not evidence that LT Hub™ has implemented or validated these protections.
+
+20.3 Security Implications
+
+[I] Inferred
+
+An AI agent may produce unsafe or unreliable decisions even when its permission controls appear appropriate if the underlying model or data has been compromised.
+
+Agent security should therefore consider both what an agent is allowed to do and the integrity of the model and information influencing its decisions.
+
+A normal successful response does not, by itself, establish that a model is free from hidden backdoors.
+
+20.4 Proposed AgentGuard Controls
+
+The following controls are [H] Hypotheses pending implementation and testing.
+
+- AG-C030 — Data Provenance: Record the origin, version, collection date, and transformations of datasets used in research or model-development workflows.
+- AG-C031 — Dataset Change Tracking: Maintain versioned records and compare dataset changes before accepting an updated version.
+- AG-C032 — Untrusted Data Isolation: Define boundaries for processing unverified external data without granting it unrestricted access to sensitive systems.
+- AG-C033 — Model Integrity Review: Document model origin, version, available integrity information, and review status before use.
+- AG-C034 — Poisoning-Robustness Evaluation: Establish a controlled evaluation process using benign synthetic examples and documented expected behaviour.
+- AG-C035 — Behaviour Anomaly Monitoring: Record unexpected changes in output quality or behaviour and define a review process before approving model updates.
+
+20.5 Proposed Validation Plan
+
+Test status: NOT RUN
+
+Use a controlled environment, harmless synthetic data, and a mock application. Do not deliberately poison a production model or introduce malicious model files.
+
+1. Create a small synthetic dataset with documented expected labels and provenance.
+2. Produce a modified copy containing a known, harmless label inconsistency.
+3. Run the proposed dataset comparison and validation procedure.
+4. Record whether the discrepancy is detected and what action the procedure recommends.
+5. Compare outputs from a mock application using the baseline and modified datasets, without treating this limited demonstration as proof of general poisoning resistance.
+6. Record test conditions, expected and observed results, limitations, and corrective actions.
+
+This test can evaluate the proposed dataset-review process. It cannot prove that a real AI model has no backdoors or is resistant to all poisoning attacks.
+
+20.6 Evidence and Limitations
+
+- [V] The OWASP source supports the recorded descriptions of poisoning risks and mitigation recommendations.
+- [I] The consequences for a particular agent depend on its model, data pipeline, architecture, and deployment environment.
+- [H] AG-C030–AG-C035 are proposed controls and have not been demonstrated effective.
+- No production model has been tested as part of this record.
+- No claim of complete poisoning prevention or model integrity is made.
+
+20.7 Research Conclusion
+
+Data and model integrity are important parts of AI agent security. LT Hub™ AgentGuard proposes tracking dataset provenance, controlling untrusted data, reviewing model integrity, and testing for unexpected behaviour using safe, controlled procedures. These controls remain hypotheses until implemented and evaluated.
+
+Next action: Append this record after E014 in the root-level "EVIDENCE-REGISTER.md", preserve the evidence labels, and commit the change.
