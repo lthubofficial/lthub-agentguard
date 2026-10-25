@@ -391,3 +391,44 @@ Result: 6/6 defined checks passed in the user-reported local simulation.
 Further testing is required before making claims about production session security or replay resistance.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
+
+Test 17 — Concurrent Replay Attempts
+
+Test ID: AG-C054-T17
+Control area: Concurrent duplicate-request detection
+Environment: Programiz; local Python thread simulation
+Status: User-reported result — all defined checks passed
+
+Objective
+
+Assess whether two concurrent threads submitting the same request ID can both be accepted by the simulated replay guard.
+
+[V] Observed test output
+
+The user-reported Programiz output recorded 4 passed, 0 failed.
+
+- Both concurrent attempts completed.
+- Exactly one request was accepted.
+- Exactly one duplicate was rejected.
+- The request ID was recorded once.
+
+The reported run recorded two attempts, one accepted request, and one rejected request.
+
+[I] Interpretation
+
+The lock-protected check-and-record operation behaved as intended in the tested, single-process thread scenario. The result supports the use of atomic check-and-record logic when coordinating threads that share the same in-memory state.
+
+Limitations
+
+- This was a local, in-process thread simulation.
+- The test did not cover multiple processes, multiple servers, persistent storage, or distributed transactions.
+- Only the reported run is documented here; it does not establish exhaustive concurrency safety.
+- A real implementation would need a shared, atomic mechanism for duplicate detection across its actual deployment environment.
+
+Conclusion
+
+Result: 4/4 defined checks passed in the user-reported local simulation.
+
+This is a limited positive test result, not proof of production replay protection.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
