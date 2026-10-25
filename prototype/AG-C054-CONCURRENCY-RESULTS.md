@@ -225,3 +225,43 @@ This was a local simulation using reproduced limiter logic. It did not test an a
 
 Conclusion
 Test 12 confirmed the identifier-based behaviour of the simulated limiter and identified a potential design weakness requiring further threat modelling and testing.
+
+Test 13 — Defensive Design Verification
+
+Status: Completed; result reported by developer.
+
+Objective
+Evaluate whether rate-limit accounting can be tied to a server-resolved identity instead of a caller-controlled label.
+
+Test configuration
+
+- Configured limit: 2 requests per identity
+- Time window: 30 seconds
+- Simulated trusted mappings:
+  - "session-A" → "account-001"
+  - "session-A-alias" → "account-001"
+  - "session-B" → "account-002"
+- Unknown session tokens rejected.
+- Environment: local Programiz simulation.
+
+Observed results
+
+1. The first two requests for "account-001" were allowed.
+2. Changing the caller-provided label did not reset the account's limit.
+3. A second session mapped to "account-001" shared the existing limit.
+4. "account-002" had a separate allowance.
+5. An unknown session token was rejected.
+
+Result: 6 checks passed; 0 failed.
+
+Evidence classification
+
+- [V] Developer-reported Programiz output records six passing checks.
+- [I] The simulation supports using a server-resolved identity as the rate-limit key rather than an arbitrary caller-provided label.
+- [H] Additional weaknesses may exist in a real authentication, session-management, or deployment architecture.
+
+Limitations
+The trusted session mapping was hard-coded. No real login, cryptographic token validation, identity provider, session expiry, or production service was tested. The experiment does not establish production security.
+
+Conclusion
+All six defined checks passed in the reported simulation. The result supports the defensive design principle that rate-limit accounting should rely on a securely established identity rather than a caller-selected label.
