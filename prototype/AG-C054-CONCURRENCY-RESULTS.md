@@ -156,3 +156,38 @@ This was a functional test using a separate script reproducing the limiter's log
 
 Conclusion
 All five defined time-window checks passed in the reported run.
+
+Test 11 — Client Isolation and State Recovery
+
+Status: Completed; result reported by developer.
+
+Test configuration
+
+- Request limit: 2 per client
+- Time window: 30 seconds
+- Client identifiers: "client-A" and "client-B"
+- State-recovery simulation: create a new limiter instance
+
+Observed results
+
+1. Client A's first two requests were allowed.
+2. Client A's third request was blocked.
+3. Client B was allowed a request while Client A was blocked.
+4. Client A remained blocked at its limit.
+5. Client B's second request was allowed and its third was blocked.
+6. A newly created limiter instance accepted a request for Client A.
+
+Result: 8 checks passed; 0 failed.
+
+Evidence classification
+
+- [V] Developer-reported Programiz output records all eight checks passing.
+- [I] The results support client-state isolation within the tested in-memory implementation.
+- [I] Creating a new instance resets its request history because state is stored in memory rather than persistent storage.
+- [H] Behaviour during an actual service restart or deployment recovery remains untested.
+
+Limitations
+The experiment used a separate test script reproducing the limiter logic. It did not test a deployed service, persistent storage, authenticated identities, multiple processes, or distributed rate limiting.
+
+Conclusion
+All eight defined checks passed in the reported run. Client isolation behaved as expected, while the new-instance test demonstrated that request history is not persisted across instances.
