@@ -385,3 +385,63 @@ OWASP guidance describes risks and mitigation approaches; it does not establish 
 Verification status: The supplied source passage supports the recorded descriptions of OWASP's guidance. AgentGuard implementation and effectiveness remain unverified.
 
 Next action: Review the proposed controls, select a safe test scenario, and document actual observations before changing any hypothesis to a validated status.
+
+## 17. Source Record — OWASP LLM02:2025 Sensitive Information Disclosure
+
+Evidence ID: LT-AG-E012
+
+Source title: LLM02:2025 Sensitive Information Disclosure
+
+Publisher: OWASP GenAI Security Project
+
+Source URL: https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/
+
+Access date: 2026-10-25
+
+Source type: Published AI application security guidance
+
+Source findings
+
+Claim 1 — [V] Published guidance: The supplied OWASP passage recommends sanitizing sensitive data, validating inputs, enforcing least-privilege access, and restricting access to data sources.
+
+Supporting reference: The “Prevention and Mitigation Strategies” section supplied from the official LLM02:2025 page.
+
+Claim 2 — [V] Published guidance: The passage discusses privacy techniques, user education, transparency about data use, secure configuration, and tokenization or redaction as possible safeguards.
+
+Supporting reference: The privacy, user education, secure configuration, and advanced-techniques subsections.
+
+Claim 3 — [V] Published examples: The passage describes potential sensitive-data exposure through inadequate sanitization, targeted prompt injection, and the inclusion of sensitive information in training data.
+
+Supporting reference: The “Example Attack Scenarios” section.
+
+Relevance to LT Hub™ AgentGuard
+
+[I] Research implication: Agent security research should examine what data an agent can access, what information enters model context, what outputs are released, and whether sensitive information is protected throughout the workflow.
+
+Proposed controls — not yet validated
+
+- AG-C015 [H]: Limit agent access to sensitive data required for the assigned task.
+- AG-C016 [H]: Use synthetic or appropriately redacted data in research and testing.
+- AG-C017 [H]: Evaluate input and output handling for unintended disclosure of sensitive information.
+- AG-C018 [H]: Document data collection, retention, access, and deletion practices for any future AgentGuard implementation.
+- AG-C019 [H]: Review whether secrets or sensitive values could appear in logs, error messages, or generated outputs.
+
+Proposed validation work
+
+In an isolated test environment, use synthetic records containing clearly identifiable test-only secret values. Test whether an agent can retrieve or disclose values outside its authorized scope.
+
+Record whether access controls reject unauthorized retrieval and whether outputs or logs expose restricted values.
+
+Do not use real credentials, personal information, private client data, or production systems.
+
+Required test record: Test ID, environment, synthetic data description, authorization rules, exact steps, expected result, observed result, relevant logs, date, and reviewer.
+
+Current test status: Not run.
+
+Limitations
+
+The supplied passage describes guidance and potential safeguards. It does not prove that every listed technique is suitable for every system or that LT Hub™ AgentGuard has implemented or tested any of them. Federated learning, differential privacy, and homomorphic encryption require context-specific evaluation and must not be presented as automatic guarantees against data disclosure.
+
+Verification status: The supplied source passage supports the recorded descriptions of the guidance. AgentGuard implementation and control effectiveness remain unverified.
+
+Next action: Review the full source and determine which data-protection risks are relevant to the proposed AgentGuard scope before designing controlled tests.
