@@ -268,3 +268,60 @@ Next action: Review the relevant primary research or standard before making a mo
 ---
 
 LT Hub™ | Creative AI Solutions Powered by Intelligence
+
+## 15. Source Record — Human Approval and Rate Limiting
+
+Evidence ID: LT-AG-E010
+
+Source title: LLM06:2025 Excessive Agency
+
+Publisher: OWASP GenAI Security Project
+
+Source URL: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/?lang=us
+
+Access date: 2026-10-25
+
+Source type: Published AI application security guidance
+
+Source findings
+
+Claim 1 — [V] Published recommendation: OWASP describes rate limiting as a way to reduce the number of undesirable actions that can occur within a given time period, creating more opportunity for monitoring to detect problems before significant damage occurs.
+
+Supporting reference: The rate-limiting mitigation passage supplied from the official OWASP LLM06:2025 page.
+
+Claim 2 — [V] Published example: OWASP describes a personal assistant with mailbox access whose email extension has sending functionality beyond the intended message-reading task.
+
+Supporting reference: The “Example Attack Scenarios” section of the official LLM06:2025 page.
+
+Claim 3 — [V] Published mitigation examples: OWASP describes reducing excessive functionality, using read-only OAuth permissions where appropriate, requiring user review before sending drafted email, and applying rate limits to the sending interface.
+
+Supporting reference: The mailbox attack scenario and its accompanying mitigation discussion.
+
+Relevance to LT Hub™ AgentGuard
+
+[I] Research implication: Human confirmation, narrow permissions, limited tool functionality, and rate limiting are complementary safeguards to investigate for AI agents performing consequential actions.
+
+Proposed controls — not yet validated
+
+- AG-C006 [H]: Require explicit human confirmation before defined high-impact actions.
+- AG-C007 [H]: Apply rate limits to selected consequential tool actions.
+- AG-C008 [H]: Separate read-only capabilities from write or send capabilities where the system permits.
+- AG-C009 [H]: Monitor rejected actions and unusual activity, subject to appropriate logging and privacy safeguards.
+
+Proposed validation work
+
+In a controlled test environment, define an agent task that drafts an email without sending it. Verify whether the system requires human confirmation before any send action. Separately, test whether configured rate limits reject requests exceeding the defined threshold.
+
+Do not test against real mailboxes or send unsolicited messages.
+
+Required test record: Test ID, environment, configuration, threshold, exact steps, expected result, observed result, logs, date, and reviewer.
+
+Current test status: Not run.
+
+Limitations
+
+The cited OWASP material documents guidance and an illustrative attack scenario. It does not prove that the proposed AgentGuard controls are implemented or effective. Rate limiting alone does not prevent every unauthorized action, and human approval must be enforced by the surrounding system to be meaningful.
+
+Verification status: The supplied passage supports the recorded source findings. AgentGuard implementation and control effectiveness remain unverified.
+
+Next action: Identify the exact actions that require approval, define safe rate limits for a test environment, and document reproducible test results before changing any proposed control's status.
