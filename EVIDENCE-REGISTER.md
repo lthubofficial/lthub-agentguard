@@ -445,3 +445,63 @@ The supplied passage describes guidance and potential safeguards. It does not pr
 Verification status: The supplied source passage supports the recorded descriptions of the guidance. AgentGuard implementation and control effectiveness remain unverified.
 
 Next action: Review the full source and determine which data-protection risks are relevant to the proposed AgentGuard scope before designing controlled tests.
+
+## 18. Source Record — OWASP LLM05:2025 Improper Output Handling
+
+Evidence ID: LT-AG-E013
+
+Source title: LLM05:2025 Improper Output Handling
+
+Publisher: OWASP GenAI Security Project
+
+Source URL: https://genai.owasp.org/llmrisk/llm052025-improper-output-handling/
+
+Access date: 2026-10-25
+
+Source type: Published AI application security guidance
+
+Source findings
+
+Claim 1 — [V] Published recommendation: OWASP recommends treating model output as untrusted, validating it before passing it to backend functions, and applying a zero-trust approach.
+
+Supporting reference: The “Prevention and Mitigation Strategies” passage supplied from the official LLM05:2025 page.
+
+Claim 2 — [V] Published recommendations: OWASP describes output encoding appropriate to the destination context, parameterized database queries, Content Security Policies, and logging and monitoring as relevant safeguards.
+
+Supporting reference: The output encoding, database operation, CSP, and monitoring recommendations in the supplied source passage.
+
+Claim 3 — [V] Published examples: OWASP describes risks involving unauthorized extension functions, unvalidated data transfers, destructive SQL queries, cross-site scripting (XSS), unsafe generated email content, and insecure code or package suggestions.
+
+Supporting reference: The six attack scenarios in the supplied source passage.
+
+Relevance to LT Hub™ AgentGuard
+
+[I] Research implication: An AI agent's output should not be trusted merely because the model generated it. The system receiving the output must enforce validation, authorization, and safe handling appropriate to the operation.
+
+Proposed controls — not yet validated
+
+- AG-C020 [H]: Validate model-generated tool arguments against a defined schema before execution.
+- AG-C021 [H]: Enforce authorization in the receiving system independently of model-generated instructions.
+- AG-C022 [H]: Use context-appropriate output encoding when displaying model-generated content.
+- AG-C023 [H]: Use parameterized queries or prepared statements when model-generated values are used in database operations.
+- AG-C024 [H]: Record relevant validation failures and rejected operations without unnecessarily logging sensitive data.
+
+Proposed validation work
+
+In an isolated test application, supply benign model output and deliberately malformed or unauthorized test values to a mock receiving function.
+
+Verify that invalid arguments are rejected, unauthorized operations cannot execute, and rendered text is handled safely in its intended context.
+
+Use mock functions and synthetic data. Do not execute destructive queries, deploy attack payloads against live systems, or test against production databases.
+
+Required test record: Test ID, environment, receiving component, validation rules, exact steps, expected result, observed result, logs, date, and reviewer.
+
+Current test status: Not run.
+
+Limitations
+
+The supplied OWASP passage documents security guidance and illustrative attack scenarios. It does not demonstrate that LT Hub™ AgentGuard implements these safeguards or that any proposed control is effective. Output encoding must match the actual output context; no single encoding or validation rule is suitable for every destination.
+
+Verification status: The supplied source passage supports the recorded descriptions of the guidance. AgentGuard implementation and control effectiveness remain unverified.
+
+Next action: Identify the intended receiving components in the proposed AgentGuard architecture, define their validation and authorization requirements, and conduct controlled tests before claiming effectiveness.
