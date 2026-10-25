@@ -53,3 +53,35 @@ Production status: Not established.
 2. Save the thread-lock experiment separately if it is approved for further testing.
 3. Reproduce and retain test outputs before making stronger claims.
 4. Test additional failure cases and document remaining risks.
+
+Test 8 — Saved Thread-Safe Implementation: Concurrent Stress Test
+
+Status: Completed; result reported by developer.
+
+Implementation tested: "prototype/rate_limiter_threadsafe.py" — thread-lock rate-limiter logic reproduced in a concurrent stress-test script.
+
+Test configuration
+
+- Concurrent attempts per trial: 20
+- Configured request limit: 5 per client
+- Window: 60 seconds
+- Number of trials: 100
+- Client identifier: "client-A"
+
+Observed result
+
+- Trials completed: 100
+- Trials with unexpected allowed counts: 0
+- Each trial returned exactly 5 allowed requests.
+
+Evidence classification
+
+- [V] Developer-reported Programiz output recorded after execution.
+- [I] The observed results support the conclusion that the lock-protected implementation enforced the configured count in these 100 test trials.
+- [H] The results do not establish behaviour under all runtime conditions or production workloads.
+
+Limitations
+This was a local experimental test, not an independent security audit. It does not establish distributed enforcement across multiple processes or machines, authenticated client identity, persistence, resistance to all attack patterns, or production readiness. The stress-test script reproduced the thread-safe limiter logic; this result should not be described as a test of the entire deployed AgentGuard system.
+
+Conclusion
+Test 8 produced no unexpected allowed-request counts across 100 trials of 20 concurrent attempts with a limit of 5. Further testing and independent review are required before any production-security claim.
