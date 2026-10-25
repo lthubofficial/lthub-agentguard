@@ -673,3 +673,111 @@ A timeout may stop a client from waiting without stopping the underlying operati
 Assess complementary controls such as request rate limits, usage budgets, input/output limits, agent loop protection, resource monitoring, and downstream action limits.
 
 Conclusion: This record establishes a testing baseline only. It does not demonstrate that timeouts are implemented, that cancellation succeeds, or that all underlying resource consumption stops at the timeout boundary.
+
+AG-C058 — Agent Loop Protection
+
+Test Record ID: AG-C058-TEST-001
+
+Control reference: AG-C058 — Agent Loop Protection
+
+Evidence classification: [H] Proposed control; implementation and effectiveness not yet established by this record.
+
+1. Implementation Status
+
+Status: Unknown — pending evidence review.
+
+Implementation evidence: Not yet recorded.
+
+Maximum iteration count: Not established.
+
+Retry limit and termination rules: Not established.
+
+Enforcement point: Not established.
+
+Coverage of recursive, parallel, and delegated workflows: Not established.
+
+2. Test Status
+
+Status: Planned — test not yet evidenced as executed.
+
+Test objective: Determine whether agent workflows stop or recover according to defined limits when they repeat actions, retry failures, recurse, or fail to make progress.
+
+Required test cases:
+
+- A normal workflow that completes successfully.
+- A controlled repeated-action scenario.
+- Repeated transient failures that trigger retries.
+- A workflow that reaches its maximum iteration count.
+- A recursive or delegated workflow, where applicable.
+- Parallel workflows or concurrent retries, where applicable.
+- Verification that termination does not leave unintended downstream actions running.
+
+Use an authorised test environment with bounded operations. Avoid production disruption, unnecessary charges, and tests against third-party systems without permission.
+
+3. Expected Behaviour
+
+Normal workflows complete within their permitted limits. Repeated actions, retries, and iterations remain within documented bounds.
+
+When a configured limit or termination condition is reached, the workflow stops or follows its documented recovery process. Relevant events, limit values, and termination reasons are recorded.
+
+Where supported, verify whether cancellation also reaches delegated or downstream operations rather than merely stopping the main workflow.
+
+4. Acceptance Criteria
+
+Before testing, document:
+
+- Maximum permitted iterations and retries.
+- The scope of each limit.
+- How repeated actions and recursive calls are handled.
+- How limits apply across concurrent and delegated workflows.
+- Expected behaviour when a limit is reached.
+- Required cancellation, recovery, and logging behaviour.
+- Known architecture or provider limitations.
+
+A test passes only when observed behaviour meets predefined acceptance criteria within the tested scope.
+
+5. Execution Results
+
+Execution date and time: Not recorded.
+
+Test environment: Not established.
+
+Configured iteration and retry limits: Not recorded.
+
+Observed iteration and retry counts: Not recorded.
+
+Termination and recovery behaviour: Not recorded.
+
+Delegated or downstream task results: Not recorded.
+
+Test outcome: Not tested.
+
+6. Evidence References
+
+No implementation or execution evidence has yet been attached to this record.
+
+When available, retain verified references to:
+
+- Configuration or code establishing iteration and retry limits.
+- Test cases and execution timestamps.
+- Workflow identifiers and observed iteration counts.
+- Retry, termination, cancellation, and recovery logs.
+- Delegated and downstream task outcomes.
+- Resource-usage observations, where available.
+- Errors, bypasses, unexpected continuation, or duplicate actions.
+
+Use actual evidence identifiers and verified paths or URLs. Redact credentials, tokens, personal data, and other sensitive information.
+
+7. Findings
+
+Current finding: [GAP] Implementation, configured limits, enforcement scope, and test results have not yet been recorded in this test record.
+
+Follow-up: Identify where iteration and retry limits are enforced, then determine how termination and downstream behaviour can be verified.
+
+8. Residual Risks
+
+A per-workflow iteration limit may not control aggregate consumption across parallel or delegated workflows. Retries may duplicate actions, and a stopped parent workflow may leave underlying tasks running. Limits alone may not prevent all resource exhaustion.
+
+Assess complementary controls, including request rate limits, usage budgets, execution timeouts, resource monitoring, and downstream action limits.
+
+Conclusion: This record establishes a testing baseline only. It does not demonstrate that loop protection is implemented, that workflows terminate correctly, or that resource consumption is fully controlled.
