@@ -673,3 +673,64 @@ This test can evaluate the proposed dataset-review process. It cannot prove that
 Data and model integrity are important parts of AI agent security. LT Hub™ AgentGuard proposes tracking dataset provenance, controlling untrusted data, reviewing model integrity, and testing for unexpected behaviour using safe, controlled procedures. These controls remain hypotheses until implemented and evaluated.
 
 Next action: Append this record after E014 in the root-level "EVIDENCE-REGISTER.md", preserve the evidence labels, and commit the change.
+
+## 21. Source Record — System Prompt Leakage
+
+Record ID: E016
+Research Series: LT Hub™ AgentGuard AI Agent Security Risk Research Series
+Research Date: 2026-10-25
+Evidence Status: Source identification requires confirmation; proposed controls not tested
+Primary Source: OWASP GenAI Security Project
+Source URL: https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/
+
+21.1 Research Question
+
+Can an AI application disclose internal instructions, configuration details, or sensitive information through model responses, and what protections reduce the resulting risk?
+
+21.2 Source Findings
+
+[V] Verified — Pending exact source confirmation
+
+Record the page's exact title, risk identifier, and relevant mitigation language here after checking the source itself. Do not classify the claims below as independently verified until the page's content has been confirmed.
+
+[I] Inferred — General security implication
+
+System prompts may contain internal instructions or implementation details. A model may reveal some of this text when responding to user requests. However, a system prompt should not be treated as a secure storage location for passwords, API keys, or other secrets.
+
+Disclosure of a prompt does not automatically mean an application has exposed protected data. The impact depends on what the prompt contains and what security boundaries the application enforces elsewhere.
+
+21.3 Proposed AgentGuard Controls
+
+All controls below are [H] Hypotheses until implemented and tested.
+
+- AG-C036 — Secret Exclusion: Do not place credentials, private keys, or other actual secrets in system prompts.
+- AG-C037 — External Authorization: Enforce sensitive data access through application-level authorization rather than relying on instructions telling the model not to disclose information.
+- AG-C038 — Disclosure Testing: Use harmless synthetic prompts and canary strings to test whether internal test instructions are returned in responses.
+- AG-C039 — Sensitive Output Review: Define checks for accidental disclosure of sensitive configuration or internal information.
+- AG-C040 — Least Privilege: Restrict the tools and data available to an agent to those required for its task.
+- AG-C041 — Incident Logging: Where appropriate and privacy-safe, record test outcomes and suspected disclosure events without logging actual secrets.
+
+21.4 Proposed Validation Plan
+
+Test status: NOT RUN
+
+1. Create a mock application containing a harmless synthetic instruction, such as "TEST-ONLY-CANARY-741".
+2. Send a documented set of benign and adversarial test requests to the mock application.
+3. Record whether the canary string appears in any output.
+4. Check whether the application independently restricts access to a mock protected resource.
+5. Record expected results, observed results, test limitations, and corrective actions.
+
+Do not use real credentials, private personal information, or production secrets in these tests. A test that does not reveal the canary string is not proof that all prompt-leakage attacks are prevented.
+
+21.5 Evidence and Limitations
+
+- [V] Exact OWASP source findings remain pending confirmation against the page content.
+- [I] Potential impact depends on the information disclosed and the application's access-control design.
+- [H] AG-C036–AG-C041 are proposed controls, not confirmed implementations.
+- No test has been performed, and no claim of complete prevention is made.
+
+21.6 Research Conclusion
+
+Prompt confidentiality is not a substitute for security boundaries. LT Hub™ AgentGuard proposes excluding real secrets from prompts, enforcing authorization outside the model, limiting agent privileges, and evaluating disclosure with synthetic test data. The source-specific claims must be confirmed before this record is considered fully verified.
+
+Next action: Confirm the source's exact title and content, complete the evidence section, then append this record after E015 in the root-level "EVIDENCE-REGISTER.md".
