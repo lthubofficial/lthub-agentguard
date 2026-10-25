@@ -685,3 +685,36 @@ Limitations: This was a controlled local test using a temporary file and one pro
 Evidence record: Google Colab execution output supplied for AG-C054 Test 21. Preserve the notebook and output as supporting evidence.
 
 Next step: Test 22 — interrupted or incomplete file writes and safe rejection when the replay store becomes unreadable.
+
+AG-C054 Test 22 — Interrupted or Incomplete Replay-Store Writes
+
+Status: [V] All 7 reported checks passed in the Google Colab run.
+
+Objective: Evaluate how the file-backed replay guard behaves when the replay store contains incomplete JSON.
+
+Test environment: Google Colab; Python; temporary local file; single-process test.
+
+Results
+
+Check| Result
+Initial replay store contains the recorded request| PASS
+Incomplete JSON content is present| PASS
+Request is rejected when store JSON is incomplete| PASS
+Damaged store remains unchanged after rejection| PASS
+Previously recorded request is rejected after valid store restoration| PASS
+New request is accepted after valid store restoration| PASS
+Restored store retains both request IDs| PASS
+
+Summary: 7 checks passed; 0 failures were reported in the supplied output.
+
+[V] Observed: The supplied output shows that the test created incomplete JSON, observed rejection, confirmed that the damaged contents remained unchanged, restored a valid store, and verified duplicate rejection and acceptance of a new request.
+
+[I] Interpretation: Rejecting requests when the replay store is unreadable avoids silently treating corrupted state as an empty replay history in this tested scenario.
+
+[H] Remaining hypothesis: The same protection will hold during actual process interruption, power loss, storage faults, and concurrent access. These conditions remain untested.
+
+Limitations: The incomplete write was simulated by deliberately truncating a temporary file. This was not a real crash or power-loss test. Atomic writes, concurrent writers, multi-process behaviour, and production deployment were not evaluated.
+
+Evidence record: Google Colab output supplied for AG-C054 Test 22. Preserve the notebook and output as supporting evidence.
+
+Next step: AG-C054 Test 23 — Replay-Store Permission and Read/Write Failure Handling.
