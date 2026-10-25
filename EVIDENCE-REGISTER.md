@@ -987,6 +987,7 @@ Expected result: Requests within the permitted rate are handled according to pol
 Evidence to retain: Configuration and threshold; test timestamp; request counts and rates; observed responses; enforcement logs; any errors or bypasses; and the final test result.
 Pass criteria: All predefined scenarios satisfy the expected behaviour, with no unexplained enforcement failures. Any failed scenario must be recorded and investigated.
 Limitations: No implementation or test result is claimed until the test has actually been performed and its evidence reviewed.
+
 - AG-C055 — Usage and Cost Budgets: Validation Plan
 
 Status: Proposed; not yet tested.
@@ -1002,6 +1003,23 @@ Evidence to retain: Configuration; threshold and measurement units; test timesta
 Pass criteria: Each configured alert and restriction behaves according to its documented acceptance criteria. Alerts must not be recorded as proof of spending enforcement. Any failed scenario or unverified capability remains explicitly documented.
 
 Limitations: No implementation, provider capability, cost saving, or successful enforcement is claimed until supported by recorded evidence.
+
+- AG-C056 — Input and Output Limits: Validation Plan
+
+Status: Proposed; not yet tested.
+
+Risk addressed: Excessive input sizes, uncontrolled output generation, and processing workloads that may cause resource exhaustion, service degradation, or unexpected usage.
+
+Test method: In an authorised test environment, configure documented input-size, output-size, and processing-workload limits appropriate to the system. Test requests below, at, and above each applicable limit. Include oversized inputs, requests for excessive output, and workloads that exceed configured processing constraints. Use bounded test data and avoid unnecessary provider charges.
+
+Expected result: Requests within configured limits are handled according to policy. Requests exceeding a limit are rejected, truncated, constrained, or otherwise handled according to the documented enforcement behaviour. Processing limits are applied where supported, and relevant outcomes are recorded.
+
+Evidence to retain: Configuration and limit values; measurement units; test inputs; timestamps; observed responses; usage or processing records; enforcement logs; errors; and any unsupported capabilities or bypasses.
+
+Pass criteria: Each tested limit behaves according to its predefined acceptance criteria. Oversized requests and excessive outputs cannot exceed the intended enforced bounds without detection. Any failed scenario or untested limit remains explicitly documented.
+
+Limitations: Input and output limits alone do not establish protection against all forms of resource exhaustion. Tokenization overhead, concurrent requests, retries, provider-side processing, and other workload factors may require separate controls. No implementation or successful test is claimed until supported by recorded evidence.
+
 - AG-C057 — Execution Timeouts: Define maximum execution durations and controlled termination behaviour for stalled workflows.
 - AG-C058 — Agent Loop Protection: Set maximum iteration counts and retry limits, with explicit termination conditions.
 - AG-C059 — Resource Monitoring: Record resource consumption and flag unusual increases for review.
