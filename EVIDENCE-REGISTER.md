@@ -734,3 +734,98 @@ Do not use real credentials, private personal information, or production secrets
 Prompt confidentiality is not a substitute for security boundaries. LT Hub™ AgentGuard proposes excluding real secrets from prompts, enforcing authorization outside the model, limiting agent privileges, and evaluating disclosure with synthetic test data. The source-specific claims must be confirmed before this record is considered fully verified.
 
 Next action: Confirm the source's exact title and content, complete the evidence section, then append this record after E015 in the root-level "EVIDENCE-REGISTER.md".
+
+## 22. Source Record — OWASP LLM08:2025 Vector and Embedding Weaknesses
+
+Record ID: E017
+Research Series: LT Hub™ AgentGuard AI Agent Security Risk Research Series
+Research Date: 2026-10-25
+Evidence Status: Official source reviewed; proposed controls not yet tested
+Primary Source: OWASP GenAI Security Project
+Source Title: LLM08:2025 Vector and Embedding Weaknesses
+Source URL: https://genai.owasp.org/llmrisk/llm082025-vector-and-embedding-weaknesses/
+
+22.1 Research Question
+
+Can weaknesses in vector databases, embeddings, or retrieval-augmented generation (RAG) systems expose unauthorised information, introduce manipulated content, or cause an AI application to return misleading results?
+
+22.2 Source Findings
+
+[V] Verified — Source description
+
+OWASP identifies security risks associated with how vectors and embeddings are generated, stored, and retrieved in systems using RAG. Exploitation of these weaknesses can potentially inject harmful content, manipulate model outputs, or expose sensitive information.
+
+[V] Verified — Risks described by OWASP
+
+The source identifies these risk areas:
+
+- Unauthorised access and data leakage: Inadequate access controls may allow sensitive information to be retrieved by users or applications without permission.
+- Cross-context information leakage: Shared vector databases may expose information between user groups or applications when separation is inadequate.
+- Embedding inversion: An attacker may attempt to recover source information from embeddings.
+- Data poisoning: Malicious or unverified information entering a knowledge base may manipulate retrieval and subsequent model responses.
+- Behaviour alteration: Retrieval augmentation may change aspects of a model's responses, including qualities such as empathy.
+
+[V] Verified — Mitigation guidance described by OWASP
+
+The source recommends:
+
+- Fine-grained, permission-aware access controls and logical separation of datasets.
+- Validation of knowledge sources and checks for integrity or poisoning.
+- Classification and tagging of information according to access requirements.
+- Detailed, tamper-resistant or immutable retrieval logs to support monitoring and investigation.
+- Validation of documents before they enter a RAG knowledge base.
+- Evaluation of how retrieval augmentation affects the model's behaviour.
+
+These are recommendations from the source, not proof that LT Hub™ has implemented them or that they are effective in a particular system.
+
+22.3 Security Implications
+
+[I] Inferred
+
+An AI agent may enforce restrictions on its tools while still receiving information that it should not have retrieved. Security therefore depends on the retrieval layer's access controls as well as the agent's own permissions.
+
+In multi-user systems, filtering search results only after sensitive records have already entered the model's context may be insufficient. Access restrictions should be enforced at the data retrieval boundary.
+
+A vector database containing no obvious plain-text passwords should not automatically be considered safe: embeddings may still reveal information about their source data.
+
+22.4 Proposed AgentGuard Controls
+
+All controls below are [H] Hypotheses until implemented and tested.
+
+- AG-C042 — Permission-Aware Retrieval: Require each retrieval request to enforce the requesting user's or agent's authorised access scope.
+- AG-C043 — Dataset Separation: Define and test logical separation between datasets belonging to different users, organisations, or sensitivity classes.
+- AG-C044 — Knowledge-Source Validation: Validate provenance, document content, and integrity before accepting information into a retrieval index.
+- AG-C045 — Retrieval Audit Trail: Record retrieval decisions, access outcomes, and relevant identifiers while minimising sensitive information in logs.
+- AG-C046 — Embedding Privacy Review: Assess whether the chosen embedding and storage design creates unacceptable exposure of source information.
+- AG-C047 — Retrieval Behaviour Evaluation: Test whether adding or updating retrieved documents changes answers in unexpected or unsafe ways.
+
+22.5 Proposed Validation Plan
+
+Test status: NOT RUN
+
+Use a small mock retrieval application with synthetic records. Do not use real personal, confidential, or commercially sensitive information.
+
+1. Create two mock users, User A and User B, with separate access permissions.
+2. Add harmless synthetic documents assigned to each user.
+3. Run retrieval queries as both users and record which documents are returned.
+4. Include a query designed to match a document that belongs exclusively to the other user.
+5. Check whether the retrieval layer blocks unauthorised results before they are supplied to the model.
+6. Record expected results, observed results, test conditions, limitations, and corrective actions.
+
+Pass criterion for this specific test: No document outside the requesting user's authorised scope is returned to the model context.
+
+A passing test only supports the tested configuration and scenarios. It does not establish that every access-control bypass, embedding inversion attack, or poisoning technique has been prevented.
+
+22.6 Evidence and Limitations
+
+- [V] The official OWASP source supports the recorded risk descriptions and mitigation recommendations.
+- [I] The impact on a specific AI agent depends on its retrieval architecture, permissions, data sensitivity, and deployment environment.
+- [H] AG-C042–AG-C047 are proposed controls; their effectiveness has not been demonstrated.
+- Test status: NOT RUN.
+- No production security audit or independent validation is claimed.
+
+22.7 Research Conclusion
+
+Vector and embedding security is an important part of protecting AI applications that retrieve external knowledge. LT Hub™ AgentGuard proposes permission-aware retrieval, dataset separation, knowledge-source validation, privacy review, and retrieval monitoring. These controls must be implemented and tested before their effectiveness can be claimed.
+
+Next action: Append this record after E016 in the root-level "EVIDENCE-REGISTER.md", preserve the evidence labels, and commit the update.
