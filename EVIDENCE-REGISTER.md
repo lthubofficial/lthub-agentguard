@@ -130,7 +130,7 @@ LT Hub™ | Creative AI Solutions Powered by Intelligence
 
 Evidence before claims. Uncertainty documented. Conclusions open to review.
 
-##12. Source Record — OWASP Top 10 for LLM Applications (2025)
+## 12. Source Record — OWASP Top 10 for LLM Applications (2025)
 
 Evidence ID: LT-AG-E007
 
@@ -156,7 +156,7 @@ Related source — Excessive Agency: https://genai.owasp.org/llmrisk/llm062025-e
 
 Next action: Review the source's mitigation guidance and record individual claims with supporting references before treating proposed controls as validated.
 
-13. Source Record — OWASP LLM06:2025 Excessive Agency
+## 13. Source Record — OWASP LLM06:2025 Excessive Agency
 
 Evidence ID: LT-AG-E008
 
