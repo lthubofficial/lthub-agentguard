@@ -129,3 +129,29 @@ No external claim is declared verified solely by this template. The initial rese
 LT Hub™ | Creative AI Solutions Powered by Intelligence
 
 Evidence before claims. Uncertainty documented. Conclusions open to review.
+
+##12. Source Record — OWASP Top 10 for LLM Applications (2025)
+
+Evidence ID: LT-AG-E007
+
+Source title: OWASP Top 10 for Large Language Model Applications (2025)
+
+Publisher: OWASP GenAI Security Project
+
+Source URL: https://genai.owasp.org/llm-top-10/
+
+Access date: 2026-10-25
+
+Source type: Published AI security risk guidance
+
+Verified source finding [V]: The OWASP 2025 taxonomy identifies risks including Prompt Injection (LLM01), Sensitive Information Disclosure (LLM02), Improper Output Handling (LLM05), and Excessive Agency (LLM06).
+
+Relevance to LT Hub™ AgentGuard: This source supports investigating instruction manipulation, sensitive information exposure, unsafe handling of model outputs, and excessive agent permissions.
+
+Limitations: The OWASP taxonomy is published guidance. It does not prove that LT Hub™ AgentGuard has implemented effective controls, passed security tests, or is free from vulnerabilities.
+
+Verification status: The source page has been reviewed for the finding stated above.
+
+Related source — Excessive Agency: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/?lang=us
+
+Next action: Review the source's mitigation guidance and record individual claims with supporting references before treating proposed controls as validated.
