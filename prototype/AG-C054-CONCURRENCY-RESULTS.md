@@ -307,3 +307,46 @@ Result: 7/7 defined checks passed in the user-reported local simulation.
 Further testing is required before drawing conclusions about a deployed system.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
+
+Test 15 — Identity Spoofing and Session Confusion
+
+Test ID: AG-C054-T15
+Control area: Session-to-account mapping and identity-claim validation
+Environment: Programiz; local Python simulation
+Status: User-reported result — all defined checks passed
+
+Objective
+
+Assess whether the simulated request handler rejects unknown sessions and account claims that do not match the server-side session mapping.
+
+[V] Observed test output
+
+The user-reported Programiz output recorded 8 passed, 0 failed.
+
+1. Session A accepted for its mapped account.
+2. Session A rejected when claiming account 002.
+3. Session B accepted for its mapped account.
+4. Unknown session rejected.
+5. Session A's alias accepted for the same mapped account.
+6. Alias rejected when claiming account 002.
+7. Missing session rejected.
+8. Rejected spoofed claims did not increment the simulated account counters.
+
+[I] Interpretation
+
+The simulated handler followed its defined mapping and claim-validation rules for all eight checks. It rejected the tested mismatched identity claims and unknown sessions.
+
+Limitations
+
+- Session tokens and account identities were hard-coded local values.
+- The alias was explicitly configured to map to account 001; this does not establish that aliases are safe in a real system.
+- No real authentication provider, cryptographic token validation, session expiration, token theft, or production service was tested.
+- Results apply only to the supplied test scenarios and code.
+
+Conclusion
+
+Result: 8/8 defined checks passed in the user-reported local simulation.
+
+The result supports further investigation of server-side identity mapping, but does not establish resistance to real-world identity spoofing.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
