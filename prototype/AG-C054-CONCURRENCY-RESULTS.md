@@ -350,3 +350,44 @@ Result: 8/8 defined checks passed in the user-reported local simulation.
 The result supports further investigation of server-side identity mapping, but does not establish resistance to real-world identity spoofing.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
+
+Test 16 — Session Expiration and Replay
+
+Test ID: AG-C054-T16
+Control area: Session expiry and duplicate request detection
+Environment: Programiz; local Python simulation
+Status: User-reported result — all defined checks passed
+
+Objective
+
+Evaluate whether the simulated request handler rejects expired or unknown sessions and duplicate request IDs.
+
+[V] Observed test output
+
+The user-reported Programiz output recorded 6 passed, 0 failed.
+
+1. A valid session accepted a new request.
+2. A duplicate request ID was rejected.
+3. A different request ID was accepted before expiry.
+4. An expired session was rejected.
+5. A previously accepted request ID was rejected when replayed.
+6. An unknown session was rejected.
+
+[I] Interpretation
+
+The simulation followed its defined expiry and duplicate-ID rules across all six checks. This is evidence of the tested code's behaviour under these local conditions, not proof of real-world replay-attack prevention.
+
+Limitations
+
+- Session expiry used a local monotonic clock and a short simulated lifetime.
+- Request IDs were tracked in an in-memory set.
+- The simulation did not test cryptographic tokens, real network requests, persistent replay protection, concurrent replay attempts, or multiple servers.
+- Request-ID reuse policy and expiry behaviour would need to be defined and tested in a real implementation.
+
+Conclusion
+
+Result: 6/6 defined checks passed in the user-reported local simulation.
+
+Further testing is required before making claims about production session security or replay resistance.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over identity, sensitive information and irreversible decisions.
