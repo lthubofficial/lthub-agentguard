@@ -2383,3 +2383,47 @@ Evidence Boundary
 This experiment used local Python threads and temporary JSON files. The lock is process-local. The test does not establish multi-process or multi-server safety, distributed atomicity, production database guarantees, or actual production authorization and retry-policy correctness.
 
 Conclusion: All five defined checks passed across 100 controlled trials. Further validation is required before making production security claims.
+
+Test 55 — Authorization Revalidation After a Stale-Generation Retry
+
+Status: PASS — 5/5 checks passed
+Trials: 100
+Unexpected trials: 0
+Execution environment: Local Python simulation using a process-local "threading.Lock" and in-memory state.
+
+Objective
+
+Evaluate whether a request that receives "STALE_GENERATION" is rejected if its authorization is revoked before it retries using the latest generation.
+
+Method
+
+Each trial begins with two requests using the same expected generation.
+
+1. Request A commits successfully and advances the generation.
+2. Request B receives "STALE_GENERATION".
+3. Authorization is revoked before Request B retries.
+4. Request B retries using the latest generation.
+5. The test checks the response sequence, final generation, and committed request IDs.
+
+Observed Results [V]
+
+- Response sequence in all 100 trials: "COMMITTED", "STALE_GENERATION", "UNAUTHORIZED".
+- Valid trial sequences: 100/100.
+- Unexpected trials: 0.
+- Checks passed: 5/5.
+- Request A committed; Request B was not committed.
+- The generation advanced exactly once per trial.
+
+Interpretation [I]
+
+Within this simulation, updating a stale request's expected generation did not override the authorization check. The retry was rejected after authorization was revoked, and no second state change occurred.
+
+Evidence Boundary
+
+This is a local, in-memory simulation with a process-local lock. It does not demonstrate production security, distributed concurrency guarantees, integration with a real identity or authorization provider, or protection against every possible authorization-revocation race.
+
+A production implementation would need to enforce authorization at the protected operation's execution boundary and test the relevant revocation, concurrency, and failure scenarios.
+
+Conclusion
+
+Test 55 passed its defined acceptance criteria in all 100 trials. The result supports the narrow claim that this simulated retry path rechecks authorization before committing. It is not evidence that a production system is secure.
