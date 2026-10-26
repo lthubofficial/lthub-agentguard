@@ -1054,3 +1054,56 @@ Conclusion
 [I] The results support preservation of the original store in this specific pre-replacement interruption scenario and demonstrate that an abandoned temporary file can remain after abrupt process termination.
 
 Next research question: Can a recovery routine distinguish valid abandoned temporary updates from unsafe or incomplete files without accidentally replacing the authoritative replay store?
+
+AG-C054 Test 31 — Safe Startup Inspection of Abandoned Temporary Files
+
+Test ID: AG-C054-T031
+Category: Replay-store recovery and startup integrity
+Status: Local controlled test completed
+Result: 7 passed, 0 failed
+
+Objective
+
+Evaluate whether a conservative startup-inspection routine can identify an abandoned temporary update while preserving the authoritative replay store and avoiding automatic promotion or deletion of the candidate file.
+
+Method
+
+A local JSON replay store was initialized with request IDs "REQ-401" and "REQ-402".
+
+A separate temporary file, ".replay-abandoned.tmp", was created containing a candidate update with an additional request ID, "REQ-403". The test then identified files matching the designated temporary-file naming pattern and inspected the original store without promoting or deleting the candidate.
+
+Results
+
+[V] All seven checks passed, with zero failures.
+
+1. The abandoned temporary file was identified.
+2. The authoritative store remained byte-for-byte unchanged.
+3. Both original request IDs remained intact.
+4. The uncommitted ID, "REQ-403", was not promoted into the original store.
+5. The temporary candidate was preserved for inspection.
+6. The candidate content was readable and matched the simulated update.
+7. No automatic deletion or replacement occurred.
+
+Evidence and interpretation
+
+[V] The supplied Colab output reports "7 passed, 0 failed".
+
+[V] The original store remained unchanged while the candidate temporary file remained available for inspection.
+
+[I] The result supports a conservative inspection policy that avoids automatically treating an abandoned temporary file as committed state.
+
+Limitations
+
+- This was a local startup-inspection simulation, not a complete application startup or recovery implementation.
+- The temporary file was deliberately created by the test; it was not recovered from an actual process or system crash.
+- Valid JSON does not establish that a candidate update was authorized, complete, or committed.
+- No automatic quarantine, deletion, promotion, concurrent-writer handling, or multi-server recovery was tested.
+- Production-grade replay protection and crash recovery remain unverified.
+
+Conclusion
+
+[V] The controlled test completed with seven passing checks and no failures.
+
+[I] The results support preserving the authoritative store and leaving candidate temporary files for further inspection rather than automatically accepting them.
+
+Next research question: Can startup inspection safely classify temporary files as valid, malformed, or structurally unexpected while preserving the authoritative store in every case?
