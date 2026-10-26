@@ -1107,3 +1107,61 @@ Conclusion
 [I] The results support preserving the authoritative store and leaving candidate temporary files for further inspection rather than automatically accepting them.
 
 Next research question: Can startup inspection safely classify temporary files as valid, malformed, or structurally unexpected while preserving the authoritative store in every case?
+
+AG-C054 Test 32 — Temporary-File Structural Validation Without Promotion
+
+Test ID: AG-C054-T032
+Category: Replay-store recovery and candidate validation
+Status: Local controlled test completed
+Result: 7 passed, 0 failed
+
+Objective
+
+Evaluate whether temporary replay-store candidates can be classified by basic JSON structure while preserving the authoritative store and avoiding automatic promotion of uncommitted data.
+
+Method
+
+A local authoritative JSON store was initialized with request IDs "REQ-501" and "REQ-502".
+
+Three candidate files were created:
+
+1. A structurally valid JSON candidate containing an additional request ID, "REQ-503".
+2. A malformed JSON candidate containing incomplete JSON.
+3. A JSON candidate with an unexpected data structure.
+
+The inspection function classified each candidate without modifying the authoritative store, promoting candidate data, or deleting the candidate files.
+
+Results
+
+[V] All seven checks passed, with zero failures.
+
+1. The valid JSON candidate was classified as structurally valid.
+2. The malformed JSON candidate was rejected.
+3. The unexpected structure was classified separately.
+4. The authoritative store remained byte-for-byte unchanged.
+5. The original request IDs remained intact.
+6. The uncommitted ID, "REQ-503", was not promoted.
+7. All candidate files remained available for inspection.
+
+Evidence and interpretation
+
+[V] The supplied Colab output reports "7 passed, 0 failed".
+
+[V] The test distinguished the three candidate categories and preserved the authoritative store.
+
+[I] These observations support basic structural validation as an inspection step before any recovery decision.
+
+Limitations
+
+- Structural validity does not prove authenticity, authorization, completeness, or whether an update was committed.
+- No candidate was promoted, quarantined, or automatically deleted.
+- The test used local temporary files and did not evaluate concurrent writers, multiple processes, or distributed recovery.
+- Production-grade replay protection and recovery remain unverified.
+
+Conclusion
+
+[V] The controlled test completed with seven passing checks and no failures.
+
+[I] The results support separating candidate-file inspection from the decision to trust or commit recovered data.
+
+Next research question: Can candidate validation reject duplicate request IDs, empty identifiers, and invalid identifier types while preserving the authoritative store?
