@@ -2943,3 +2943,52 @@ Conclusion
 Test 65 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact "ZAR" matches and denied the tested non-matching currency strings.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 66 — Authorization Must Be Valid at the Decision Time
+
+Result: PASS
+Checks passed: 5/5
+Trials: 16
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated transaction is accepted only when the authorization remains valid at the decision time.
+
+Method
+
+The test used an illustrative authorization expiry timestamp of "1000" and 16 fixed decision timestamps:
+
+- Eight decisions occurred before expiry.
+- Four decisions occurred exactly at expiry.
+- Four decisions occurred after expiry.
+
+The simulated rule permitted a request only when its transaction context matched and "decision_time < authorization_expiry". Expiry was therefore treated as exclusive.
+
+Results
+
+- Authorization expiry: "1000"
+- Total trials: 16
+- Requests committed: 8
+- Requests denied: 8
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Aggregate checks passed: 5/5
+
+Evidence assessment
+
+[V] Verified observation: The recorded execution output reports 16 trials, 8 committed requests, 8 denied requests, zero unexpected outcomes, and 5/5 checks passed.
+
+[I] Interpretation: In this local simulation, decisions before the expiry timestamp were accepted, while decisions at or after expiry were denied.
+
+[H] Hypothesis requiring further testing: Checking authorization validity at the decision boundary may help prevent expired approvals from being used. Real implementations require trusted time sources and enforcement at the actual execution boundary.
+
+Limitations
+
+This was a local Python simulation using artificial timestamps and fixed transaction-context values. It did not test real clocks, time zones, clock drift, token validation, authorization revocation, delayed execution, distributed services, or real payment systems. It does not establish production security readiness.
+
+Conclusion
+
+Test 66 passed all five programmed checks. The evidence supports only the narrow claim that the simulated expiry rule accepted pre-expiry cases and denied cases at or after expiry.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
