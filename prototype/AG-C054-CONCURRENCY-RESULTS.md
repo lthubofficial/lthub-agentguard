@@ -1797,3 +1797,55 @@ Conclusion
 [I] The result supports further testing of stale-state checks, atomic updates, and preservation of competing changes under concurrency.
 
 Security status: Local experimental evidence only. Production security remains unverified.
+
+Test 45 — Generation Integrity and Lost-Update Detection
+
+Test ID: AG-C054-T045
+Series: LT Hub™ AgentGuard — AG-C054
+Method: Sequential local Python simulation
+Result: 7 passed, 0 failed
+
+Objective
+
+Examine whether a generation check detects a stale candidate after another candidate commits an update to the authoritative replay store.
+
+Procedure
+
+1. Initialized the store at generation 10 with "REQ-1201" and "REQ-1202".
+2. Created Candidates A and B from the same generation-10 snapshot.
+3. Committed Candidate A and advanced the store generation to 11.
+4. Submitted Candidate B using its original generation-10 snapshot.
+5. Compared the final generation and request IDs against the expected state.
+
+Results
+
+[V] Observed: The supplied Google Colab output reported 7 passed and 0 failed.
+
+- The initial store began at generation 10.
+- Candidate A committed successfully.
+- The successful A commit advanced the generation to 11.
+- Candidate B was rejected with "STALE_GENERATION".
+- The final generation remained 11.
+- The final state retained "REQ-1201", "REQ-1202", and "CANDIDATE-A".
+- "CANDIDATE-B" was absent from the final state.
+
+Interpretation
+
+[V] The sequential simulation detected Candidate B's stale generation after Candidate A committed.
+
+[I] Generation-based stale-state detection can help prevent this particular sequential lost-update scenario when candidates are compared against the current authoritative generation before a write.
+
+Limitations
+
+- The test was a sequential local simulation, not a simultaneous concurrency test.
+- The generation check and file write were separate operations.
+- No lock, atomic compare-and-commit mechanism, production database, or distributed storage system was tested.
+- The result does not prove that a production system is protected from race conditions.
+
+Conclusion
+
+[V] All seven programmed checks passed in the reported run.
+
+[I] The result supports further testing of atomic generation checks and updates under forced concurrent interleaving.
+
+Security status: Local experimental evidence only. Production security remains unverified.
