@@ -1490,3 +1490,67 @@ Conclusion
 Research principle: Competing updates based on the same generation should not both commit as though they were the sole successful update.
 
 Next proposed test: Test 40 — Repeated Concurrent Compare-and-Commit Trials. Evaluate whether the same single-winner property holds across multiple controlled trials, while retaining the limitations of the local thread-lock model.
+
+Test 40 — Repeated Concurrent Compare-and-Commit Trials
+
+Test ID: AG-C054-T040
+Category: Replay-Store Recovery / Repeated Concurrency Testing
+Result: 4 passed, 0 failed
+Trials completed: 100
+Execution environment: Local Python simulation in Google Colab
+
+Objective
+
+Evaluate whether repeated pairs of competing candidates, both expecting the same authoritative generation, result in exactly one successful commit per trial when the comparison and write are protected by a shared thread lock.
+
+Test Procedure
+
+1. Initialized a temporary authoritative store at generation 10 for each trial.
+2. Preserved the baseline request IDs "BASE-A" and "BASE-B".
+3. Prepared Candidate A and Candidate B with different trial-specific request IDs.
+4. Submitted both candidates concurrently using a two-worker thread pool.
+5. Used a shared "threading.Lock" to protect each candidate's read, generation check, validation, and write.
+6. Inspected the final state after both attempts completed.
+7. Repeated the procedure 100 times.
+
+Observed Results
+
+[V] The reported run completed all 100 trials.
+
+[V] All 100 trials satisfied the single-winner and final-state checks.
+
+[V] Exactly one successful commit occurred in each trial.
+
+[V] Candidate A won 100 trials; Candidate B won zero trials.
+
+[V] No unexpected final authoritative states were detected.
+
+[V] The final result was four passing aggregate checks and zero failures.
+
+Interpretation
+
+[I] The results are consistent with the shared thread lock serializing the competing operations in this implementation.
+
+[I] The generation check rejected the candidate that attempted to commit after the authoritative generation had advanced.
+
+[I] Candidate A winning every trial is an observed outcome, not evidence that Candidate A is inherently preferred or that the candidates have equal scheduling opportunities.
+
+Limitations
+
+- The experiment used a local, single-process Python simulation and temporary files.
+- The competing threads shared one lock object.
+- The test did not evaluate independent processes, multiple servers, distributed storage, database transactions, or production deployment.
+- The test did not prove crash durability or production-grade atomicity.
+- Four aggregate checks passed; this does not mean 400 independent trials or individual checks were performed.
+
+Conclusion
+
+[V] The reported run passed all four aggregate checks across 100 trials.
+
+[I] The results support further investigation of synchronized compare-and-commit logic within one process.
+
+[H] A production implementation may need transactional storage or inter-process coordination to provide comparable guarantees across independent workers. This remains unverified.
+
+Research principle: Repeated successful local concurrency trials strengthen evidence about the tested implementation, but do not establish safety outside its tested execution boundary.
+
+Next proposed test: Test 41 — Forced Interleaving Without a Shared Lock. Use a controlled simulation to examine how competing commits behave when the read/check/write sequence is not protected by a shared lock.
