@@ -2610,3 +2610,50 @@ This is a simplified local simulation. It does not test a real authorization pro
 Conclusion
 
 Test 59 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that the simulated decision rule denies all non-True authorization results. It does not establish production readiness.
+
+Test 60 — Authorization Must Match the Requested Action
+
+Status: PASS — 5/5 checks passed
+Trials: 100
+Unexpected outcomes: 0
+Environment: Local Python simulation using in-memory state.
+
+Objective
+
+Evaluate whether authorization for one action is incorrectly accepted when a different action is requested.
+
+Method
+
+The test cycles through five combinations of granted and requested actions:
+
+- "READ" → "READ"
+- "READ" → "COMMIT"
+- "COMMIT" → "COMMIT"
+- "COMMIT" → "DELETE"
+- "DELETE" → "DELETE"
+
+The simulated authorization rule permits an operation only when the granted action exactly matches the requested action. Each trial checks the response, generation, and committed request IDs.
+
+Observed Results [V]
+
+- Trials executed: 100.
+- Unauthorized action mismatches denied: 40.
+- Exact action matches committed: 60.
+- Valid trials: 100/100.
+- Unexpected outcomes: 0.
+- Checks passed: 5/5.
+- State transitions matched the expected outcomes in every trial.
+
+Interpretation [I]
+
+The simulated exact-match rule denied requests when the granted action differed from the requested action. Matching action names were accepted under the test's defined criteria.
+
+Evidence Boundary
+
+This is a toy authorization simulation. It does not test real identity providers, resource-level access control, ownership, role hierarchies, contextual permissions, policy conflicts, or production enforcement.
+
+A production authorization system must validate the principal, resource, requested operation, applicable policy, and relevant context—not merely compare action strings.
+
+Conclusion
+
+Test 60 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that this simulated rule rejects action-name mismatches. It does not establish production readiness.
