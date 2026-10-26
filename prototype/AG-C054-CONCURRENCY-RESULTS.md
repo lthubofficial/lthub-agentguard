@@ -2751,3 +2751,51 @@ A production implementation must derive the principal from a trusted authenticat
 Conclusion
 
 Test 62 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that this simulated rule rejects principal-string mismatches. It does not establish production readiness.
+
+Test 63 — Authorization Must Match the Complete Transaction Context
+
+Result: PASS
+Checks passed: 5/5
+Trials: 32
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated request is accepted only when its requested principal, action, and resource all match the corresponding authorized context.
+
+Method
+
+The test evaluated exact-match cases and cases with one deliberately mismatched field:
+
+- Principal mismatch
+- Action mismatch
+- Resource mismatch
+
+The authorization decision used exact tuple equality across all three fields.
+
+Results
+
+- Total trials: 32
+- Requests committed: 8
+- Requests denied: 24
+- Valid trials: 32/32
+- Unexpected outcomes: 0
+- Aggregate checks passed: 5/5
+
+Evidence assessment
+
+[V] Verified observation: The recorded execution output reports 32 trials, 8 committed requests, 24 denied requests, zero unexpected outcomes, and 5/5 checks passed.
+
+[I] Interpretation: Within this local simulation, exact-match comparison across principal, action, and resource produced the expected allow/deny outcomes for the tested cases.
+
+[H] Hypothesis requiring further testing: Combining these three fields may help reduce authorization-context mismatches when implemented within a properly designed access-control system. This test alone does not establish that a real system is protected against identity spoofing, compromised authorization data, or other attacks.
+
+Limitations
+
+This was a local Python simulation using predefined values and exact tuple comparison. It did not test real authentication, trusted identity provenance, delegated permissions, policy engines, concurrent transactions, distributed services, or production integrations. The authorized context was constructed within the test; it was not independently verified.
+
+Conclusion
+
+Test 63 passed all five programmed checks. The result supports only the narrow claim that the simulated decision rule denied the tested single-field mismatches and accepted the exact-match cases. It does not establish production security readiness.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
