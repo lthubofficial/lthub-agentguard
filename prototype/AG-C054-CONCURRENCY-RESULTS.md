@@ -3136,3 +3136,51 @@ Conclusion
 Test 69 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact recipient matches and denied the tested mismatches.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 70 — Authorization Must Match the Transaction Reference
+
+Result: PASS
+Checks passed: 5/5
+Trials: 16
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated payment request is accepted only when its transaction reference matches the reference bound to the authorized transaction context.
+
+Method
+
+The authorized reference was "INV-2026-001". Sixteen requests were evaluated while keeping the other transaction-context fields fixed.
+
+- Eight requests used the exact authorized reference.
+- Eight requests used alternative, unknown, empty, lowercase, or whitespace-altered references.
+
+The simulated decision rule compared the complete requested context with the authorized context using exact dictionary equality.
+
+Results
+
+- Authorized reference: "INV-2026-001"
+- Total trials: 16
+- Requests committed: 8
+- Requests denied: 8
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Aggregate checks passed: 5/5
+
+Evidence assessment
+
+[V] Verified observation: The supplied execution output reports 16 trials, 8 committed requests, 8 denied requests, zero unexpected outcomes, and 5/5 checks passed.
+
+[I] Interpretation: In this local simulation, exact reference matching rejected the tested mismatches and accepted the matching references.
+
+[H] Hypothesis requiring further testing: Binding authorization to a transaction reference may help identify reference substitutions when the control is integrated with trusted transaction records and approval workflows.
+
+Limitations
+
+This was a local Python simulation using predefined strings and exact dictionary equality. It did not verify invoice authenticity, invoice payment status, supplier ownership, duplicate-invoice detection, approval provenance, or real payment execution. A matching reference does not prove that an invoice is genuine, valid, or unpaid. This test does not establish production security readiness.
+
+Conclusion
+
+Test 70 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact transaction-reference matches and denied the tested mismatches.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
