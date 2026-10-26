@@ -1674,3 +1674,66 @@ Conclusion
 Research principle: A successful validation against stale state is not sufficient evidence that a concurrent update can be safely committed.
 
 Next proposed test: Test 43 — Repeated Controlled Concurrency Comparisons. Repeat the paired scenarios to assess consistency across multiple trials while keeping the local simulation limitations explicit.
+
+Test 43 — Repeated Controlled Concurrency Comparisons
+
+Test ID: AG-C054-T043
+Category: Replay-Store Recovery / Repeated Concurrency Comparison
+Result: 5 passed, 0 failed
+Trials: 100 unsynchronized and 100 synchronized
+Execution environment: Local Python simulation in Google Colab
+
+Objective
+
+Compare synchronized and unsynchronized competing commits over repeated trials, checking operation acceptance results and the structure of the final authoritative state.
+
+Test Procedure
+
+1. Initialized a separate temporary JSON store at generation 10 for each trial.
+2. Preserved baseline request IDs "BASE-A" and "BASE-B".
+3. Prepared two candidates targeting generation 11, each with a unique trial-specific ID.
+4. In the unsynchronized scenario, used a two-party barrier to ensure both workers read the initial state before either wrote.
+5. In the synchronized scenario, protected the read, generation check, and write with a shared "threading.Lock".
+6. Repeated each scenario 100 times and checked acceptance outcomes, generation, baseline IDs, and candidate-specific IDs.
+
+Observed Results
+
+[V] The reported run passed all five aggregate checks.
+
+[V] Both unsynchronized workers reported acceptance in all 100 trials.
+
+[V] Exactly one synchronized worker reported acceptance in all 100 trials.
+
+[V] All unsynchronized final states passed the programmed structural checks.
+
+[V] All synchronized final states passed the programmed structural checks.
+
+[V] The aggregate acceptance counts matched the expected outcomes in all 200 trial executions.
+
+Interpretation
+
+[I] The results are consistent with the controlled timing in the unsynchronized scenario: both workers read the same earlier state and passed the generation check before writing.
+
+[I] The results are consistent with the shared lock serializing the synchronized operations, allowing the second worker to observe the changed generation and be rejected.
+
+[I] The forced barrier makes the unsynchronized result repeatable under this test design; it does not measure the natural frequency of race conditions under arbitrary scheduling.
+
+Limitations
+
+- The test used local Python threads and temporary JSON files.
+- The unsynchronized scenario deliberately forced both reads to occur before either write.
+- The synchronized lock protects only cooperating threads sharing the same lock object.
+- No independent processes, multiple servers, database transactions, distributed storage, or production deployment were tested.
+- Passing the programmed checks does not establish production-grade atomicity, crash durability, or complete replay protection.
+
+Conclusion
+
+[V] The reported run passed all five aggregate checks across 100 trials per approach.
+
+[I] The comparison supports coordinating the state check and update within a suitable synchronization boundary.
+
+[H] A transactional or inter-process coordination mechanism may provide similar protection in a production design, but that must be tested in the intended architecture.
+
+Research principle: Repeated outcomes strengthen evidence about the tested conditions, not about untested deployment environments.
+
+Next proposed test: Test 44 — Unsynchronized Commit Ordering and Final-State Integrity. Examine how the final state depends on write order when competing candidates both pass a stale-state check.
