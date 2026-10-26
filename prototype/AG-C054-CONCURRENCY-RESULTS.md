@@ -2473,3 +2473,48 @@ This test uses in-memory state and a process-local lock. It does not test distri
 Conclusion
 
 Test 56 passed its defined acceptance criteria in all 100 trials. The result supports the narrow claim that the simulated retry was denied when it checked authorization after revocation had taken effect under the shared lock. It is not evidence of production readiness.
+
+Test 57 — Authorization Revocation Before the Commit Boundary
+
+Status: PASS — 5/5 checks passed
+Trials: 100
+Unexpected outcomes: 0
+Execution environment: Controlled local Python simulation using in-memory state and a process-local lock.
+
+Objective
+
+Evaluate whether a prepared request is denied when authorization is revoked before the simulated commit boundary.
+
+Method
+
+Each trial follows a defined sequence:
+
+1. Initialize generation 90 and the existing committed request "REQ-BASE".
+2. Confirm that authorization is valid and prepare "REQ-NEW".
+3. Revoke authorization before attempting the commit.
+4. Check authorization again at the commit boundary.
+5. Verify the response, generation, committed request IDs, and final authorization state.
+
+Observed Results [V]
+
+- Trials executed: 100.
+- Response counts: "UNAUTHORIZED" — 100.
+- Valid trials: 100/100.
+- Unexpected outcomes: 0.
+- Checks passed: 5/5.
+- Final generation remained 90 in every trial.
+- "REQ-NEW" was not committed.
+- "REQ-BASE" remained the only committed request.
+- Final authorization state was revoked.
+
+Interpretation [I]
+
+In this controlled sequence, the simulated commit path rechecked authorization after revocation. The earlier preparation step did not grant permission to commit after authorization had been withdrawn.
+
+Evidence Boundary
+
+This test is sequential and uses in-memory state with a process-local lock. It does not test real identity providers, distributed execution, multiple processes or servers, external authorization changes, or every possible timing race.
+
+Conclusion
+
+Test 57 passed its defined acceptance criteria in all 100 trials. The result supports the narrow claim that the simulated commit path rejects a prepared request when authorization has been revoked before the commit check. It does not establish production readiness.
