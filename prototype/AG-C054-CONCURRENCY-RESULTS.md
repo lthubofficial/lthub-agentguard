@@ -1428,3 +1428,65 @@ Conclusion
 Research principle: A candidate that was valid earlier must not be assumed valid at commit time. Recheck it against the current authoritative state.
 
 Next proposed test: Test 39 — Concurrent Compare-and-Commit Attempts. Evaluate competing candidates against the same expected generation, while clearly distinguishing a local synchronization simulation from database-level or distributed atomicity.
+
+Test 39 — Concurrent Compare-and-Commit Attempts
+
+Test ID: AG-C054-T039
+Category: Replay-Store Recovery / Concurrent Commit Protection
+Result: 7 passed, 0 failed
+Execution environment: Local Python simulation in Google Colab
+
+Objective
+
+Evaluate whether two competing candidates attempting to commit against the same expected authoritative generation can both be accepted when the comparison and update are protected by a shared thread lock.
+
+Test Procedure
+
+1. Initialized the authoritative store at generation 10 with request IDs "REQ-1201" and "REQ-1202".
+2. Prepared Candidate A containing "REQ-1203" and Candidate B containing "REQ-1204".
+3. Submitted both candidates concurrently using a two-worker thread pool.
+4. Required each candidate to match the expected generation and advance it by exactly one.
+5. Protected the read, validation, comparison, and write operation with a shared "threading.Lock".
+6. Inspected the final authoritative generation and request IDs.
+
+Observed Results
+
+[V] The reported run passed all seven checks.
+
+[V] Exactly one competing candidate was accepted.
+
+[V] Candidate A was accepted; Candidate B was rejected.
+
+[V] The authoritative generation advanced from 10 to 11 exactly once.
+
+[V] The final store contained "REQ-1203" and did not contain the rejected candidate's "REQ-1204".
+
+[V] Both original authoritative request IDs were preserved.
+
+[V] The final state matched one complete candidate.
+
+Interpretation
+
+[I] A shared thread lock can serialize compare-and-commit operations among threads using the same lock object.
+
+[I] The generation check rejected the second candidate after the first candidate advanced the authoritative state.
+
+Limitations
+
+- This was a local, single-process Python simulation using a temporary file.
+- The lock protects only cooperating threads sharing that lock object.
+- No independent processes, multiple servers, distributed storage, database transactions, or production deployment were tested.
+- The test does not establish crash durability, production-grade atomicity, or complete replay protection.
+- The observed outcome applies to this reported test run.
+
+Conclusion
+
+[V] The reported simulation passed all seven checks.
+
+[I] The results support further testing of synchronized compare-and-commit logic within a single process.
+
+[H] A production implementation may require transactional storage or inter-process coordination to provide equivalent guarantees across independent workers. This remains unverified.
+
+Research principle: Competing updates based on the same generation should not both commit as though they were the sole successful update.
+
+Next proposed test: Test 40 — Repeated Concurrent Compare-and-Commit Trials. Evaluate whether the same single-winner property holds across multiple controlled trials, while retaining the limitations of the local thread-lock model.
