@@ -1613,3 +1613,64 @@ Conclusion
 Research principle: Two operations must not both be treated as successful commits merely because they independently validated the same stale state.
 
 Next proposed test: Test 42 — Controlled Comparison of Synchronized and Unsynchronized Commits. Compare both approaches using equivalent initial states and competing candidates, while keeping conclusions limited to the local simulation.
+
+Test 42 — Controlled Comparison of Synchronized and Unsynchronized Commits
+
+Test ID: AG-C054-T042
+Category: Replay-Store Recovery / Concurrency Control Comparison
+Result: 6 passed, 0 failed
+Execution environment: Local Python simulation in Google Colab
+
+Objective
+
+Compare synchronized and unsynchronized read-check-write operations under controlled competing-candidate conditions, examining acceptance results and final authoritative state.
+
+Test Procedure
+
+1. Initialized separate temporary authoritative stores at generation 10 with baseline IDs "BASE-A" and "BASE-B".
+2. Prepared Candidate A and Candidate B, each targeting generation 11 and containing a different candidate-specific ID.
+3. In the unsynchronized scenario, used a barrier to ensure both workers read the initial state before either wrote.
+4. In the synchronized scenario, used a shared "threading.Lock" to protect the read, generation check, and write.
+5. Inspected both operation results and each final authoritative state.
+
+Observed Results
+
+[V] The reported run passed all six checks.
+
+[V] In the unsynchronized scenario, both workers reported acceptance, but the final state contained only "CANDIDATE-A" and not "CANDIDATE-B".
+
+[V] In the synchronized scenario, Candidate A was accepted and Candidate B was rejected.
+
+[V] The synchronized scenario's authoritative generation advanced from 10 to 11 exactly once.
+
+[V] Each final state contained exactly one candidate-specific ID.
+
+[V] Both scenarios preserved the baseline IDs.
+
+Interpretation
+
+[I] The unsynchronized result demonstrates a lost-update pattern in this controlled simulation: both candidates passed their checks against the same earlier state, but one write overwrote the other.
+
+[I] The synchronized result demonstrates how a shared lock can serialize cooperating threads so the second candidate observes the changed generation and is rejected.
+
+[I] The same candidate won in both scenarios in this run. This is an observed execution outcome, not evidence of a general preference for Candidate A.
+
+Limitations
+
+- The test used local Python threads and temporary JSON files.
+- The unsynchronized scenario deliberately controlled the timing of reads.
+- The synchronized lock protects only cooperating threads sharing that lock object.
+- No independent processes, multiple servers, database transactions, or production storage were tested.
+- The test does not establish production-grade atomicity, crash durability, or complete replay protection.
+
+Conclusion
+
+[V] The reported local run passed all six checks.
+
+[I] The comparison supports coordinating the state check and update rather than treating them as independent operations.
+
+[H] A suitable transactional or synchronization mechanism may prevent similar lost updates in a production implementation. Its effectiveness must be verified in the intended deployment architecture.
+
+Research principle: A successful validation against stale state is not sufficient evidence that a concurrent update can be safely committed.
+
+Next proposed test: Test 43 — Repeated Controlled Concurrency Comparisons. Repeat the paired scenarios to assess consistency across multiple trials while keeping the local simulation limitations explicit.
