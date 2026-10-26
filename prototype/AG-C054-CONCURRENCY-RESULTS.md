@@ -1325,3 +1325,42 @@ No candidate was promoted.
 Next step
 
 Test 37 should examine whether candidate generation checks remain safe when the authoritative generation changes between initial evaluation and a later recovery decision. The test should preserve the authoritative state and avoid treating an earlier validation result as permanent authorization.
+
+Test 37 — Authoritative Generation Changes Before Recovery
+
+Status: [V] 7/7 checks passed in the user-provided Google Colab output.
+
+Objective
+
+Evaluate whether a candidate that initially matches the authoritative generation is rejected when the authoritative state changes before the final eligibility check.
+
+Test setup
+
+The initial authoritative store contained generation "5" and request IDs "REQ-1001" and "REQ-1002". A candidate with generation "5" initially passed the eligibility check.
+
+The test then simulated an authoritative update to generation "6", adding "REQ-1004". The candidate was evaluated again against the newly read authoritative state.
+
+Results
+
+Check| Expected behaviour| Result
+Initial candidate matches generation "5"| Eligible initially| PASS
+Authoritative generation advances to "6"| Update observed| PASS
+Previously eligible candidate| Rejected on re-evaluation| PASS
+Latest generation| Remains "6"| PASS
+New authoritative ID "REQ-1004"| Preserved| PASS
+Candidate-only ID "REQ-1003"| Not promoted| PASS
+Store matches latest authoritative state| Confirmed by test| PASS
+
+Outcome
+
+[V] The provided output reports 7 passed, 0 failed. The candidate initially matched generation "5", but after the authoritative state advanced to generation "6", the candidate failed the subsequent eligibility check. The updated authoritative state was preserved, and no candidate was promoted.
+
+Scope and limitations
+
+[I] Rechecking eligibility against the latest available state helps detect stale candidates in a time-of-check/time-of-use scenario.
+
+The test is a sequential local simulation. It does not test simultaneous writers or guarantee that the authoritative state cannot change between the final check and a later write. It does not establish atomic compare-and-commit behaviour or production concurrency safety.
+
+Next step
+
+Test 38 should examine an atomic compare-and-commit simulation: a candidate may be committed only if the authoritative generation still matches the expected generation at the moment of the simulated commit. The test must reject stale commits and preserve the latest authoritative state.
