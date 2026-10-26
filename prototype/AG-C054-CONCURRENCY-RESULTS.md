@@ -3833,3 +3833,68 @@ Research series: LT Hub™ AgentGuard
 Test ID: 81
 Evidence status: Local simulation; scope-limited
 Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 82 — Verify Actual Authorization State After Transaction Mutation Denial
+
+Result: PASS
+Checks passed: 5/5
+Trials: 100
+
+1. Objective
+
+Verify that rejecting a modified transaction leaves the actual authorization object unconsumed, allowing the original approved transaction to proceed once while preventing subsequent consumption.
+
+2. Test scenario
+
+The authorization approved the following transaction:
+
+- Transaction ID: "TX-082"
+- Amount: "1000"
+- Currency: "ZAR"
+- Recipient: "SUPPLIER-A"
+
+The test changed the transaction amount to "1500", attempted validation, inspected the actual authorization object's "consumed" flag, retried the unchanged approved transaction, and attempted a second consumption.
+
+3. Observed results
+
+[V] Modified transactions denied: 100/100.
+
+[V] Actual authorization preserved after denial: 100/100.
+
+[V] Approved transactions committed: 100/100.
+
+[V] Second consumption attempts denied: 100/100.
+
+[V] Unexpected outcomes: 0.
+
+[V] Checks passed: 5/5.
+
+[V] Overall result: PASS.
+
+4. Interpretation
+
+[I] The local simulation demonstrates the intended sequence: a changed transaction is rejected without consuming the authorization; the unchanged approved transaction can then consume it; a subsequent consumption attempt is denied.
+
+[I] Unlike Test 81, this test checks the actual authorization object used by the trial rather than a separately constructed state object.
+
+5. Evidence limitations
+
+- This is a sequential, single-process Python simulation.
+- The lock is local to each trial and does not establish cross-process or distributed atomicity.
+- The authorization object and consumption state exist only in memory.
+- The test does not integrate with a real payment service, durable database, identity provider, or external authorization system.
+- The result does not establish production readiness or guarantee that a real transaction cannot be modified through other paths.
+
+6. Conclusion
+
+[V] The supplied output reports 100/100 modified-transaction denials, 100/100 preservation checks, 100/100 approved-transaction commitments, and 100/100 second-consumption denials, with zero unexpected outcomes.
+
+[I] The tested local control sequence behaved as intended. Further testing is needed to establish safe behavior under concurrent requests and persistent-state failures.
+
+[H] A subsequent frontier could test concurrent attempts to consume the same authorization while checking the actual shared authorization object and final state.
+
+Research series: LT Hub™ AgentGuard
+Test ID: 82
+Evidence status: Local simulation; scope-limited
+
+Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
