@@ -2704,3 +2704,50 @@ A production authorization system must validate the authenticated principal, res
 Conclusion
 
 Test 61 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that this simulated rule rejects resource-name mismatches. It does not establish production readiness.
+
+Test 62 — Authorization Must Match the Requested Principal
+
+Status: PASS — 5/5 checks passed
+Trials: 100
+Unexpected outcomes: 0
+Environment: Local Python simulation using in-memory state.
+
+Objective
+
+Evaluate whether authorization granted to one principal is incorrectly accepted for a request made by a different principal.
+
+Method
+
+The test cycles through five combinations of granted and requesting principals:
+
+- "USER-A" → "USER-A"
+- "USER-A" → "USER-B"
+- "USER-B" → "USER-B"
+- "USER-B" → "USER-C"
+- "USER-C" → "USER-C"
+
+The simulated authorization rule permits commitment only when the granted principal exactly matches the requesting principal. Each trial checks the response, generation, and committed request IDs.
+
+Observed Results [V]
+
+- Trials executed: 100.
+- Principal mismatches denied: 40.
+- Exact principal matches committed: 60.
+- Valid trials: 100/100.
+- Unexpected outcomes: 0.
+- Checks passed: 5/5.
+- State transitions matched the expected outcomes in every trial.
+
+Interpretation [I]
+
+The simulated exact-match rule denied requests when the requesting principal differed from the principal associated with the grant. Matching principal strings were accepted under the test's defined criteria.
+
+Evidence Boundary
+
+This is a simplified local authorization simulation. It does not verify authentication, identity provenance, impersonation resistance, delegated authority, session integrity, or integration with a real access-control system.
+
+A production implementation must derive the principal from a trusted authentication context and validate the principal's permission for the requested action and resource. Comparing caller-supplied identity strings alone is insufficient.
+
+Conclusion
+
+Test 62 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that this simulated rule rejects principal-string mismatches. It does not establish production readiness.
