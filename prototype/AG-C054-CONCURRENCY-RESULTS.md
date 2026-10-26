@@ -3235,3 +3235,63 @@ Conclusion
 Test 71 passed all six programmed checks. The evidence supports only the narrow claim that the simulated rule accepted totals equal to the approved line-item sum and denied the tested alternatives.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 72 — Authorization Must Match the Approved Payment Method
+
+Result: PASS
+Checks passed: 6/6
+Total trials: 16
+Unexpected outcomes: 0
+
+1. Objective
+
+Verify that a payment request is accepted only when its requested payment method exactly matches the method specified in the authorization record.
+
+2. [V] Observed Results
+
+The executed local Python simulation reported:
+
+- Approved example method: "BANK_TRANSFER"
+- Trials: 16
+- Requests committed: 4
+- Requests denied: 12
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Checks passed: 6/6
+- Final result: "PASS"
+
+3. Test Coverage
+
+The 16 cases included:
+
+- Matching payment methods.
+- Mismatched methods, including "CARD", "CASH", and "MOBILE_MONEY".
+- Case differences and leading or trailing whitespace.
+- Empty strings, "None", and a non-string method value.
+- Matching alternative methods and mismatches between requested and approved methods.
+
+The test accepted exact valid matches and denied mismatches or invalid values.
+
+4. [I] Interpretation
+
+The result supports the narrow conclusion that this test function enforces exact payment-method matching and fails closed for the invalid inputs represented in the test cases.
+
+Checking the payment method alongside the transaction attributes tested previously can reduce the risk of executing a request under authorization intended for a different payment arrangement.
+
+5. [H] Hypothesis for Further Testing
+
+Requiring the payment method to match the approved authorization may help prevent unauthorized changes to payment routing or execution methods. This hypothesis requires further testing against realistic integrations and threat scenarios.
+
+6. Limitations
+
+- This was a local Python simulation, not a real payment transaction.
+- The test does not validate identity, authorization-record authenticity, cryptographic integrity, or the security of an external payment provider.
+- Exact string matching is the behavior of this test function; production systems may require formally defined payment-method identifiers and validation rules.
+- The test does not establish resistance to concurrent authorization changes, compromised credentials, malicious integrations, or other attack paths.
+- A passing result is not evidence that AgentGuard is production-ready.
+
+7. Conclusion
+
+Test 72 passed all six programmed checks. The simulation demonstrated exact payment-method matching for the 16 tested cases.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
