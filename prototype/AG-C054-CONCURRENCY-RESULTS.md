@@ -3712,3 +3712,62 @@ Revalidating authorization at the consumption boundary, together with an atomic 
 Test 79 passed all six programmed checks. The simulation denied all 100 requests when revocation occurred between initial validation and the final consumption decision.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 80 — Authorization Must Fail Closed When the Final Status Check Fails
+
+Result: PASS
+Checks passed: 6/6
+Total trials: 16
+Unexpected outcomes: 0
+
+1. Objective
+
+Evaluate whether a simulated authorization-consumption function denies a request when the final status check fails or returns an invalid result, accepting only the literal Boolean value "True" as a successful check.
+
+2. [V] Observed Results
+
+The executed local Python simulation reported:
+
+- Trials: 16
+- Successful status checks committed: 2
+- Failed or invalid status checks denied: 14
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Checks passed: 6/6
+- Final result: "PASS"
+
+3. Test Coverage
+
+The test evaluated:
+
+- Successful Boolean status-check results.
+- Explicit failure using "False".
+- Missing results represented by "None".
+- String values such as "TRUE", "APPROVED", "ERROR", "TIMEOUT", and "UNAVAILABLE".
+- Integer and collection values that must not be treated as successful Boolean results.
+
+Only cases containing the literal Boolean "True" were accepted.
+
+4. [I] Interpretation
+
+The observed results support the narrow conclusion that the tested function fails closed for the represented failed and invalid status-check results.
+
+This is consistent with the control principle that uncertainty about authorization must not be interpreted as approval.
+
+5. [H] Hypothesis for Further Testing
+
+Explicitly distinguishing successful authorization checks from errors, timeouts, unavailable services, and malformed responses may reduce the risk of unauthorized actions during service failures. This requires testing against actual failure paths and integrations.
+
+6. Limitations
+
+- This was a local Python simulation, not a live authorization service.
+- Error and timeout conditions were represented by input values rather than actual network or database failures.
+- The function does not independently authenticate authorization data or verify the correctness of an external service's response.
+- The test does not establish protection against every exception, process failure, race condition, or integration error.
+- Passing this test does not establish production readiness.
+
+7. Conclusion
+
+Test 80 passed all six programmed checks. The simulation accepted the two successful Boolean checks and denied the 14 failed or invalid results.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
