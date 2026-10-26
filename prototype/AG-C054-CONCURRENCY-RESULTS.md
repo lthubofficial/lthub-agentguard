@@ -2799,3 +2799,51 @@ Conclusion
 Test 63 passed all five programmed checks. The result supports only the narrow claim that the simulated decision rule denied the tested single-field mismatches and accepted the exact-match cases. It does not establish production security readiness.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 64 — Authorization Must Match the Transaction Amount
+
+Result: PASS
+Checks passed: 5/5
+Trials: 16
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated payment request is accepted only when its requested integer amount exactly matches the authorized amount.
+
+Method
+
+The test used an authorized amount of 1000 and evaluated 16 requests:
+
+- Eight requests specified the exact authorized amount.
+- Eight requests specified different amounts, including lower, higher, zero, and negative values.
+
+The decision rule required the requested context to match the authorized context and the amount to be a positive integer.
+
+Results
+
+- Authorized amount: 1000
+- Total trials: 16
+- Requests committed: 8
+- Requests denied: 8
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Aggregate checks passed: 5/5
+
+Evidence assessment
+
+[V] Verified observation: The recorded execution output reports 16 trials, 8 committed requests, 8 denied requests, zero unexpected outcomes, and 5/5 checks passed.
+
+[I] Interpretation: The local simulation accepted the exact authorized integer amount and denied the tested mismatched amounts.
+
+[H] Hypothesis requiring further testing: Binding transaction approval to an exact amount may help prevent unauthorized changes to a transaction's value. This test does not establish that a real payment system enforces such binding.
+
+Limitations
+
+This was a local Python simulation using predefined integer values and exact tuple comparison. It did not test currency identification, decimal precision, rounding, transaction limits, approval expiry, authorization provenance, concurrent amount changes, or real payment execution. The test does not establish production security readiness.
+
+Conclusion
+
+Test 64 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted the eight exact-amount cases and denied the eight mismatched-amount cases.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
