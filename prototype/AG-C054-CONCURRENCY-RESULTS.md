@@ -1554,3 +1554,62 @@ Conclusion
 Research principle: Repeated successful local concurrency trials strengthen evidence about the tested implementation, but do not establish safety outside its tested execution boundary.
 
 Next proposed test: Test 41 — Forced Interleaving Without a Shared Lock. Use a controlled simulation to examine how competing commits behave when the read/check/write sequence is not protected by a shared lock.
+
+Test 41 — Forced Interleaving Without a Shared Lock
+
+Test ID: AG-C054-T041
+Category: Replay-Store Recovery / Lost-Update Simulation
+Result: 5 passed, 0 failed
+Execution environment: Local Python simulation in Google Colab
+
+Objective
+
+Demonstrate how two concurrent operations can both pass a generation check against the same earlier state when the read-check-write sequence is not protected by a shared lock.
+
+Test Procedure
+
+1. Initialized a temporary authoritative JSON store at generation 10 with request IDs "BASE-A" and "BASE-B".
+2. Prepared two candidates, each targeting generation 11, with distinct candidate-specific request IDs.
+3. Used a two-party thread barrier to ensure both workers read the initial state before either wrote.
+4. Allowed both workers to check the observed generation and write without a shared synchronization lock.
+5. Inspected the final authoritative file and the two operation results.
+
+Observed Results
+
+[V] The reported run passed all five checks.
+
+[V] Both workers reported acceptance based on the earlier generation.
+
+[V] The final authoritative generation was 11.
+
+[V] The final store contained "CANDIDATE-A" but not "CANDIDATE-B".
+
+[V] Both baseline IDs remained present.
+
+[V] At least one candidate's unique ID was absent from the final state despite both operations reporting acceptance.
+
+Interpretation
+
+[I] The result demonstrates a lost-update scenario in this controlled implementation: both operations passed a check against the same earlier state, but one write overwrote the other candidate's update.
+
+[I] A successful generation check alone is insufficient if the authoritative state can change between the check and the write.
+
+Limitations
+
+- The experiment used two threads, a temporary JSON file, and a deliberately unsynchronized read-check-write sequence.
+- The barrier controlled the timing of reads; it did not model every possible concurrency schedule.
+- The result does not establish a vulnerability in a production application, database, or distributed system.
+- No independent processes, multiple servers, database transactions, or production storage were tested.
+- The observed surviving candidate depends on the execution order and is not predetermined.
+
+Conclusion
+
+[V] The reported local run passed all five checks.
+
+[I] The result supports the need to protect the comparison and authoritative update as one coordinated operation.
+
+[H] A transactional storage mechanism or suitable synchronization strategy may prevent this class of lost update in a production design. The appropriate mechanism and its guarantees remain to be verified.
+
+Research principle: Two operations must not both be treated as successful commits merely because they independently validated the same stale state.
+
+Next proposed test: Test 42 — Controlled Comparison of Synchronized and Unsynchronized Commits. Compare both approaches using equivalent initial states and competing candidates, while keeping conclusions limited to the local simulation.
