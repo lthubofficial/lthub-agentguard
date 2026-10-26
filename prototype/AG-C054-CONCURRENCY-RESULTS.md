@@ -2222,3 +2222,55 @@ Final reported state:
 Evidence boundary: Local functional experiment only; not proof of production security.
 
 LT Hub™ principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 52B — Concurrent Duplicate-Request Safety
+
+Status: Completed — 5/5 checks passed
+Trials: 100
+Environment: Local Python threads, temporary JSON store, process-local thread lock.
+
+Objective
+
+Evaluate whether two concurrent submissions using the same request ID produce exactly one successful commit and one valid rejection, without duplicating the request in stored state.
+
+Method
+
+Each trial initialized the store at generation 40 with baseline request IDs "REQ-4001" and "REQ-4002". Two threads then submitted "REQ-CONCURRENT-RETRY-001", both expecting generation 40.
+
+The routine checked the expected generation before checking whether the request ID already existed. The read-check-write sequence was protected by a thread lock, and updates were written through a temporary file followed by "os.replace".
+
+Observed Results [V]
+
+- Total trials: 100.
+- "COMMITTED" responses: 100.
+- "STALE_GENERATION" responses: 100.
+- Valid response pairs: 100/100 trials.
+- Valid final states: 100/100 trials.
+- Trials passing both checks: 100/100.
+- Unexpected response trials: 0.
+- Invalid final-state trials: 0.
+- Aggregate checks: 5 passed, 0 failed.
+
+Each trial advanced the generation from 40 to 41, preserved both baseline IDs, and stored the concurrent request ID exactly once.
+
+Check Results [V]
+
+1. Exactly one commit and one valid rejection per trial — PASS.
+2. Generation advances exactly once — PASS.
+3. Request ID is stored exactly once — PASS.
+4. Baseline IDs are preserved and no extra IDs appear — PASS.
+5. All trials pass response and state checks — PASS.
+
+Interpretation [I]
+
+The results support the conclusion that the tested process-local lock and generation check prevented duplicate commits under this controlled two-thread scenario.
+
+The competing request returned "STALE_GENERATION", not "DUPLICATE_ID", because generation validation occurred first. This is acceptable under Test 52B's revised contract, which permits either response as the valid rejection.
+
+Test 52B is a revised acceptance test following Test 52's original response-expectation failures. The original failure remains part of the research history and is not superseded or erased.
+
+Evidence Boundary
+
+This experiment used local Python threads and a temporary JSON file. The thread lock coordinates threads within one process only. The test does not establish multi-process or multi-server safety, distributed atomicity, production database guarantees, or resilience to actual operating-system or power failures.
+
+Conclusion: The implementation passed all five defined checks in 100 controlled trials. Further testing is required before making production security claims.
