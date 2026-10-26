@@ -3418,3 +3418,64 @@ Binding a transaction to an approved authorizer may help reduce unauthorized sub
 Test 74 passed all six programmed checks. The simulation demonstrated exact authorizer-identifier matching across the 16 tested cases.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 75 — Authorization Must Not Be Reused for a Different Transaction
+
+Result: PASS
+Checks passed: 6/6
+Total trials: 16
+Unexpected outcomes: 0
+
+1. Objective
+
+Evaluate whether an authorization associated with one transaction can be used only for that same transaction, rather than being reused for a different transaction.
+
+2. [V] Observed Results
+
+The executed local Python simulation reported:
+
+- Authorization transaction ID: "TX-100"
+- Trials: 16
+- Requests committed: 2
+- Requests denied: 14
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Checks passed: 6/6
+- Final result: "PASS"
+
+3. Test Coverage
+
+The test included:
+
+- Requests matching the authorized transaction ID.
+- Requests using alternative transaction IDs.
+- Empty, missing, non-string, case-altered, and whitespace-altered transaction IDs.
+- Repeated attempts involving the same approved transaction ID.
+
+The function required the request's authorization ID, transaction ID, authorizer ID, and status to match the supplied authorization record.
+
+4. [I] Interpretation
+
+The observed result supports the narrow conclusion that this test function rejects transaction-ID mismatches and invalid identifiers for the tested cases.
+
+Binding authorization to a specific transaction is an important control concept: approval for one transaction should not automatically authorize another.
+
+However, the test does not demonstrate persistent replay prevention. The two matching requests were both accepted because the function does not track whether an authorization has already been consumed.
+
+5. [H] Hypothesis for Further Testing
+
+A transaction-bound authorization combined with a reliable, atomic, single-use consumption mechanism may help prevent authorization reuse. Further tests should examine concurrent duplicate submissions, retries, process restarts, and durable consumption records.
+
+6. Limitations
+
+- This was a local Python simulation; no real payment or identity system was used.
+- The authorization record was supplied directly to the function and was not cryptographically authenticated.
+- The test checks matching fields but does not consume or permanently invalidate an authorization after use.
+- It does not establish protection against concurrent replay, compromised credentials, forged authorization records, or distributed-system failures.
+- Passing these checks does not establish production readiness.
+
+7. Conclusion
+
+Test 75 passed all six programmed checks. The simulation demonstrated transaction-ID binding across the 16 tested cases, but it did not prove single-use authorization or persistent replay protection.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
