@@ -1955,3 +1955,58 @@ Conclusion
 [I] The result supports further testing of the same invariant across repeated trials and, separately, of atomicity mechanisms suitable for multi-process or distributed systems.
 
 Security status: Local experimental evidence only. Production security remains unverified.
+
+Test 48 — Repeated Concurrent Compare-and-Commit Trials
+
+Test ID: AG-C054-T048
+Series: LT Hub™ AgentGuard — AG-C054
+Method: 100 repeated two-thread compare-and-commit trials
+Result: 7 aggregate checks passed, 0 failed
+
+Objective
+
+Evaluate whether the synchronized compare-and-commit simulation consistently preserves its expected state invariants across 100 repeated trials involving two competing candidates.
+
+Procedure
+
+1. Initialized a temporary JSON replay store at generation 10 with "REQ-1501" and "REQ-1502" for each trial.
+2. Captured both candidate snapshots before either commit began.
+3. Used a barrier to ensure both snapshots were obtained before committing.
+4. Protected the current-generation check and update with a shared in-process lock.
+5. Repeated the experiment 100 times and evaluated seven aggregate checks across all trials.
+
+Results
+
+[V] Observed: The supplied Google Colab output reported all seven aggregate checks passing in all 100 trials.
+
+Check| Result
+Both candidates started at generation 10| 100/100 passed
+Exactly one candidate committed| 100/100 passed
+Exactly one candidate was rejected as stale| 100/100 passed
+Generation advanced exactly once| 100/100 passed
+Exactly one candidate-specific ID remained| 100/100 passed
+Baseline IDs were preserved| 100/100 passed
+No unexpected request IDs remained| 100/100 passed
+
+Summary: 7 aggregate checks passed, 0 failed. The output also reported "All individual trials passed: True".
+
+Interpretation
+
+[V] The tested implementation maintained all seven programmed invariants across the 100 reported trials.
+
+[I] The results strengthen the evidence that the shared-lock approach handles this particular stale-snapshot race consistently in the tested single-process environment.
+
+Limitations
+
+- The tests used local temporary JSON files and threads within one Python process.
+- The shared lock does not coordinate independent processes or separate servers.
+- The experiment did not test database transactions, distributed locking, crash recovery, or production workloads.
+- Repeated success in this simulation does not establish universal correctness or production security.
+
+Conclusion
+
+[V] All seven aggregate checks passed in the reported 100-trial run.
+
+[I] The results support further evaluation of an atomic state-update mechanism appropriate to the intended deployment environment.
+
+Security status: Local experimental evidence only. Production security remains unverified.
