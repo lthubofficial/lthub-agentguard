@@ -2847,3 +2847,51 @@ Conclusion
 Test 64 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted the eight exact-amount cases and denied the eight mismatched-amount cases.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 65 — Authorization Must Match the Transaction Currency
+
+Result: PASS
+Checks passed: 5/5
+Trials: 16
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated transaction is accepted only when its requested currency exactly matches the authorized currency.
+
+Method
+
+The authorized currency was "ZAR". Sixteen requests were evaluated while keeping the principal, action, resource, and amount fixed.
+
+- Eight requests used the exact authorized currency.
+- Eight requests used different, empty, lowercase, or whitespace-altered currency strings.
+
+The decision rule required exact transaction-context equality and membership in the test's predefined currency-code set.
+
+Results
+
+- Authorized currency: "ZAR"
+- Total trials: 16
+- Requests committed: 8
+- Requests denied: 8
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Aggregate checks passed: 5/5
+
+Evidence assessment
+
+[V] Verified observation: The recorded execution output reports 16 trials, 8 committed requests, 8 denied requests, zero unexpected outcomes, and 5/5 checks passed.
+
+[I] Interpretation: In this local simulation, exact currency-string matching rejected the tested currency mismatches and accepted the exact "ZAR" matches.
+
+[H] Hypothesis requiring further testing: Explicitly binding currency to transaction authorization may help prevent currency-substitution errors. Real payment systems require additional validation and controls.
+
+Limitations
+
+This was a local Python simulation using predefined strings. It did not test exchange rates, currency conversion, settlement, payment-provider behaviour, currency metadata validation, authorization provenance, or real payment execution. The predefined currency set is illustrative and is not a complete currency registry. This test does not establish production security readiness.
+
+Conclusion
+
+Test 65 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact "ZAR" matches and denied the tested non-matching currency strings.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
