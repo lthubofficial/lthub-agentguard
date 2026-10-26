@@ -949,3 +949,54 @@ Conclusion
 [I] The observed results support preservation of the original replay-store content and temporary-file cleanup for the specific injected failure paths tested.
 
 Next research question: How does the replay-store update workflow behave when a process terminates unexpectedly between successful synchronization and replacement of the original file?
+
+AG-C054 Test 29 — Simulated Process Interruption Before Replay-Store Replacement
+
+Test ID: AG-C054-T029
+Category: Replay-store integrity and interruption handling
+Status: Local controlled test completed
+Result: 6 passed, 0 failed
+
+Objective
+
+Examine the state of the original replay store when execution is deliberately interrupted after the temporary update has been written and synchronized, but before the replacement operation.
+
+Method
+
+A temporary JSON replay store was initialized with request IDs "REQ-201" and "REQ-202". An updated version containing "REQ-203" was written to a temporary file, flushed, and synchronized using "os.fsync()".
+
+Before "os.replace()" could execute, the test deliberately raised and caught an "InterruptedError". The test inspected the original store and the temporary file, then removed the temporary file through explicit test-harness cleanup.
+
+Results
+
+[V] All six checks passed, with zero failures.
+
+1. The interruption was injected before replacement.
+2. The original store remained unchanged at the interruption point.
+3. The uncommitted request ID, "REQ-203", was absent from the original store.
+4. The original store remained valid JSON.
+5. The temporary update existed at the interruption point.
+6. The test harness successfully removed the temporary update.
+
+Evidence and interpretation
+
+[V] The supplied Colab output reports "6 passed, 0 failed".
+
+[V] The original replay store remained unchanged during the simulated interruption, and the uncommitted request ID was absent.
+
+[I] The result supports preservation of the original store for this specific interruption point in the tested local workflow.
+
+Limitations
+
+- The interruption was simulated with a raised exception; the Python process was not terminated unexpectedly.
+- The test harness explicitly cleaned up the temporary file. This does not establish that an abandoned temporary file would be cleaned up after a real process crash.
+- No operating-system crash, power loss, filesystem failure, or real restart was tested.
+- Multi-process, multi-server, and production recovery behaviour remain unverified.
+
+Conclusion
+
+[V] The controlled test completed with six passing checks and no failures.
+
+[I] The result supports original-store integrity before replacement in the tested scenario, but does not establish crash recovery or production-grade durability.
+
+Next research question: After an actual process termination, can a new process recover a valid original replay store while safely identifying and handling any abandoned temporary update files?
