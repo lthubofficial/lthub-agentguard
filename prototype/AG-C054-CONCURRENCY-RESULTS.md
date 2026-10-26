@@ -897,3 +897,55 @@ Conclusion
 [I] The observed result supports preservation of the original replay-store content and temporary-file cleanup for this specific injected error path.
 
 Next research question: How should the replay-store update workflow be tested when temporary-file creation, writing, flushing, synchronization, or cleanup fails at different stages?
+
+AG-C054 Test 28 — Replay-Store Write, Flush and Synchronization Failure Handling
+
+Test ID: AG-C054-T028
+Category: Replay-store integrity and failure handling
+Status: Local controlled test completed
+Result: 15 individual checks passed; 0 failures shown in the supplied output
+
+Objective
+
+Evaluate replay-store integrity and temporary-file cleanup when an update encounters a deliberately injected error at the write, flush, or synchronization stage.
+
+Method
+
+The test used a temporary directory and three separate JSON replay stores. Each store began with the request IDs "REQ-101" and "REQ-102".
+
+A controlled "OSError" was injected at one of three points:
+
+1. Write stage: before the update data was written.
+2. Flush stage: after the update data was serialized, but before the explicit flush.
+3. Synchronization stage: after flushing, but before calling "os.fsync()".
+
+For each scenario, the test checked whether the update was rejected, the original store remained byte-for-byte unchanged, the new request ID was absent, the temporary file was cleaned up, and the original store remained valid JSON.
+
+Results
+
+[V] The supplied output shows all 15 individual checks passing: five checks for each of the three failure stages.
+
+- Write stage: 5/5 checks passed.
+- Flush stage: 5/5 checks passed.
+- Synchronization stage: 5/5 checks passed.
+
+[V] Across the displayed checks, each injected error was rejected, the original store remained unchanged, the uncommitted ID was absent, temporary-file cleanup succeeded, and the original JSON remained valid.
+
+Evidence and interpretation
+
+[I] These results support the expected error-handling behaviour at the three deliberately selected failure points in this local test implementation.
+
+Limitations
+
+- The failures were deliberately raised by the test code; actual disk-write, flush, or operating-system synchronization failures were not induced.
+- The test did not simulate power loss, process termination, filesystem corruption, or hardware failure.
+- It did not test concurrent writers, multiple processes, multiple servers, or production deployment conditions.
+- The results do not establish production-grade replay protection or crash durability.
+
+Conclusion
+
+[V] All 15 displayed checks passed in the supplied test output.
+
+[I] The observed results support preservation of the original replay-store content and temporary-file cleanup for the specific injected failure paths tested.
+
+Next research question: How does the replay-store update workflow behave when a process terminates unexpectedly between successful synchronization and replacement of the original file?
