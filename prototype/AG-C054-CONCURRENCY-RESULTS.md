@@ -3597,3 +3597,60 @@ Combining transaction binding with atomic, durable single-use consumption may re
 Test 77 passed all six programmed checks. In the 100 tested concurrent trials, the matching transaction was accepted and the incorrect transaction was denied, with no unexpected outcomes.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 78 — Authorization Must Remain Valid at the Moment of Consumption
+
+Result: PASS
+Checks passed: 6/6
+Trials: 100
+Unexpected outcomes: 0
+
+1. Objective
+
+Evaluate whether an authorization revoked before consumption is denied, even when its authorization ID and transaction ID still match the request.
+
+2. [V] Observed Results
+
+The executed local Python simulation reported:
+
+- Trials: 100
+- Revoked authorization denials: 100
+- Approved control acceptances: 100
+- Valid revoked-state trials: 100/100
+- Unexpected outcomes: 0
+- Checks passed: 6/6
+- Final result: "PASS"
+
+3. Test Coverage
+
+Each trial tested two cases:
+
+1. A matching authorization was revoked before consumption and then presented for use.
+2. A separate, fresh authorization remained approved and was presented for consumption.
+
+The simulation denied all 100 revoked authorizations and accepted all 100 approved control authorizations.
+
+4. [I] Interpretation
+
+The observed results support the conclusion that the tested function checks the authorization status during consumption and denies authorizations marked "REVOKED".
+
+The control cases also indicate that the revocation check did not prevent valid, unconsumed authorizations from being accepted in the tested scenarios.
+
+5. [H] Hypothesis for Further Testing
+
+Checking authorization status atomically at the point of consumption may reduce the risk of executing actions using revoked approvals. Further testing should examine revocation races, distributed state propagation, and failures between authorization consumption and downstream execution.
+
+6. Limitations
+
+- This was a local Python simulation using in-memory state.
+- Revocation occurred before consumption; this test did not examine simultaneous revocation and consumption.
+- It does not establish that revocation propagates reliably across processes, servers, or external services.
+- It does not validate real identity systems, payment-provider behavior, durable storage, or downstream execution.
+- The result does not establish that all revocation-related attack paths are covered.
+- Passing this test does not establish production readiness.
+
+7. Conclusion
+
+Test 78 passed all six programmed checks. The simulation denied every tested revoked authorization and accepted every approved control authorization.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
