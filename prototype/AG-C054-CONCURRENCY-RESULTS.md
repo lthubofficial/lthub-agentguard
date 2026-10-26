@@ -813,3 +813,35 @@ Limitations: The failure was deliberately simulated in code before "os.replace()
 Evidence record: Google Colab execution output supplied for AG-C054 Test 25. Preserve the notebook and output as supporting evidence.
 
 Next step: AG-C054 Test 26 — Failure During Replacement and Recovery of the Original Store.
+
+AG-C054 Test 26 — Failure During Replacement and Recovery
+
+Status: [V] All 6 defined checks passed in the reported Google Colab run.
+
+Objective: Evaluate whether the original replay store remains unchanged when an update fails immediately before the replacement operation.
+
+Test environment: Google Colab; Python; temporary local directory and files; single-process test.
+
+Results
+
+Check| Result
+Original replay store is valid before the test| PASS
+Simulated replacement failure rejects the update| PASS
+Original store remains unchanged after simulated failure| PASS
+Temporary update file is cleaned up| PASS
+Original request IDs remain available| PASS
+Uncommitted request ID is absent| PASS
+
+Summary: 6 checks passed; 0 checks failed.
+
+[V] Observed: The supplied output shows that the deliberately simulated failure resulted in rejection. The original store content and request IDs remained unchanged, the temporary update file was cleaned up, and the new request ID was not recorded.
+
+[I] Interpretation: Preparing an update separately before replacement can help preserve the original state when a failure occurs before replacement, provided the cleanup path executes successfully.
+
+[H] Remaining hypothesis: The same behaviour will hold when the actual operating-system replacement operation fails, during process crashes, under concurrent access, and in production deployment. These conditions remain untested.
+
+Limitations: The test raised an "OSError" before calling "os.replace()". It did not actually cause "os.replace()" to fail. It was a controlled simulation, not a real replacement-failure or crash-recovery test. Atomicity under concurrent access and crash durability remain unverified.
+
+Evidence record: Google Colab execution output supplied for AG-C054 Test 26. Preserve the notebook and output as supporting evidence.
+
+Next step: AG-C054 Test 27 — Actual Replacement Failure Injection and Original-Store Integrity.
