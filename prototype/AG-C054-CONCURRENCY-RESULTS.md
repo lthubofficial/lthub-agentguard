@@ -3295,3 +3295,64 @@ Requiring the payment method to match the approved authorization may help preven
 Test 72 passed all six programmed checks. The simulation demonstrated exact payment-method matching for the 16 tested cases.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 73 — Authorization Must Match the Approved Payment Destination
+
+Result: PASS
+Checks passed: 6/6
+Total trials: 16
+Unexpected outcomes: 0
+
+1. Objective
+
+Evaluate whether a simulated payment request is accepted only when its requested destination identifier exactly matches the destination recorded in its authorization context.
+
+2. [V] Observed Results
+
+The executed local Python simulation reported:
+
+- Approved example destination: "ACCOUNT-SUPPLIER-A"
+- Trials: 16
+- Requests committed: 5
+- Requests denied: 11
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Checks passed: 6/6
+- Final result: "PASS"
+
+3. Test Coverage
+
+The test included:
+
+- Exact destination matches.
+- Requests targeting a different supplier or other account.
+- Mismatches between requested and approved destinations.
+- Case differences and leading or trailing whitespace.
+- Empty identifiers, "None", and a non-string identifier.
+- Additional matching destination pairs.
+
+The function accepted exact, non-empty string matches and denied mismatches or invalid inputs.
+
+4. [I] Interpretation
+
+The observed result supports the narrow conclusion that the test function enforces exact destination-identifier matching for the 16 cases evaluated.
+
+This check complements earlier tests covering transaction identity, recipient, amount, currency, payment method, and authorization status. Together, these simulations examine whether individual transaction attributes remain consistent with the authorization context.
+
+5. [H] Hypothesis for Further Testing
+
+Checking the approved destination immediately before an irreversible action may help reduce unauthorized payment redirection. This remains a hypothesis until tested against realistic authorization changes, integration failures, and adversarial scenarios.
+
+6. Limitations
+
+- This was a local Python simulation using illustrative identifiers; no real accounts or payments were involved.
+- Exact string matching does not establish that an account identifier is authentic or belongs to the intended supplier.
+- The test does not verify authorization signatures, external account ownership, or payment-provider controls.
+- It does not establish security against compromised credentials, concurrent changes, malicious integrations, or other attack paths.
+- Passing these checks does not establish production readiness.
+
+7. Conclusion
+
+Test 73 passed all six programmed checks. The simulation demonstrated exact destination matching across the 16 tested cases.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
