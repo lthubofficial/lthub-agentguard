@@ -2148,3 +2148,77 @@ Final reported state:
 Evidence boundary: Local failure-injection experiment only; not proof of production security.
 
 LT Hub™ principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions. 
+
+Test 51 — Duplicate Commit Retry and Stale-Generation Handling
+
+Project: LT Hub™ AgentGuard
+Test ID: AG-C054-Test-51
+Category: Duplicate request detection, retry handling, and generation integrity
+Environment: Google Colab, Python, temporary JSON storage
+Reported result: 12 checks passed, 0 failed
+
+51.1 Objective
+
+Evaluate whether the local commit routine rejects a duplicate request ID without modifying the authoritative store, while permitting a distinct request and rejecting a request based on an outdated generation.
+
+51.2 Test configuration
+
+- Initial generation: "30"
+- Initial request IDs: "REQ-3001", "REQ-3002"
+- First request: "REQ-RETRY-001"
+- Distinct request: "REQ-RETRY-002"
+- Stale request: "REQ-STALE-001"
+- Synchronization: one shared Python thread lock around the local check-and-update routine.
+
+51.3 Observed results
+
+[V] Verified from the supplied Colab output
+
+Check| Result
+First request committed successfully| PASS
+First commit advanced generation once| PASS
+Baseline IDs and first request were retained| PASS
+Duplicate retry rejected as "DUPLICATE_ID"| PASS
+Authoritative file unchanged byte-for-byte after retry| PASS
+Duplicate retry did not advance generation| PASS
+Duplicate request appeared only once| PASS
+Distinct request committed successfully| PASS
+Distinct commit advanced generation once| PASS
+Baseline and both distinct request IDs retained| PASS
+Stale-generation request rejected| PASS
+Stale request left final state unchanged| PASS
+
+Final reported state:
+
+- Generation: "32"
+- Request IDs: "REQ-3001", "REQ-3002", "REQ-RETRY-001", "REQ-RETRY-002"
+- Checks passed: "12/12"
+- Checks failed: "0/12"
+
+51.4 Analysis
+
+[V] The supplied run shows that the first request was committed at generation 31. Retrying that request using the current generation returned "DUPLICATE_ID"; the authoritative file remained byte-for-byte unchanged.
+
+[V] A distinct request was committed, advancing the generation to 32. A subsequent request using the obsolete generation 30 was rejected as "STALE_GENERATION", and the final state remained unchanged.
+
+[I] The results support duplicate-ID checks and generation validation as complementary safeguards within this local implementation.
+
+51.5 Limitations
+
+- This is a local Python test using temporary JSON storage.
+- The retry was simulated by directly calling the commit function; no real network timeout or uncertain client response was tested.
+- The shared lock protects threads in one Python process, not independent processes or servers.
+- The test does not establish production replay protection, distributed consistency, authentication, or durability.
+- The results are based on the supplied Colab output and have not been independently reproduced in this report.
+
+51.6 Conclusion
+
+[V] The supplied execution output reports 12 passing checks and no failures.
+
+[I] Under the tested conditions, duplicate request IDs and stale-generation requests were rejected without changing the authoritative state.
+
+[H] Applying equivalent safeguards to a production service may improve retry and replay handling, subject to independent testing of the actual storage and deployment architecture.
+
+Evidence boundary: Local functional experiment only; not proof of production security.
+
+LT Hub™ principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
