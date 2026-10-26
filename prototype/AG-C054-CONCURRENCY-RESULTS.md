@@ -2274,3 +2274,58 @@ Evidence Boundary
 This experiment used local Python threads and a temporary JSON file. The thread lock coordinates threads within one process only. The test does not establish multi-process or multi-server safety, distributed atomicity, production database guarantees, or resilience to actual operating-system or power failures.
 
 Conclusion: The implementation passed all five defined checks in 100 controlled trials. Further testing is required before making production security claims.
+
+Test 53 — Concurrent Distinct Requests Using the Same Expected Generation
+
+Status: Completed — 5/5 checks passed
+Trials: 100
+Environment: Local Python threads, temporary JSON store, process-local thread lock.
+
+Objective
+
+Evaluate whether two concurrent requests with different request IDs, both expecting the same generation, can cause an unintended double commit or lost state update.
+
+Method
+
+Each trial initialized the store at generation 50 with baseline request IDs "REQ-5001" and "REQ-5002".
+
+Two threads concurrently submitted:
+
+- "REQ-CONCURRENT-A-053"
+- "REQ-CONCURRENT-B-053"
+
+Both requests expected generation 50. The routine used a process-local thread lock around the read-check-write sequence. Generation validation occurred before duplicate-ID validation. State updates used a temporary file and "os.replace".
+
+Observed Results [V]
+
+- Total trials: 100.
+- "COMMITTED" responses: 100.
+- "STALE_GENERATION" responses: 100.
+- Valid response outcomes: 100/100.
+- Valid final states: 100/100.
+- Trials passing both response and state checks: 100/100.
+- Unexpected response trials: 0.
+- Invalid state trials: 0.
+- Aggregate checks: 5 passed, 0 failed.
+
+Each trial advanced generation from 50 to 51, preserved both baseline IDs, and stored exactly one of the two new request IDs. The request receiving "STALE_GENERATION" was not present in the final stored state.
+
+Check Results [V]
+
+1. One commit and one stale-generation rejection per trial — PASS.
+2. Generation advances exactly once per trial — PASS.
+3. Exactly one new request ID is stored — PASS.
+4. Baseline IDs are preserved and no extra IDs appear — PASS.
+5. All trials pass both response and state checks — PASS.
+
+Interpretation [I]
+
+The observed results support the conclusion that the tested lock and generation check prevented both distinct requests from committing against the same expected generation in this controlled, single-process scenario.
+
+The losing request was rejected as stale rather than automatically retried. A safe retry policy would need to reread the current state and re-evaluate authorization, request validity, and other applicable conditions before attempting another commit.
+
+Evidence Boundary
+
+This experiment used local Python threads and temporary JSON files. The lock is process-local. The test does not establish multi-process or multi-server safety, distributed atomicity, production database guarantees, or resilience to actual operating-system or power failures.
+
+Conclusion: All five defined checks passed across 100 controlled trials. These results support the tested scenario only and must not be presented as proof of production readiness.
