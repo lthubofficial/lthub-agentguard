@@ -3184,3 +3184,54 @@ Conclusion
 Test 70 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact transaction-reference matches and denied the tested mismatches.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 71 — Authorization Must Match the Approved Transaction Total
+
+Result: PASS
+Checks passed: 6/6
+Trials: 16
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated transaction is accepted only when its requested total matches the sum of the approved line items.
+
+Method
+
+The approved line items were "[400, 600]", producing an authorized total of "1000".
+
+Sixteen requested totals were evaluated:
+
+- Eight requests used the exact authorized total.
+- Eight requests used altered totals, including lower, higher, zero, and negative values.
+
+The simulated decision rule required a positive integer total equal to the calculated authorized total.
+
+Results
+
+- Approved line items: "[400, 600]"
+- Calculated authorized total: "1000"
+- Total trials: 16
+- Requests committed: 8
+- Requests denied: 8
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Aggregate checks passed: 6/6
+
+Evidence assessment
+
+[V] Verified observation: The supplied execution output reports 16 trials, 8 committed requests, 8 denied requests, zero unexpected outcomes, and 6/6 checks passed.
+
+[I] Interpretation: In this local simulation, exact total matching accepted the tested authorized totals and denied the tested alternatives.
+
+[H] Hypothesis requiring further testing: Recalculating totals from approved line items may help detect unauthorized total changes when implemented in a real transaction system.
+
+Limitations
+
+This was a local Python simulation using integer arithmetic and predefined values. It did not test decimal currency calculations, taxes, fees, discounts, rounding, line-item authenticity, or real payment execution. The example does not establish that a production payment system calculates or enforces transaction totals securely.
+
+Conclusion
+
+Test 71 passed all six programmed checks. The evidence supports only the narrow claim that the simulated rule accepted totals equal to the approved line-item sum and denied the tested alternatives.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
