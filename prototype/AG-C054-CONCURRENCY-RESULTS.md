@@ -4095,3 +4095,70 @@ Test ID: 85
 Evidence status: Local in-memory simulation; scope-limited
 
 Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 86 — Concurrent Duplicate Requests Using the Same Request ID
+
+Result: PASS
+Checks passed: 5/5
+Trials: 100
+
+1. Objective
+
+Evaluate whether two concurrent requests using the same request ID produce only one simulated effect and leave the shared request record consistent.
+
+2. Test design
+
+Each trial initialized shared in-memory state containing:
+
+- Request ID: "REQ-086"
+- A completed-request ID set
+- An effect counter
+- A process-local "threading.Lock"
+- Two worker threads released through a synchronization barrier
+
+Under the lock, the first request applied the simulated effect and recorded the request ID. The competing request checked the same record and returned "ALREADY_COMMITTED".
+
+3. Observed results
+
+[V] Trials with exactly one effect: 100/100.
+
+[V] Trials with exactly one "COMMITTED" response: 100/100.
+
+[V] Trials with exactly one "ALREADY_COMMITTED" response: 100/100.
+
+[V] Trials with consistent shared state: 100/100.
+
+[V] Unexpected outcomes: 0.
+
+[V] Checks passed: 5/5.
+
+[V] Overall result: PASS.
+
+4. Interpretation
+
+[I] In the tested local simulation, the lock serialized access to the shared request record and effect counter. One request committed, and the competing request recognized the existing request ID without applying a second effect.
+
+[I] The observed behavior supports duplicate-request protection for this specific two-thread, in-memory implementation.
+
+5. Evidence limitations
+
+- The test operates within one Python process.
+- The lock does not coordinate independent processes or servers.
+- The request record and effect counter are not durably persisted.
+- The simulated effect and request record are protected together by the same local lock; this does not establish atomicity between a real database and an external service.
+- The test does not cover process crashes, network failures, conflicting payloads sharing an ID, or concurrent retries after restart.
+- The results do not establish production readiness or exactly-once execution in external systems.
+
+6. Conclusion
+
+[V] The supplied output reports 100/100 trials with one effect, one "COMMITTED" response, one "ALREADY_COMMITTED" response, and consistent shared state, with zero unexpected outcomes.
+
+[I] The local duplicate-request control behaved as intended under the tested conditions.
+
+[H] A subsequent frontier could test whether the system rejects reuse of the same request ID when the second request carries a different transaction payload.
+
+Research series: LT Hub™ AgentGuard
+Test ID: 86
+Evidence status: Local concurrency simulation; scope-limited
+
+Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
