@@ -1000,3 +1000,57 @@ Conclusion
 [I] The result supports original-store integrity before replacement in the tested scenario, but does not establish crash recovery or production-grade durability.
 
 Next research question: After an actual process termination, can a new process recover a valid original replay store while safely identifying and handling any abandoned temporary update files?
+
+AG-C054 Test 30 — Recovery Inspection After Abrupt Child-Process Termination
+
+Test ID: AG-C054-T030
+Category: Replay-store integrity and process-interruption recovery
+Status: Local controlled test completed
+Result: 6 passed, 0 failed
+
+Objective
+
+Examine the original replay store and temporary-file state after a separate child process terminates abruptly before replacing the original store.
+
+Method
+
+A local JSON replay store was initialized with request IDs "REQ-301" and "REQ-302".
+
+A separate Python child process read the store, prepared an updated version containing "REQ-303", wrote the update to a temporary file, flushed the file, and called "os.fsync()".
+
+Before the replacement operation, the child process terminated using "os._exit(23)", bypassing normal Python cleanup handlers. The parent process inspected the original store and temporary directory, then removed the abandoned temporary file.
+
+Results
+
+[V] All six checks passed, with zero failures.
+
+1. The child process exited with the injected exit code "23".
+2. The original store remained byte-for-byte unchanged.
+3. The original store remained valid JSON.
+4. The uncommitted request ID, "REQ-303", was absent from the original store.
+5. One abandoned temporary update file remained after child-process termination.
+6. The parent process successfully removed the abandoned temporary file.
+
+Evidence and interpretation
+
+[V] The supplied Colab output reports "6 passed, 0 failed".
+
+[V] Abrupt child-process termination left the original store unchanged while leaving the temporary update file behind.
+
+[I] The observation demonstrates why recovery procedures may need to account for temporary files left by interrupted updates.
+
+Limitations
+
+- The experiment terminated a child process, not the operating system.
+- It did not simulate power loss, filesystem failure, or hardware failure.
+- Temporary-file cleanup was performed explicitly by the parent test process; automatic recovery on application startup was not tested.
+- The test used a local temporary directory and did not assess concurrent writers, multiple servers, or production deployment.
+- It does not establish production-grade replay protection or crash durability.
+
+Conclusion
+
+[V] The controlled experiment completed with six passing checks and no failures.
+
+[I] The results support preservation of the original store in this specific pre-replacement interruption scenario and demonstrate that an abandoned temporary file can remain after abrupt process termination.
+
+Next research question: Can a recovery routine distinguish valid abandoned temporary updates from unsafe or incomplete files without accidentally replacing the authoritative replay store?
