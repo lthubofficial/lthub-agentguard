@@ -1243,3 +1243,43 @@ The test passed candidate data structures directly to the validator; it did not 
 Next step
 
 Test 35 should examine whether the decision gate also rejects a candidate that is structurally valid but contains an incomplete or inconsistent set of request IDs. Validation alone must not be treated as proof that a candidate is safe to restore.
+
+Test 35 — Candidate Completeness and Consistency Gate
+
+Status: [V] 8/8 checks passed in the user-provided Google Colab output.
+
+Objective
+
+Evaluate whether a candidate replay store can be checked for structural validity and compliance with an explicitly defined completeness policy before being considered for recovery.
+
+Test setup
+
+A local temporary authoritative store contained "REQ-801" and "REQ-802". Five candidate data structures were evaluated against the test policy that every authoritative request ID must be present in a candidate.
+
+Results
+
+Check| Expected behaviour| Result
+Complete candidate| Eligible for further review| PASS
+Candidate missing an original ID| Reject as incomplete| PASS
+Duplicate IDs| Reject as invalid| PASS
+Empty or whitespace-only ID| Reject as invalid| PASS
+Non-string ID| Reject as invalid| PASS
+Authoritative store| Remains byte-for-byte unchanged| PASS
+Original IDs| Both remain intact| PASS
+Candidate-only "REQ-803"| Not promoted| PASS
+
+Outcome
+
+[V] The provided output reports 8 passed, 0 failed. All five candidate cases received the expected classifications. The authoritative store remained unchanged, and "REQ-803" was not promoted.
+
+Scope and limitations
+
+[I] The test demonstrates that structural validation and a separately defined completeness check can be combined in a local recovery decision gate.
+
+The completeness rule is a test assumption, not a universal requirement. In a real replay-protection system, retention policies, expired entries, and legitimate pruning may mean that a candidate does not need to contain every historical request ID.
+
+The test used in-memory candidate data structures and a temporary authoritative file. It did not establish candidate authenticity, freshness, production recovery safety, concurrent-writer safety, or multi-server consistency.
+
+Next step
+
+Test 36 should examine candidate freshness and stale-state detection using an explicit, test-defined version or generation number. A structurally valid and complete candidate should not automatically be considered current or safe to restore.
