@@ -2992,3 +2992,51 @@ Conclusion
 Test 66 passed all five programmed checks. The evidence supports only the narrow claim that the simulated expiry rule accepted pre-expiry cases and denied cases at or after expiry.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 67 — Authorization Must Match the Transaction ID
+
+Result: PASS
+Checks passed: 5/5
+Trials: 16
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated transaction is accepted only when its requested transaction ID matches the transaction ID bound to the authorized context.
+
+Method
+
+The authorized transaction ID was "TX-100". Sixteen requests were evaluated while keeping the principal, action, resource, amount, and currency fixed.
+
+- Eight requests used the exact authorized transaction ID.
+- Eight requests used different, empty, lowercase, or whitespace-altered IDs.
+
+The decision rule compared the complete requested context with the authorized context using exact dictionary equality.
+
+Results
+
+- Authorized transaction ID: "TX-100"
+- Total trials: 16
+- Requests committed: 8
+- Requests denied: 8
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Aggregate checks passed: 5/5
+
+Evidence assessment
+
+[V] Verified observation: The recorded execution output reports 16 trials, 8 committed requests, 8 denied requests, zero unexpected outcomes, and 5/5 checks passed.
+
+[I] Interpretation: In this local simulation, exact transaction-context comparison rejected the tested transaction-ID mismatches and accepted the matching ID.
+
+[H] Hypothesis requiring further testing: Binding authorization to a specific transaction ID may help prevent an approval from being applied to a different transaction. Further testing is required to evaluate this control in an actual transaction-processing system.
+
+Limitations
+
+This was a local Python simulation using predefined values and exact dictionary equality. It did not test transaction-ID generation, uniqueness guarantees, authorization provenance, replay prevention, duplicate execution, concurrent requests, or real payment execution. Matching an ID alone does not prove that the transaction is authentic or has not already been processed. This test does not establish production security readiness.
+
+Conclusion
+
+Test 67 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact transaction-ID matches and denied the tested mismatches.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
