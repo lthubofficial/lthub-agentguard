@@ -3040,3 +3040,51 @@ Conclusion
 Test 67 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact transaction-ID matches and denied the tested mismatches.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 68 — Authorization Must Match the Transaction Status
+
+Result: PASS
+Checks passed: 5/5
+Trials: 16
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated transaction is accepted only when its authorization status is explicitly "APPROVED".
+
+Method
+
+The test evaluated 16 predefined status values:
+
+- Eight requests used the exact status "APPROVED".
+- Eight requests used alternative statuses, including pending, revoked, expired, unknown, empty, lowercase, cancelled, and on-hold values.
+
+The simulated decision rule accepted only an exact match with "APPROVED".
+
+Results
+
+- Required status: "APPROVED"
+- Total trials: 16
+- Requests committed: 8
+- Requests denied: 8
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Aggregate checks passed: 5/5
+
+Evidence assessment
+
+[V] Verified observation: The supplied execution output reports 16 trials, 8 committed requests, 8 denied requests, zero unexpected outcomes, and 5/5 checks passed.
+
+[I] Interpretation: In this local simulation, exact status matching accepted the approved cases and denied the tested alternatives.
+
+[H] Hypothesis requiring further testing: Explicit status validation may help prevent pending, revoked, expired, or otherwise unapproved requests from proceeding when incorporated into a properly enforced authorization workflow.
+
+Limitations
+
+This was a local Python simulation using predefined strings. It did not verify the identity of the party setting the status, the authenticity or freshness of authorization records, concurrent revocation, status transitions, or enforcement by a real transaction-processing system. A string equal to "APPROVED" does not itself prove that valid approval occurred. This test does not establish production security readiness.
+
+Conclusion
+
+Test 68 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact "APPROVED" values and denied the tested alternative status strings.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
