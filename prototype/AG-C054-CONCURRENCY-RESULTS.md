@@ -1283,3 +1283,45 @@ The test used in-memory candidate data structures and a temporary authoritative 
 Next step
 
 Test 36 should examine candidate freshness and stale-state detection using an explicit, test-defined version or generation number. A structurally valid and complete candidate should not automatically be considered current or safe to restore.
+
+Test 36 — Candidate Freshness and Stale-State Detection
+
+Status: [V] 10/10 checks passed in the user-provided Google Colab output.
+
+Objective
+
+Evaluate whether a candidate replay store can be classified using an explicit generation number, while rejecting invalid generation metadata and preserving the authoritative store.
+
+Test setup
+
+A local temporary authoritative store was initialized with generation "5" and request IDs "REQ-901" and "REQ-902". Seven candidate cases were evaluated.
+
+Results
+
+Check| Expected behaviour| Result
+Matching generation| Eligible for further review| PASS
+Older generation ("4")| Reject as stale| PASS
+Newer generation ("6")| Require further review| PASS
+Missing generation| Reject as invalid| PASS
+Negative generation| Reject as invalid| PASS
+Boolean generation| Reject as invalid| PASS
+Incomplete candidate| Reject as incomplete| PASS
+Authoritative store| Remains byte-for-byte unchanged| PASS
+Original generation and IDs| Preserved| PASS
+Candidate-only IDs| Not promoted| PASS
+
+Outcome
+
+[V] The provided output reports 10 passed, 0 failed. The candidate matching generation "5" was eligible for review. The older candidate was rejected as stale, while the newer candidate was referred for further review. Invalid generation metadata and an incomplete candidate were rejected. The authoritative store remained unchanged.
+
+Scope and limitations
+
+[I] A generation number can help identify stale candidate state when compared against a trustworthy authoritative reference.
+
+The test uses locally constructed data and a test-defined generation policy. It does not establish that generation numbers are authentic, tamper-resistant, globally consistent, or durable across multiple servers. A higher generation number alone does not prove that a candidate is trustworthy or safe to restore.
+
+No candidate was promoted.
+
+Next step
+
+Test 37 should examine whether candidate generation checks remain safe when the authoritative generation changes between initial evaluation and a later recovery decision. The test should preserve the authoritative state and avoid treating an earlier validation result as permanent authorization.
