@@ -3964,3 +3964,67 @@ Test ID: 83
 Evidence status: Local concurrency simulation; scope-limited
 
 Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 84 — Authorization Consumption Interrupted at the Commit Boundary
+
+Result: PASS
+Checks passed: 5/5
+Trials: 100
+
+1. Objective
+
+Evaluate whether a simulated exception immediately before authorization consumption leaves the actual in-memory authorization unconsumed, permits a subsequent retry, and prevents a second consumption.
+
+2. Test design
+
+Each trial initialized one authorization object:
+
+- Authorization ID: "AUTH-084"
+- Initial consumption state: "False"
+
+The test injected a "RuntimeError" immediately before the consumption assignment. It then inspected the actual authorization object, retried consumption, and attempted a second consumption.
+
+3. Observed results
+
+[V] Failed commits reported as failed: 100/100.
+
+[V] Authorization unconsumed after failure: 100/100.
+
+[V] Retries committed once: 100/100.
+
+[V] Second consumption attempts denied: 100/100.
+
+[V] Unexpected outcomes: 0.
+
+[V] Checks passed: 5/5.
+
+[V] Overall result: PASS.
+
+4. Interpretation
+
+[I] In the tested local sequence, the injected exception occurred before the consumption assignment. The authorization remained unconsumed, the retry changed the state to consumed, and the subsequent attempt was denied.
+
+[I] This supports the specified control behavior for this particular pre-assignment exception scenario.
+
+5. Evidence limitations
+
+- The exception is deliberately raised before the state-changing assignment.
+- The test does not inject a failure after the state changes.
+- The authorization state exists only in memory.
+- The test does not simulate an operating-system crash, power loss, durable database transaction, process restart, or distributed commit.
+- It does not establish recovery behavior when the caller cannot determine whether an external operation succeeded.
+- A passing result does not establish production readiness or real-world payment safety.
+
+6. Conclusion
+
+[V] The supplied output reports 100/100 simulated failures correctly reported, 100/100 authorization-preservation checks, 100/100 successful retries, and 100/100 denied second-consumption attempts, with zero unexpected outcomes.
+
+[I] The local authorization state behaved as intended when failure occurred before consumption was recorded.
+
+[H] A subsequent frontier could examine a failure after the state change, where the caller may receive an error even though the authorization has already been consumed.
+
+Research series: LT Hub™ AgentGuard
+Test ID: 84
+Evidence status: Local in-memory simulation; scope-limited
+
+Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
