@@ -2657,3 +2657,50 @@ A production authorization system must validate the principal, resource, request
 Conclusion
 
 Test 60 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that this simulated rule rejects action-name mismatches. It does not establish production readiness.
+
+Test 61 — Authorization Must Match the Requested Resource
+
+Status: PASS — 5/5 checks passed
+Trials: 100
+Unexpected outcomes: 0
+Environment: Local Python simulation using in-memory state.
+
+Objective
+
+Evaluate whether authorization for one resource is incorrectly accepted when an operation targets a different resource.
+
+Method
+
+The test cycles through five combinations of granted and requested resources:
+
+- "ACCOUNT-A" → "ACCOUNT-A"
+- "ACCOUNT-A" → "ACCOUNT-B"
+- "ACCOUNT-B" → "ACCOUNT-B"
+- "ACCOUNT-B" → "ACCOUNT-C"
+- "ACCOUNT-C" → "ACCOUNT-C"
+
+The simulated authorization rule permits commitment only when the granted resource exactly matches the requested resource. Each trial checks the response, generation, and committed request IDs.
+
+Observed Results [V]
+
+- Trials executed: 100.
+- Resource mismatches denied: 40.
+- Exact resource matches committed: 60.
+- Valid trials: 100/100.
+- Unexpected outcomes: 0.
+- Checks passed: 5/5.
+- State transitions matched the expected outcomes in every trial.
+
+Interpretation [I]
+
+The simulated exact-match rule denied requests targeting a different resource from the one authorized. Exact resource matches were accepted under the test's defined criteria.
+
+Evidence Boundary
+
+This is a simplified local authorization simulation. It does not test real account ownership, tenant isolation, resource-level policy evaluation, identifier substitution, access-control integration, or production enforcement.
+
+A production authorization system must validate the authenticated principal, resource identity, requested operation, applicable policy, and relevant context. Exact string matching alone is insufficient.
+
+Conclusion
+
+Test 61 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that this simulated rule rejects resource-name mismatches. It does not establish production readiness.
