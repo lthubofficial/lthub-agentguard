@@ -1364,3 +1364,67 @@ The test is a sequential local simulation. It does not test simultaneous writers
 Next step
 
 Test 38 should examine an atomic compare-and-commit simulation: a candidate may be committed only if the authoritative generation still matches the expected generation at the moment of the simulated commit. The test must reject stale commits and preserve the latest authoritative state.
+
+Test 38 — Atomic Compare-and-Commit Simulation
+
+Test ID: AG-C054-T038
+Category: Replay-Store Recovery / Stale-State Protection
+Result: 8 passed, 0 failed
+Execution environment: Local Python simulation in Google Colab
+
+Objective
+
+Evaluate whether a recovery candidate is rejected when the authoritative store's generation changes before the candidate attempts to commit, and whether a fresh candidate based on the current generation can be accepted.
+
+Test Procedure
+
+1. Initialized the authoritative store at generation 5 with request IDs "REQ-1101" and "REQ-1102".
+2. Prepared a candidate based on generation 5.
+3. Simulated an intervening authoritative update to generation 6, adding "REQ-1104".
+4. Attempted to commit the stale candidate using expected generation 5.
+5. Checked that the stale commit was rejected and the latest authoritative file remained unchanged.
+6. Prepared a fresh candidate based on generation 6.
+7. Attempted the fresh commit and checked the resulting generation and request IDs.
+
+Observed Results
+
+[V] All eight test checks passed in the reported run.
+
+[V] The initial authoritative generation was 5.
+
+[V] The stale candidate commit was rejected after the authoritative generation changed to 6.
+
+[V] The rejected commit left the latest authoritative file unchanged.
+
+[V] The latest authoritative request ID, "REQ-1104", was preserved.
+
+[V] The stale candidate-only request ID, "REQ-1103", was not promoted.
+
+[V] A candidate matching the current generation was accepted.
+
+[V] The successful simulated commit advanced the generation to 7 and included "REQ-1105".
+
+Interpretation
+
+[I] Checking the expected generation before committing can reject a candidate that was prepared against an outdated authoritative state.
+
+[I] A compare-and-commit decision rule provides a useful basis for designing stale-state protection in replay-store recovery.
+
+Limitations
+
+- The test used a single-threaded local simulation.
+- The comparison and file write were not protected by a database transaction, inter-process lock, or distributed coordination mechanism.
+- It did not test simultaneous writers, multiple servers, actual operating-system crashes, power loss, or production storage guarantees.
+- The eight passing checks establish the observed behavior of this test run, not production-grade atomicity or complete replay protection.
+
+Conclusion
+
+[V] The reported local run passed all eight checks.
+
+[I] The results support further investigation of generation-based stale-state protection.
+
+[H] A properly implemented transactional or synchronized compare-and-commit mechanism may help prevent stale recovery decisions in a production design. This remains to be demonstrated with the intended storage and concurrency architecture.
+
+Research principle: A candidate that was valid earlier must not be assumed valid at commit time. Recheck it against the current authoritative state.
+
+Next proposed test: Test 39 — Concurrent Compare-and-Commit Attempts. Evaluate competing candidates against the same expected generation, while clearly distinguishing a local synchronization simulation from database-level or distributed atomicity.
