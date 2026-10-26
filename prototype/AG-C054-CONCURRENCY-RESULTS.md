@@ -1849,3 +1849,56 @@ Conclusion
 [I] The result supports further testing of atomic generation checks and updates under forced concurrent interleaving.
 
 Security status: Local experimental evidence only. Production security remains unverified.
+
+Test 46 — Forced Race Between Generation Check and Commit
+
+Test ID: AG-C054-T046
+Series: LT Hub™ AgentGuard — AG-C054
+Method: Forced two-thread race using a synchronization barrier
+Result: 6 passed, 0 failed
+
+Objective
+
+Examine whether two workers can both pass a generation check against the same initial state, report successful commits, and nevertheless lose one candidate's update.
+
+Procedure
+
+1. Initialized a temporary JSON replay store at generation 10 with "REQ-1301" and "REQ-1302".
+2. Started two worker threads, one for Candidate A and one for Candidate B.
+3. Each worker independently read the initial store and checked whether its snapshot generation equalled 10.
+4. Used a two-party barrier to ensure both workers completed their checks before either proceeded to write.
+5. Allowed each worker to write a full snapshot based on its own initial read.
+6. Inspected the final store and evaluated six programmed checks.
+
+Results
+
+[V] Observed: The supplied Google Colab output reported 6 passed and 0 failed.
+
+- Candidate A: "check_passed=True", outcome "ACCEPTED".
+- Candidate B: "check_passed=True", outcome "ACCEPTED".
+- Final generation: 11.
+- Final request IDs: "REQ-1301", "REQ-1302", "CANDIDATE-B".
+- Candidate A was absent from the final state.
+- Both original request IDs remained present.
+
+Interpretation
+
+[V] Both workers passed the generation check and reported acceptance, but only Candidate B's candidate-specific ID remained in the final store for this run.
+
+[I] The controlled simulation demonstrates that a generation check performed separately from the write does not, by itself, prevent this forced race from losing an update.
+
+Limitations
+
+- This was a local, two-thread file-based simulation.
+- The barrier deliberately forced both workers to check the same initial generation before writing.
+- Full-snapshot writes were used; this is not a transactional compare-and-commit implementation.
+- The result does not establish a vulnerability in the live repository or any production system.
+- The identity of the final candidate may vary between runs.
+
+Conclusion
+
+[V] All six programmed checks passed in the reported run.
+
+[I] The result supports testing a genuinely atomic compare-and-commit mechanism that combines the generation check and update into one protected operation.
+
+Security status: Local experimental evidence only. Production security remains unverified.
