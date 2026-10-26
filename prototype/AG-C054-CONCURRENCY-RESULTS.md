@@ -3356,3 +3356,65 @@ Checking the approved destination immediately before an irreversible action may 
 Test 73 passed all six programmed checks. The simulation demonstrated exact destination matching across the 16 tested cases.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 74 — Authorization Must Match the Approved Authorizer
+
+Result: PASS
+Checks passed: 6/6
+Total trials: 16
+Unexpected outcomes: 0
+
+1. Objective
+
+Evaluate whether a simulated payment request is accepted only when the authorizer identifier matches the identifier specified in the authorization context.
+
+2. [V] Observed Results
+
+The executed local Python simulation reported:
+
+- Approved authorizer: "HUMAN-APPROVER-01"
+- Trials: 16
+- Requests committed: 5
+- Requests denied: 11
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Checks passed: 6/6
+- Final result: "PASS"
+
+3. Test Coverage
+
+The test included:
+
+- An exact authorizer-identifier match.
+- Mismatched human approver and unknown-user identifiers.
+- An AI-agent identifier that differed from the approved authorizer.
+- Case differences and leading or trailing whitespace.
+- Empty identifiers, "None", and a non-string identifier.
+- Additional matching identifiers, including a delegate identifier and an AI-agent identifier.
+
+The function accepted exact, non-empty string matches and denied mismatches or invalid inputs.
+
+4. [I] Interpretation
+
+The observed result supports the narrow conclusion that the test function enforces exact authorizer-identifier matching for the 16 cases evaluated.
+
+This check addresses consistency between the requested authorizer and the authorizer recorded in the simulated authorization context. It does not establish the real-world identity, authority, or legitimacy of that authorizer.
+
+5. [H] Hypothesis for Further Testing
+
+Binding a transaction to an approved authorizer may help reduce unauthorized substitutions of the approving identity. Further testing is needed to assess authentication, delegation, revocation, and authorization integrity.
+
+6. Limitations
+
+- This was a local Python simulation using illustrative identifiers; no real identity system or payment service was involved.
+- Identifier matching does not authenticate a human or AI agent.
+- The test does not establish that an authorizer has permission to approve a particular transaction.
+- The inclusion of an AI-agent identifier in a matching test case does not establish that AI agents should receive payment-approval authority.
+- The test does not validate identity-provider security, cryptographic signatures, compromised credentials, or production integrations.
+- Passing the checks does not establish production readiness.
+
+7. Conclusion
+
+Test 74 passed all six programmed checks. The simulation demonstrated exact authorizer-identifier matching across the 16 tested cases.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
