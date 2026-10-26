@@ -1165,3 +1165,43 @@ Conclusion
 [I] The results support separating candidate-file inspection from the decision to trust or commit recovered data.
 
 Next research question: Can candidate validation reject duplicate request IDs, empty identifiers, and invalid identifier types while preserving the authoritative store?
+
+Test 33 — Replay-Store Candidate Content Validation
+
+Status: [V] 8/8 checks passed in the user-provided Google Colab output.
+
+Objective
+
+Evaluate whether candidate replay-store files can be classified according to their content before any recovery or promotion decision is considered.
+
+Test setup
+
+A local temporary directory contained an authoritative replay store and five candidate files. The authoritative store initially contained "REQ-601" and "REQ-602".
+
+Results
+
+Check| Expected result| Observed result
+Valid unique string IDs| "STRUCTURALLY_VALID"| PASS
+Duplicate request IDs| "DUPLICATE_IDS"| PASS
+Empty or whitespace-only ID| "EMPTY_ID"| PASS
+Non-string ID| "INVALID_ID_TYPE"| PASS
+Missing "request_ids" field| "UNEXPECTED_STRUCTURE"| PASS
+Authoritative store unchanged byte-for-byte| True| PASS
+Original IDs retained| Both original IDs present| PASS
+Candidate-only "REQ-603" not promoted| True| PASS
+
+Outcome
+
+[V] The provided test output reports 8 passed, 0 failed. All five candidate categories received their expected classifications. The authoritative store remained byte-for-byte unchanged, its original IDs remained intact, and the candidate-only ID "REQ-603" was not promoted.
+
+Scope and limitations
+
+[I] These results support the usefulness of content validation as a separate step before considering a candidate for recovery. Structural validity alone does not establish that a candidate is trustworthy or represents the correct, most recent state.
+
+[H] Additional testing may reveal further invalid or misleading candidate states that require explicit rejection rules.
+
+This was a local validation test using temporary files. It did not test production recovery, candidate promotion, concurrent writers, multiple servers, or actual operating-system or hardware failure.
+
+Next step
+
+Test 34 should examine whether candidate files containing duplicate IDs, empty IDs, or invalid ID types are consistently rejected by a recovery decision process, while preserving the authoritative store. Candidate validation and promotion must remain separate operations.
