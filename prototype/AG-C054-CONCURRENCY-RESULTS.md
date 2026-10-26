@@ -3088,3 +3088,51 @@ Conclusion
 Test 68 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact "APPROVED" values and denied the tested alternative status strings.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 69 — Authorization Must Match the Intended Recipient
+
+Result: PASS
+Checks passed: 5/5
+Trials: 16
+Unexpected outcomes: 0
+
+Objective
+
+Evaluate whether a simulated payment request is accepted only when its requested recipient matches the recipient bound to the authorized transaction context.
+
+Method
+
+The authorized recipient was "SUPPLIER-A". Sixteen requests were evaluated while keeping the principal, action, resource, amount, currency, and transaction ID fixed.
+
+- Eight requests specified the exact authorized recipient.
+- Eight requests specified alternative, unknown, empty, lowercase, or whitespace-altered recipient values.
+
+The simulated decision rule compared the complete requested transaction context against the authorized context using exact dictionary equality.
+
+Results
+
+- Authorized recipient: "SUPPLIER-A"
+- Total trials: 16
+- Requests committed: 8
+- Requests denied: 8
+- Valid trials: 16/16
+- Unexpected outcomes: 0
+- Aggregate checks passed: 5/5
+
+Evidence assessment
+
+[V] Verified observation: The supplied execution output reports 16 trials, 8 committed requests, 8 denied requests, zero unexpected outcomes, and 5/5 checks passed.
+
+[I] Interpretation: In this local simulation, exact recipient matching rejected the tested mismatches and accepted the matching recipient values.
+
+[H] Hypothesis requiring further testing: Binding authorization to an intended recipient may help prevent unauthorized payee substitutions when enforced by a real transaction system.
+
+Limitations
+
+This was a local Python simulation using predefined strings and exact dictionary equality. It did not verify supplier identity, bank-account ownership, account-number changes, trusted recipient records, authorization provenance, concurrent payee changes, or actual payment execution. A matching recipient label does not prove that the destination account belongs to the intended supplier. This test does not establish production security readiness.
+
+Conclusion
+
+Test 69 passed all five programmed checks. The evidence supports only the narrow claim that the simulated rule accepted exact recipient matches and denied the tested mismatches.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
