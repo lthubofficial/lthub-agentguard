@@ -845,3 +845,55 @@ Limitations: The test raised an "OSError" before calling "os.replace()". It did 
 Evidence record: Google Colab execution output supplied for AG-C054 Test 26. Preserve the notebook and output as supporting evidence.
 
 Next step: AG-C054 Test 27 — Actual Replacement Failure Injection and Original-Store Integrity.
+
+AG-C054 Test 27 — Replacement-Call Failure Injection and Original-Store Integrity
+
+Test ID: AG-C054-T027
+Category: Replay-store integrity and error handling
+Status: Local controlled test completed
+Result: 7 passed, 0 failed
+
+Objective
+
+Evaluate whether a failed replacement call causes an update to be rejected while preserving the original replay-store content and cleaning up the temporary update file.
+
+Method
+
+A temporary JSON replay store was created with two existing request IDs: "REQ-001" and "REQ-002". An updated version containing "REQ-003" was written to a temporary file, flushed, and synchronized using "os.fsync()".
+
+A controlled replacement function was then called. Instead of invoking the operating system's actual "os.replace()" operation, this function deliberately raised an "OSError". The test subsequently inspected the original store and temporary-file cleanup state.
+
+Results
+
+[V] 7/7 checks passed; 0 failed.
+
+1. The replacement-call failure was injected.
+2. The update was rejected.
+3. The original store content remained unchanged.
+4. Both original request IDs remained present.
+5. The uncommitted request ID, "REQ-003", was absent from the original store.
+6. The temporary file was cleaned up.
+7. The original store remained valid JSON.
+
+Evidence and interpretation
+
+[V] The supplied test output reports seven passing checks and no failures.
+
+[V] In this run, the deliberately injected "OSError" was caught, the original store remained unchanged, and the temporary file was removed.
+
+[I] These observations support the expected error-handling behaviour for the specific controlled failure path tested.
+
+Limitations
+
+- The failure was injected by a test function before the real "os.replace()" operation; an actual operating-system replacement failure was not tested.
+- The test used a local temporary directory and a single process.
+- It did not establish crash consistency, power-loss durability, concurrent-writer safety, multi-server consistency, or production-grade replay protection.
+- The result applies to this test run and does not independently establish the security of a deployed system.
+
+Conclusion
+
+[V] The controlled replacement-call failure test completed with 7 passed and 0 failed.
+
+[I] The observed result supports preservation of the original replay-store content and temporary-file cleanup for this specific injected error path.
+
+Next research question: How should the replay-store update workflow be tested when temporary-file creation, writing, flushing, synchronization, or cleanup fails at different stages?
