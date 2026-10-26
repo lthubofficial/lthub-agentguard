@@ -4028,3 +4028,70 @@ Test ID: 84
 Evidence status: Local in-memory simulation; scope-limited
 
 Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 85 — Failure After Authorization Consumption but Before Caller Confirmation
+
+Result: PASS
+Checks passed: 6/6
+Trials: 100
+
+1. Objective
+
+Evaluate whether a retry using the same request ID can recognize a previously committed operation when confirmation is lost, without applying the simulated effect a second time.
+
+2. Test design
+
+Each trial used an in-memory state containing:
+
+- Request ID: "REQ-085"
+- Authorization-consumed flag
+- Completed-request ID set
+- Simulated effect counter
+
+The first attempt marked authorization consumed, incremented the effect counter, and recorded the request ID. The test then simulated a lost confirmation and retried using the same request ID.
+
+3. Observed results
+
+[V] Initial operations committed: 100/100.
+
+[V] Lost confirmations simulated: 100/100.
+
+[V] Same-request retries recognized as already committed: 100/100.
+
+[V] Duplicate effects prevented: 100/100.
+
+[V] Final states consistent: 100/100.
+
+[V] Unexpected outcomes: 0.
+
+[V] Checks passed: 6/6.
+
+[V] Overall result: PASS.
+
+4. Interpretation
+
+[I] The local simulation recognized each repeated request ID as already committed and did not increment the simulated effect counter a second time.
+
+[I] This supports the intended retry-handling behavior for the tested in-memory sequence.
+
+5. Evidence limitations
+
+- The lost confirmation is simulated by a local Boolean state; no real network response is lost.
+- The completed-request record, authorization flag, and effect counter exist only in memory.
+- The test does not simulate process restart, persistent storage, concurrent duplicate requests, or failure between separate database writes.
+- Recording a request ID and applying an effect are not tested as an atomic durable transaction.
+- The result does not establish exactly-once execution or durable idempotency for external services or real payments.
+
+6. Conclusion
+
+[V] The supplied output reports 100/100 initial commitments, 100/100 simulated lost confirmations, 100/100 retries recognized as already committed, 100/100 duplicate-effect prevention checks, and 100/100 consistent final states, with zero unexpected outcomes.
+
+[I] The in-memory retry logic behaved as intended under the tested scenario.
+
+[H] A subsequent frontier could test concurrent duplicate requests sharing the same request ID and inspect whether the shared effect counter remains exactly one.
+
+Research series: LT Hub™ AgentGuard
+Test ID: 85
+Evidence status: Local in-memory simulation; scope-limited
+
+Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
