@@ -4162,3 +4162,71 @@ Test ID: 86
 Evidence status: Local concurrency simulation; scope-limited
 
 Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 87 — Reject Request ID Reuse With a Different Transaction Payload
+
+Result: PASS
+Checks passed: 5/5
+Trials: 100
+
+1. Objective
+
+Verify that an existing request ID cannot be reused with different transaction details, and that the conflicting request does not alter the original request record or produce an additional simulated effect.
+
+2. Test design
+
+Each trial initialized a request record for:
+
+- Request ID: "REQ-087"
+- Original transaction ID: "TX-087-A"
+- Original amount: "1000"
+- Currency: "ZAR"
+- Original recipient: "SUPPLIER-A"
+
+A conflicting payload used the same request ID with transaction ID "TX-087-B", amount "2500", and recipient "SUPPLIER-B".
+
+The test submitted a same-payload retry and a changed-payload request concurrently. A shared in-memory record, effect counter, and process-local lock controlled the outcomes.
+
+3. Observed results
+
+[V] Original same-payload retries recognized: 100/100.
+
+[V] Changed payloads rejected as conflicts: 100/100.
+
+[V] Duplicate effects prevented: 100/100.
+
+[V] Original request records preserved: 100/100.
+
+[V] Unexpected outcomes: 0.
+
+[V] Checks passed: 5/5.
+
+[V] Overall result: PASS.
+
+4. Interpretation
+
+[I] The local simulation distinguished between a retry matching the original payload and a request reusing the same identifier with different transaction details.
+
+[I] In every reported trial, the changed payload was rejected as an idempotency conflict, the simulated effect count remained one, and the original request record remained unchanged.
+
+5. Evidence limitations
+
+- The request record and effect counter are held in memory.
+- The lock protects state only within the current Python process.
+- The original request record is seeded before the concurrent submissions; the test does not test two competing first-time payloads.
+- The test does not validate persistent request fingerprints, process restarts, multiple servers, durable database transactions, or external payment execution.
+- The result does not establish production-grade idempotency or comprehensive transaction security.
+
+6. Conclusion
+
+[V] The supplied output reports 100/100 matching retries recognized, 100/100 changed payloads rejected, 100/100 duplicate-effect prevention checks, and 100/100 preserved request records, with zero unexpected outcomes.
+
+[I] The tested local request-ID conflict control behaved as intended.
+
+[H] A subsequent frontier could test two different payloads attempting to register the same previously unused request ID at the same time.
+
+Research series: LT Hub™ AgentGuard
+Test ID: 87
+Evidence status: Local concurrency simulation; scope-limited
+
+Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
