@@ -3771,3 +3771,65 @@ Explicitly distinguishing successful authorization checks from errors, timeouts,
 Test 80 passed all six programmed checks. The simulation accepted the two successful Boolean checks and denied the 14 failed or invalid results.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 81 — Authorization Must Reject Transaction Changes Immediately Before Consumption
+
+Result: PASS
+Checks passed: 4/4
+Trials: 100
+
+1. Objective
+
+Verify that authorization cannot be consumed when the transaction context changes after initial validation but immediately before final consumption.
+
+2. Test scenario
+
+The approved transaction contained:
+
+- Transaction ID: "TX-081"
+- Amount: "1000"
+- Currency: "ZAR"
+- Recipient: "SUPPLIER-A"
+
+The test first validated the approved transaction, then simulated a last-moment amount change from "1000" to "1500". A separate control trial retained the original transaction details.
+
+3. Observed results
+
+[V] Changed transaction denials: 100/100.
+
+[V] Unchanged approved transaction acceptances: 100/100.
+
+[V] Denials with authorization reported as preserved: 100/100.
+
+[V] Unexpected outcomes: 0.
+
+[V] Checks passed: 4/4.
+
+[V] Overall result: PASS.
+
+4. Interpretation
+
+[I] The observed output supports the intended control rule: the transaction context must still match the approved context at the point of consumption. A changed amount was rejected, while the unchanged approved transaction was accepted.
+
+[I] The test models final comparison and consumption within a local Python simulation. Its output does not establish that an external payment service or production database enforces the same rule.
+
+5. Evidence limitations
+
+- The test is a local simulation, not a live payment integration.
+- The lock is local to each trial and does not establish distributed atomicity.
+- The authorization-preservation check uses a separately constructed state object rather than inspecting the authorization object inside "run_trial". Therefore, the 100/100 preservation result does not independently prove that the actual authorization object remained unconsumed after every denial.
+- The test changes the transaction amount only; other fields and mutation patterns require separate testing.
+- No production-readiness, financial-security certification, or real-world payment protection is established.
+
+6. Conclusion
+
+[V] The supplied test output reports 100 successful changed-transaction denials, 100 successful unchanged-transaction acceptances, zero unexpected outcomes, and 4/4 checks passed.
+
+[I] The transaction-context comparison behaved as intended in the tested local scenario. The authorization-preservation assertion should be strengthened to inspect the actual authorization object before this result is used as evidence of non-consumption.
+
+[H] A subsequent test could exercise mutation of the transaction ID, recipient, currency, or amount against the same authorization object and verify that every denied attempt leaves that object unconsumed.
+
+Research series: LT Hub™ AgentGuard
+Test ID: 81
+Evidence status: Local simulation; scope-limited
+Core principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
