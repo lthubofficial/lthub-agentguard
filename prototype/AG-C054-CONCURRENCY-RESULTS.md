@@ -1205,3 +1205,41 @@ This was a local validation test using temporary files. It did not test producti
 Next step
 
 Test 34 should examine whether candidate files containing duplicate IDs, empty IDs, or invalid ID types are consistently rejected by a recovery decision process, while preserving the authoritative store. Candidate validation and promotion must remain separate operations.
+
+Test 34 — Replay-Store Recovery Decision Gate
+
+Status: [V] 8/8 checks passed in the user-provided Google Colab output.
+
+Objective
+
+Evaluate whether a recovery decision gate distinguishes candidates eligible for further review from candidates that fail basic content checks, without promoting any candidate into the authoritative replay store.
+
+Test setup
+
+A local temporary directory contained an authoritative store with request IDs "REQ-701" and "REQ-702". Five candidate data structures were evaluated by a simulated decision gate.
+
+Results
+
+Check| Expected behaviour| Observed result
+Valid candidate| Eligible for further review| PASS
+Duplicate IDs| Reject| PASS
+Empty or whitespace-only ID| Reject| PASS
+Non-string ID| Reject| PASS
+Unexpected structure| Reject| PASS
+Authoritative store unchanged| Original bytes preserved| PASS
+Original IDs preserved| Both original IDs retained| PASS
+Candidate-only ID| "REQ-703" not promoted| PASS
+
+Outcome
+
+[V] The provided test output reports 8 passed, 0 failed. The valid candidate was classified as "ELIGIBLE_FOR_REVIEW". The four invalid candidate categories were classified as "REJECT". The authoritative store remained unchanged, and "REQ-703" was not promoted.
+
+Scope and limitations
+
+[I] The result supports separating basic candidate validation from any subsequent recovery or promotion decision.
+
+The test passed candidate data structures directly to the validator; it did not read candidate files from disk. The decision gate is a local simulation, not a production recovery mechanism. It does not verify candidate authenticity, freshness, completeness, concurrent-writer safety, or multi-server behaviour.
+
+Next step
+
+Test 35 should examine whether the decision gate also rejects a candidate that is structurally valid but contains an incomplete or inconsistent set of request IDs. Validation alone must not be treated as proof that a candidate is safe to restore.
