@@ -2427,3 +2427,49 @@ A production implementation would need to enforce authorization at the protected
 Conclusion
 
 Test 55 passed its defined acceptance criteria in all 100 trials. The result supports the narrow claim that this simulated retry path rechecks authorization before committing. It is not evidence that a production system is secure.
+
+Test 56 — Authorization Revocation and Concurrent Retry
+
+Status: PASS — 5/5 checks passed
+Trials: 100
+Unexpected trials: 0
+Execution errors: 0
+Environment: Local Python concurrency simulation using "threading.Lock", "threading.Barrier", and in-memory state.
+
+Objective
+
+Evaluate the state transitions when authorization revocation and a retry compete to acquire a shared process-local lock.
+
+Method
+
+Each trial starts with an existing committed request ("REQ-A") and generation 81. A retry for "REQ-B" and an authorization-revocation operation are released through a two-thread barrier.
+
+The retry checks authorization, generation, and duplicate request ID while holding the lock. The revocation operation sets authorization to false while holding the same lock.
+
+The acceptance criteria allow either operation to acquire the lock first, provided the resulting state matches the corresponding sequence.
+
+Observed Results [V]
+
+- Trials executed: 100.
+- Retry response: "UNAUTHORIZED" in 100/100 trials.
+- Valid state transitions: 100/100.
+- Unexpected trials: 0.
+- Execution errors: 0.
+- Checks passed: 5/5.
+- Final generation: 81.
+- Final committed request IDs: "REQ-A" only.
+- Final authorization state: revoked.
+
+Interpretation [I]
+
+In all observed trials, authorization revocation acquired the lock before the retry's protected commit section. The retry therefore returned "UNAUTHORIZED", and no additional request was committed.
+
+The observed result confirms the expected behavior for this execution path in the simulation. It does not establish that every scheduler, implementation, or external authorization architecture will behave identically.
+
+Evidence Boundary
+
+This test uses in-memory state and a process-local lock. It does not test distributed locks, multiple processes or servers, external identity providers, real authorization-token revocation, or all possible production race conditions.
+
+Conclusion
+
+Test 56 passed its defined acceptance criteria in all 100 trials. The result supports the narrow claim that the simulated retry was denied when it checked authorization after revocation had taken effect under the shared lock. It is not evidence of production readiness.
