@@ -3540,3 +3540,60 @@ A durable, atomic authorization-consumption mechanism may help prevent duplicate
 Test 76 passed all six programmed checks. In the tested local simulation, each authorization was consumed successfully once, and concurrent attempts produced exactly one acceptance per trial.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 77 — Authorization Must Remain Transaction-Bound During Concurrent Consumption
+
+Result: PASS
+Checks passed: 6/6
+Concurrent trials: 100
+Unexpected outcomes: 0
+
+1. Objective
+
+Evaluate whether an authorization can be consumed only for its designated transaction when a correct-transaction request and an incorrect-transaction request attempt consumption concurrently.
+
+2. [V] Observed Results
+
+The executed local Python simulation reported:
+
+- Concurrent trials: 100
+- Valid outcomes: 100/100
+- Wrong-transaction denials: 100
+- Correct-transaction acceptances: 100
+- Unexpected outcomes: 0
+- Checks passed: 6/6
+- Final result: "PASS"
+
+3. Test Coverage
+
+Each trial created a fresh authorization bound to a specific authorization ID and transaction ID. Two threads then attempted to consume it:
+
+- One request supplied the matching transaction ID.
+- The other supplied an incorrect transaction ID.
+
+The implementation checked both identifiers and the consumed state while holding a process-local lock.
+
+4. [I] Interpretation
+
+The observed results support the conclusion that the tested function rejected incorrect transaction IDs while allowing the matching request to consume the authorization in all 100 trials.
+
+The test combines transaction binding with single-use consumption in a local threaded implementation.
+
+5. [H] Hypothesis for Further Testing
+
+Combining transaction binding with atomic, durable single-use consumption may reduce the risk of authorization reuse or transaction substitution during concurrent execution. Further testing is required across process boundaries and realistic persistence systems.
+
+6. Limitations
+
+- This was a local Python threading simulation, not a real payment transaction.
+- The lock and consumed flag were process-local and in memory.
+- The test does not establish guarantees across multiple processes, servers, or restarts.
+- It does not validate authorization authenticity, cryptographic integrity, or downstream payment execution.
+- The test uses controlled concurrent requests and does not cover all possible scheduling, failure, or attack scenarios.
+- Passing this test does not establish production readiness.
+
+7. Conclusion
+
+Test 77 passed all six programmed checks. In the 100 tested concurrent trials, the matching transaction was accepted and the incorrect transaction was denied, with no unexpected outcomes.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
