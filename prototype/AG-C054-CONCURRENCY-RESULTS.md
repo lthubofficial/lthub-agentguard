@@ -3654,3 +3654,61 @@ Checking authorization status atomically at the point of consumption may reduce 
 Test 78 passed all six programmed checks. The simulation denied every tested revoked authorization and accepted every approved control authorization.
 
 LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Test 79 — Revocation Must Be Checked Atomically at Consumption
+
+Result: PASS
+Checks passed: 6/6
+Trials: 100
+Unexpected outcomes: 0
+
+1. Objective
+
+Evaluate whether an authorization revoked after an initial validation step but before the final consumption decision is denied.
+
+2. [V] Observed Results
+
+The executed local Python simulation reported:
+
+- Trials: 100
+- Revoked authorization denials: 100
+- Valid revocation-race trials: 100/100
+- Unexpected outcomes: 0
+- Checks passed: 6/6
+- Final result: "PASS"
+
+3. Test Coverage
+
+Each trial coordinated two threads using synchronization events:
+
+1. The consumption thread performed an initial authorization check.
+2. The test thread revoked the authorization.
+3. The consumption thread resumed and performed a final status check under the lock.
+4. The test checked that the request was denied and the authorization remained unconsumed.
+
+All 100 trials followed the expected outcome.
+
+4. [I] Interpretation
+
+The observed results support the conclusion that the tested implementation rechecked authorization status under its process-local lock immediately before consumption.
+
+This avoided committing the transaction in the specifically tested sequence where revocation occurred between initial validation and the final decision.
+
+5. [H] Hypothesis for Further Testing
+
+Revalidating authorization at the consumption boundary, together with an atomic state transition, may reduce time-of-check-to-time-of-use risks. Additional tests should examine competing revocation and consumption operations, persistence failures, and distributed state changes.
+
+6. Limitations
+
+- This was a local Python threading simulation, not a real payment system.
+- The synchronization deliberately imposed one ordering: initial validation, revocation, then final consumption check.
+- It does not establish behavior for every possible thread schedule or simultaneous lock acquisition.
+- The lock and authorization state were process-local and in memory.
+- It does not validate durable atomicity, cross-process coordination, distributed revocation, or downstream execution.
+- Passing this test does not establish production readiness.
+
+7. Conclusion
+
+Test 79 passed all six programmed checks. The simulation denied all 100 requests when revocation occurred between initial validation and the final consumption decision.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
