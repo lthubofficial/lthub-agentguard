@@ -2329,3 +2329,57 @@ Evidence Boundary
 This experiment used local Python threads and temporary JSON files. The lock is process-local. The test does not establish multi-process or multi-server safety, distributed atomicity, production database guarantees, or resilience to actual operating-system or power failures.
 
 Conclusion: All five defined checks passed across 100 controlled trials. These results support the tested scenario only and must not be presented as proof of production readiness.
+
+Test 54 — Fresh-Generation Retry Safety
+
+Status: Completed — 5/5 checks passed
+Trials: 100
+Environment: Local Python threads, temporary JSON store, process-local thread lock.
+
+Objective
+
+Evaluate whether two distinct requests that compete using the same expected generation can be handled safely by retrying the stale request with a freshly read generation.
+
+Method
+
+Each trial initialized the store at generation 60 with baseline IDs "REQ-6001" and "REQ-6002".
+
+Two concurrent threads submitted:
+
+- "REQ-RETRY-A-054"
+- "REQ-RETRY-B-054"
+
+Both expected generation 60. The initial race was expected to produce one successful commit and one "STALE_GENERATION" rejection.
+
+When that outcome occurred, the rejected request ID was retained. The test read the latest generation from the local store and retried that same request ID using the fresh generation.
+
+Observed Results [V]
+
+- Total trials: 100.
+- Valid initial-response and retry sequences: 100/100.
+- Valid final states: 100/100.
+- Trials passing both checks: 100/100.
+- Unexpected trials: 0.
+- Aggregate checks: 5 passed, 0 failed.
+
+Both distinct request IDs were present exactly once after the retry. The final generation was 62, representing two successful commits after the initial generation of 60. Both baseline IDs remained intact.
+
+Check Results [V]
+
+1. Initial race produced one commit and one stale-generation rejection — PASS.
+2. Stale request committed after a fresh-generation retry — PASS.
+3. Generation advanced twice after two successful commits — PASS.
+4. Both request IDs were stored exactly once — PASS.
+5. All trials passed response and state checks — PASS.
+
+Interpretation [I]
+
+The results support the tested behavior in which a stale request is reconsidered using a fresh generation and the same local commit routine. In this simulation, both distinct requests eventually committed without duplicate request records or unintended extra generation changes.
+
+A fresh generation alone does not prove that retrying an operation is safe. A real implementation must re-evaluate authorization, request validity, current business conditions, and any side effects before retrying.
+
+Evidence Boundary
+
+This experiment used local Python threads and temporary JSON files. The lock is process-local. The test does not establish multi-process or multi-server safety, distributed atomicity, production database guarantees, or actual production authorization and retry-policy correctness.
+
+Conclusion: All five defined checks passed across 100 controlled trials. Further validation is required before making production security claims.
