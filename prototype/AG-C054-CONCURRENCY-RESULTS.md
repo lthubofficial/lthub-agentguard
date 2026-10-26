@@ -2076,4 +2076,4 @@ Aggregate checks failed| 0/6
 
 Evidence boundary: This is a local concurrency experiment, not proof of production security or a confirmed vulnerability in a deployed system.
 
-LT Hub™ principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+LT Hub™ principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions. 
