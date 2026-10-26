@@ -2010,3 +2010,70 @@ Conclusion
 [I] The results support further evaluation of an atomic state-update mechanism appropriate to the intended deployment environment.
 
 Security status: Local experimental evidence only. Production security remains unverified.
+
+Test 49 — Concurrent Commit Integrity Under Repeated Forced Interleaving
+
+Project: LT Hub™ AgentGuard
+Test ID: AG-C054-Test-49
+Category: Concurrency control, stale-state detection, and lost-update analysis
+Environment: Google Colab, Python threads, temporary JSON files
+Trials: 100 unsynchronized + 100 synchronized
+Reported result: 6 aggregate checks passed, 0 failed
+
+49.1 Objective
+
+Evaluate the difference between unsynchronized and synchronized compare-and-commit behaviour under a deliberately controlled concurrent interleaving.
+
+The experiment examines whether two competing workers can both report acceptance while one candidate's update is missing from the final state, and whether a shared in-process lock combined with a generation and state check prevents that outcome in this test.
+
+49.2 Test configuration
+
+- Initial generation: "10"
+- Initial request IDs: "REQ-1501", "REQ-1502"
+- Competing candidate IDs: "CANDIDATE-A", "CANDIDATE-B"
+- Unsynchronized mode: a barrier forces both workers to read the initial state before either writes.
+- Synchronized mode: both workers begin with the same snapshot; a shared thread lock protects the current-state comparison and update.
+- Repetition: 100 trials per mode.
+
+49.3 Observed results
+
+[V] Verified from the supplied Colab output
+
+Check| Observed result
+Unsynchronized trials where both workers reported acceptance| 100/100
+Unsynchronized trials showing the controlled lost-update pattern| 100/100
+Synchronized trials with one acceptance and one stale-generation rejection| 100/100
+Synchronized trials advancing the generation exactly once| 100/100
+Synchronized trials preserving both baseline IDs| 100/100
+Synchronized trials retaining exactly one valid candidate ID| 100/100
+Aggregate checks passed| 6/6
+Aggregate checks failed| 0/6
+
+49.4 Analysis
+
+[V] In all 100 unsynchronized trials, both workers reported "ACCEPTED", while the final state contained only one of the two competing candidate IDs. The generation advanced from 10 to 11.
+
+[V] In all 100 synchronized trials, one candidate was accepted and the competing candidate was rejected as "STALE_GENERATION". The final generation advanced exactly once, and both original request IDs remained present.
+
+[I] The results support using an atomic compare-and-commit mechanism to prevent this particular lost-update pattern. The generation/state check and update must be protected by the same effective synchronization boundary.
+
+49.5 Limitations
+
+- The unsynchronized race was deliberately forced by a barrier; the results do not measure its natural occurrence rate.
+- The synchronized lock is shared by threads in one Python process.
+- The experiment uses local temporary JSON files, not a production database or distributed coordination service.
+- It does not establish safety across multiple processes, servers, or independent application instances.
+- It does not test power loss, crash durability, authentication, or the complete AgentGuard system.
+- The output is user-supplied execution evidence; it has not been independently reproduced in this report.
+
+49.6 Conclusion
+
+[V] The supplied run reports six passing aggregate checks and no failures.
+
+[I] Under the specific controlled conditions tested, synchronized compare-and-commit prevented the lost-update pattern observed in the unsynchronized implementation.
+
+[H] A suitable transactional or distributed coordination mechanism may provide comparable protection in a multi-process deployment, but that requires separate implementation and testing.
+
+Evidence boundary: This is a local concurrency experiment, not proof of production security or a confirmed vulnerability in a deployed system.
+
+LT Hub™ principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
