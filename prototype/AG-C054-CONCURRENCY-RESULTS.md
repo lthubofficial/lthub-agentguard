@@ -1902,3 +1902,56 @@ Conclusion
 [I] The result supports testing a genuinely atomic compare-and-commit mechanism that combines the generation check and update into one protected operation.
 
 Security status: Local experimental evidence only. Production security remains unverified.
+
+Test 47 — Compare-and-Commit Under Forced Concurrency
+
+Test ID: AG-C054-T047
+Series: LT Hub™ AgentGuard — AG-C054
+Method: Two-thread compare-and-commit simulation using a shared in-process lock
+
+Objective
+
+Evaluate whether a shared lock around the generation check and state update prevents two competing threads from committing changes based on the same initial generation.
+
+Procedure
+
+1. Initialized the local replay store at generation 10 with "REQ-1401" and "REQ-1402".
+2. Captured initial snapshots for Candidate A and Candidate B before either commit.
+3. Used a barrier to ensure both candidates had obtained their snapshots.
+4. Protected the current-generation check and write with the same "threading.Lock".
+5. Inspected the final generation, request IDs, and candidate outcomes.
+
+Results
+
+[V] Observed: The supplied output showed all seven programmed checks passing.
+
+- Candidate A started from generation 10 and reported "COMMITTED".
+- Candidate B started from generation 10 and reported "REJECTED_STALE".
+- Exactly one candidate committed and one was rejected as stale.
+- Final generation: 11.
+- Final request IDs: "REQ-1401", "REQ-1402", "CANDIDATE-A".
+- The original request IDs were preserved.
+- No unexpected request IDs were present.
+
+The supplied output did not include the final summary line; therefore, the recorded result is based on the seven visible passing checks.
+
+Interpretation
+
+[V] In this run, the shared lock serialized the two commit sections: Candidate A committed first, and Candidate B was rejected after the current generation changed.
+
+[I] A shared in-process lock can prevent this tested stale-snapshot race when all relevant threads use the same lock around both the check and update.
+
+Limitations
+
+- This was a local, two-thread Python simulation using a temporary JSON file.
+- The lock protects threads sharing this particular lock object within one process.
+- No multi-process, multi-server, database transaction, crash-recovery, or production deployment test was performed.
+- This test does not establish production security or distributed atomicity.
+
+Conclusion
+
+[V] All seven visible programmed checks passed in the supplied output.
+
+[I] The result supports further testing of the same invariant across repeated trials and, separately, of atomicity mechanisms suitable for multi-process or distributed systems.
+
+Security status: Local experimental evidence only. Production security remains unverified.
