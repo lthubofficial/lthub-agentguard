@@ -2565,3 +2565,48 @@ This is a local simulation with controlled thread ordering. It does not establis
 Conclusion
 
 Test 58 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that the simulated final decision rejects the request after authorization has been revoked. It does not establish production readiness.
+
+Test 59 — Authorization-Check Failure Must Fail Closed
+
+Status: PASS — 5/5 checks passed
+Trials: 100
+Unexpected outcomes: 0
+Environment: Local Python simulation using in-memory state.
+
+Objective
+
+Evaluate whether a request is denied when an authorization result is false, missing, an error indicator, or an unrecognized value.
+
+Method
+
+The test cycles through five authorization results:
+
+- Boolean "True"
+- Boolean "False"
+- "None"
+- ""ERROR""
+- ""INVALID""
+
+The simulated decision rule permits commitment only when the authorization result is the literal Boolean "True". All other values must be denied without changing the generation or committed request IDs.
+
+Observed Results [V]
+
+- Trials executed: 100.
+- Non-True authorization results denied: 80.
+- Explicit-True cases committed: 20.
+- Valid trials: 100/100.
+- Unexpected outcomes: 0.
+- Checks passed: 5/5.
+- State changes matched the expected outcomes in every trial.
+
+Interpretation [I]
+
+The tested decision rule fails closed for all simulated authorization results other than the literal Boolean "True". Missing, denied, error, and unrecognized results did not authorize a commitment.
+
+Evidence Boundary
+
+This is a simplified local simulation. It does not test a real authorization provider, identity verification, permission scopes, service timeouts, exception handling in a production integration, or distributed execution. A production implementation must also ensure that authorization applies to the specific action, resource, and current context.
+
+Conclusion
+
+Test 59 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that the simulated decision rule denies all non-True authorization results. It does not establish production readiness.
