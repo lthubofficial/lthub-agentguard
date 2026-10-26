@@ -2518,3 +2518,50 @@ This test is sequential and uses in-memory state with a process-local lock. It d
 Conclusion
 
 Test 57 passed its defined acceptance criteria in all 100 trials. The result supports the narrow claim that the simulated commit path rejects a prepared request when authorization has been revoked before the commit check. It does not establish production readiness.
+
+Test 58 — Authorization Revocation Between Validation and Commit
+
+Status: PASS — 5/5 checks passed
+Trials: 100
+Unexpected outcomes: 0
+Environment: Local Python simulation using threads, synchronization events, in-memory state, and a process-local lock.
+
+Objective
+
+Evaluate whether a request is rejected when its initial authorization check succeeds but authorization is revoked before the final commit decision.
+
+Method
+
+Each trial follows a coordinated sequence:
+
+1. Initialize generation 100 and preserve the existing committed request "REQ-BASE".
+2. Validate the request while authorization is active.
+3. Signal that initial validation has completed.
+4. Revoke authorization in a separate thread.
+5. Allow the request's final decision to proceed only after revocation completes.
+6. Verify the response, generation, committed IDs, and authorization state.
+
+Observed Results [V]
+
+- Trials executed: 100.
+- Response counts: "UNAUTHORIZED" — 100.
+- Valid trials: 100/100.
+- Unexpected outcomes: 0.
+- Checks passed: 5/5.
+- Initial authorization check succeeded in all trials.
+- Final generation remained 100.
+- "REQ-58" was not committed.
+- "REQ-BASE" remained the only committed request.
+- Authorization was revoked at the end of every trial.
+
+Interpretation [I]
+
+Under the explicitly coordinated event sequence, the request was denied because the final decision checked the current authorization state rather than relying on the earlier validation result.
+
+Evidence Boundary
+
+This is a local simulation with controlled thread ordering. It does not establish security for real identity providers, distributed services, multiple processes or servers, or all possible timing and failure conditions.
+
+Conclusion
+
+Test 58 passed its defined acceptance criteria in all 100 trials. The evidence supports the narrow claim that the simulated final decision rejects the request after authorization has been revoked. It does not establish production readiness.
