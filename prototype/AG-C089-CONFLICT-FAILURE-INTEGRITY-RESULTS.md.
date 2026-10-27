@@ -1,0 +1,67 @@
+Test 89 — Request Integrity During Simulated Conflict-Storage Failure
+
+Project: LT Hub™ AgentGuard
+Test ID: AG-C089
+Status: PASS — 5/5 checks
+Trials: 100
+Test type: Controlled in-memory failure simulation
+
+1. Objective
+
+Evaluate whether an existing request record and its associated simulated effect remain unchanged when a conflicting transaction payload encounters a simulated failure.
+
+The test also checks whether the conflicting payload is subsequently rejected and whether a retry matching the original payload is recognized.
+
+2. Test configuration
+
+Each trial initialized request ID "REQ-089" with an existing transaction:
+
+- Transaction ID: "TX-089-A"
+- Amount: 1000
+- Currency: "ZAR"
+- Recipient: "SUPPLIER-A"
+
+A conflicting payload used transaction ID "TX-089-B", amount "2500", currency "ZAR", and recipient "SUPPLIER-B".
+
+The simulation used an in-memory request dictionary, an effect list, and a process-local lock.
+
+3. Observed results [V]
+
+Across 100 trials:
+
+- Expected failure, conflict, and retry responses: 100/100
+- Original record preserved after simulated failure: 100/100
+- Original record preserved after conflict rejection: 100/100
+- Original matching retry recognized: 100/100
+- Final state contained only the original effect: 100/100
+- Unexpected outcomes: 0
+- Checks passed: 5/5
+- Overall result: PASS
+
+The observed response sequence was "STORAGE_FAILURE", "IDEMPOTENCY_CONFLICT", then "ALREADY_COMMITTED".
+
+4. Interpretation [I]
+
+The results are consistent with the intended request-integrity behaviour in this simulation. The conflicting payload did not replace the original record or add a second effect, and the original matching retry was recognized.
+
+These results support the implemented control's behaviour under the specific in-memory conditions tested. They do not establish the reliability of a real storage system.
+
+5. Limitations
+
+- The failure was simulated before any mutation; no actual storage operation failed.
+- Request records and effects existed only in memory.
+- The test did not simulate process termination, operating-system failure, power loss, database rollback, or a distributed system.
+- The recorded effect was a local list entry, not an actual payment.
+- The test did not establish durable recovery or atomicity across an external side effect.
+
+6. Conclusion [V]/[I]
+
+Observed conclusion [V]: All 100 trials passed all five programmed checks, with zero unexpected outcomes.
+
+Interpretation [I]: The local simulation preserved the original request record and effect during the specified failure sequence.
+
+Unverified hypothesis [H]: A production implementation may require durable transactional storage, explicit failure recovery, and coordinated handling of external side effects to preserve equivalent invariants.
+
+LT Hub™ AgentGuard principle: AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
+
+Next frontier: Test 90 — examine whether a retry remains safe when the system cannot determine whether a previous operation committed.
