@@ -1,0 +1,56 @@
+LT Hub™ AgentGuard — Test 97 Results
+
+Test title
+
+Reject Status Records With a Mismatched Amount
+
+Objective
+
+Evaluate whether status-decision logic blocks a status record when its recorded transaction amount does not match the expected amount.
+
+[V] Observed results
+
+- Cases executed: 14
+- Checks passed: 14/14
+- Unexpected outcomes: 0
+- Overall result: PASS
+
+Cases verified
+
+1. Matching amount and fresh "NOT_COMMITTED" status returned "RETRY_ALLOWED".
+2. Higher recorded amount returned "STATUS_UNCERTAIN".
+3. Lower recorded amount returned "STATUS_UNCERTAIN".
+4. Matching amount and fresh "COMMITTED" status returned "ALREADY_COMMITTED".
+5. Missing recorded amount returned "STATUS_UNCERTAIN".
+6. String-formatted recorded amount returned "STATUS_UNCERTAIN".
+7. Boolean recorded amount returned "STATUS_UNCERTAIN".
+8. Negative requested amount returned "STATUS_UNCERTAIN".
+9. Boolean requested amount returned "STATUS_UNCERTAIN".
+10. Wrong request ID returned "STATUS_UNCERTAIN".
+11. Wrong transaction ID returned "STATUS_UNCERTAIN".
+12. Stale record returned "STATUS_UNCERTAIN".
+13. Future-dated record returned "STATUS_UNCERTAIN".
+14. Unknown status returned "STATUS_UNCERTAIN".
+
+[I] Interpretation
+
+The tested logic requires the recorded amount to match the expected amount before accepting a retry or already-committed decision. Integer cents were used for comparisons, avoiding floating-point currency representation issues in this simulation.
+
+[H] Further hypothesis to test
+
+Matching identifiers and amounts may still be insufficient if status records are forged, altered, or inconsistent with the external payment system. Future tests should examine transaction currency, record authenticity, and authoritative status verification.
+
+Limitations
+
+- This was a local Python decision-logic simulation with predefined records and a fixed clock.
+- No real payment, database, durable storage, or distributed system was tested.
+- The test does not establish the authenticity of a status record or guarantee that an external transaction matches the record.
+- Passing these checks does not establish production readiness or payment safety.
+
+Conclusion
+
+PASS — 14/14 checks. The tested logic blocked amount mismatches and malformed or uncertain status records. Further validation is needed for trusted external status, durable persistence, and real-system failure modes.
+
+Research principle
+
+AI may research, analyse, recommend and prepare. Humans retain authority over money, identity, sensitive information and irreversible decisions.
